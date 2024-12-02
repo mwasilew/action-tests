@@ -1,0 +1,9 @@
+on:
+  workflow_call:
+  pull_request:
+  push:
+
+jobs:
+  print-trigger:
+    steps:
+      echo "Triggered by ${{github.event_name}}"

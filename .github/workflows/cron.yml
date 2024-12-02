@@ -1,0 +1,9 @@
+name: Schedule build
+
+on:
+  schedule:
+  - cron: "*/5 * * * *"
+
+jobs:
+  nightly:
+    uses: ./.github/workflows/build.yml
