@@ -6,4 +6,6 @@ on:
 jobs:
   print-trigger:
     steps:
-      echo "Triggered by ${{github.event_name}}"
+      - name: Print trigger
+        run: |
+          echo "Triggered by ${{github.event_name}}"
