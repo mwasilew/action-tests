@@ -5,6 +5,7 @@ on:
 
 jobs:
   print-trigger:
+    runs-on: ubuntu-latest
     steps:
       - name: Print trigger
         run: |
