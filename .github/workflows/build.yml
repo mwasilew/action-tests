@@ -25,5 +25,5 @@ jobs:
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v4
         with:
-          name: testjobs-${{ GITHUB_RUN_ID }}-${{ matrix.machine }}
+          name: testjobs-${{ github.run_id }}-${{ matrix.machine }}
           path: lava/${{ matrix.machine }}/
