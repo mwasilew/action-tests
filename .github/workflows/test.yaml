@@ -1,0 +1,47 @@
+name: Run tests
+
+on:
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
+
+jobs:
+  retrieve-job-list:
+    strategy:
+      fail-fast: true
+      matrix:
+        machine:
+          - rb3g2
+          - imx8mm
+    oputputs:
+      jobmatrix: ${{ steps.listjobs.outputs.jobmatrix }}
+    steps:
+      - name: Print trigger
+        run: |
+          echo "Triggered by ${{ github.event_name }}"
+          echo "Triggering workflow: ${{ github.event.workflow_run.id }}"
+      - name: 'Download Artifacts'
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GH_TOKEN }}
+          name: testjobs-${{ github.event.workflow_run.id }}-${{ matrix.machine }}
+          path: lava/${{ matrix.machine }}/
+      - name: "List jobs"
+        is: listjobs
+        run: |
+          JOBFILES=$(ls -mQ "lava/${{ matrix.machine }}/")
+          JOBFILES="[${JOBFILES}]"
+          echo "jobmatrix=$(jq -cn --argjson jobfiles '$JOBFILES' '{target: $jobfiles}')" >> $GITHUB_OUTPUT
+    runs-on: ubuntu-latest
+  submit-job:
+    needs: retrieve-job-list
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.retrieve-job-list.outputs.jobmatrix) }}
+    steps:
+      - name: Submit
+        run: |
+          echo "Submitting ${{ matrix.target }}"
+

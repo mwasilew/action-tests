@@ -1,0 +1,109 @@
+actions:
+- deploy:
+    images:
+      bootloader:
+        headers:
+          OSF-TOKEN: OSF-TOKEN
+        url: 'https://api.foundries.io/projects/scarthgap/lmp/builds/103/runs/imx8mmevk//imx-boot-imx8mmevk'
+      image:
+        headers:
+          OSF-TOKEN: OSF-TOKEN
+        url: 'https://api.foundries.io/projects/scarthgap/lmp/builds/103/runs/imx8mmevk//lmp-factory-image-imx8mmevk.rootfs.wic.gz'
+      mfgtools:
+        headers:
+          OSF-TOKEN: OSF-TOKEN
+        url: 'https://api.foundries.io/projects/scarthgap/lmp/builds/103/runs/imx8mmevk-mfgtools/mfgtool-files.tar.gz'
+      sitimg:
+        headers:
+          OSF-TOKEN: OSF-TOKEN
+        url: 'https://api.foundries.io/projects/scarthgap/lmp/builds/103/runs/imx8mmevk//sit-imx8mmevk.bin'
+      uboot:
+        headers:
+          OSF-TOKEN: OSF-TOKEN
+        url: 'https://api.foundries.io/projects/scarthgap/lmp/builds/103/runs/imx8mmevk//u-boot-imx8mmevk.itb'
+    postprocess:
+      docker:
+        image: ghcr.io/foundriesio/lava-lmp-sign:main
+        steps:
+        - export IMAGE_PATH=$PWD
+        - ls -l
+        - rm -rf mfgtool-files | true
+        - mkdir mfgtool-files
+        - tar -C mfgtool-files --strip-components=1 -xvf mfgtool-files.tar.gz
+        - rm mfgtool-files.tar.gz
+        - tar  -C $IMAGE_PATH -czvf $IMAGE_PATH/mfgtool-files.tgz mfgtool-files
+        - ls -l $IMAGE_PATH
+        - echo "DEVICE_TYPE=imx8mmevk" >> $IMAGE_PATH/flash.settings
+        - cat $IMAGE_PATH/flash.settings
+    timeout:
+      minutes: 20
+    to: downloads
+- deploy:
+    images:
+      bootloader:
+        url: downloads://imx-boot-imx8mmevk
+      image:
+        url: downloads://lmp-factory-image-imx8mmevk.rootfs.wic.gz
+      mfgtools:
+        url: downloads://mfgtool-files.tgz
+      settings:
+        url: downloads://flash.settings
+      sitimg:
+        url: downloads://sit-imx8mmevk.bin
+      uboot:
+        url: downloads://u-boot-imx8mmevk.itb
+    timeout:
+      minutes: 20
+    to: flasher
+- boot:
+    auto_login:
+      login_commands:
+      - sudo su
+      - fio
+      login_prompt: 'login:'
+      password: fio
+      password_prompt: 'Password:'
+      username: fio
+    method: minimal
+    prompts:
+    - fio@imx8mmevk
+    - 'Password:'
+    - root@imx8mmevk
+    timeout:
+      minutes: 10
+    transfer_overlay:
+      download_command: cd /home ; wget
+      unpack_command: tar -C /home/fio -xzmf
+- command:
+    name: network_turn_on
+- test:
+    definitions:
+    - from: git
+      name: docker
+      parameters:
+        IMAGE: nuc-worker-06.fiolab.qualcomm.com/hello-world
+      path: automated/linux/docker/docker.yaml
+      repository: http://github.com/linaro/test-definitions.git
+    - from: git
+      name: docker-networking
+      parameters:
+        IMAGE: nuc-worker-06.fiolab.qualcomm.com/alpine:latest
+      path: automated/linux/docker-networking/docker-networking.yaml
+      repository: http://github.com/linaro/test-definitions.git
+    timeout:
+      minutes: 10
+context:
+  lava_test_results_dir: /home/fio/lava-%s
+  test_character_delay: 10
+device_type: imx8mmevk
+job_name: docker tests (imx8mm) 103
+priority: 50
+tags: []
+timeouts:
+  action:
+    minutes: 4
+  connection:
+    minutes: 8
+  job:
+    minutes: 45
+visibility: public

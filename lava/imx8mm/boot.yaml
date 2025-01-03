@@ -1,0 +1,107 @@
+timeouts:
+  job:
+    minutes: 20
+  connection:
+    minutes: 2
+  action:
+    minutes: 2
+context:
+  test_character_delay: 10
+  lava_test_results_dir: "/home/fio/lava-%s"
+device_type: imx8mmevk
+job_name: boot test (lmp-ci-testing 125)
+priority: 50
+visibility: public
+metadata:
+  build-url: 'https://api.foundries.io/projects/lmp-ci-testing/lmp/builds/125/'
+  build-id: '125'
+  trigger: ''
+actions:
+- deploy:
+    timeout:
+      minutes: 10
+    to: downloads
+    images:
+      image:
+        url: https://api.foundries.io/projects/lmp-ci-testing/lmp/builds/125/runs/imx8mmevk/lmp-factory-image-imx8mmevk.wic.gz
+        compression: gz
+        headers:
+          OSF-TOKEN: OSF-TOKEN
+      bootloader:
+        url: https://api.foundries.io/projects/lmp-ci-testing/lmp/builds/125/runs/imx8mmevk/imx-boot-imx8mmevk
+        headers:
+          OSF-TOKEN: OSF-TOKEN
+      sitimg:
+        url: https://api.foundries.io/projects/lmp-ci-testing/lmp/builds/125/runs/imx8mmevk/sit-imx8mmevk.bin
+        headers:
+          OSF-TOKEN: OSF-TOKEN
+      uboot:
+        url: https://api.foundries.io/projects/lmp-ci-testing/lmp/builds/125/runs/imx8mmevk/u-boot-imx8mmevk.itb
+        headers:
+          OSF-TOKEN: OSF-TOKEN
+      mfgtools:
+        url: https://api.foundries.io/projects/lmp-ci-testing/lmp/builds/125/runs/imx8mmevk-mfgtools/mfgtool-files.tar.gz
+        headers:
+          OSF-TOKEN: OSF-TOKEN
+    postprocess:
+       docker:
+          image: ghcr.io/foundriesio/lava-lmp-sign:main
+          steps:
+            - "export IMAGE_PATH=$PWD"
+            - ls -l
+            - rm -rf mfgtool-files | true
+            - mkdir mfgtool-files
+            - tar -C mfgtool-files --strip-components=1 -xvf mfgtool-files.tar.gz
+            - rm mfgtool-files.tar.gz
+            - tar  -C $IMAGE_PATH -czvf mfgtool-files.tgz mfgtool-files
+            - ls -l $IMAGE_PATH
+            - echo "DEVICE_TYPE=imx8mmevk" >> flash.settings
+            - cat flash.settings
+- deploy:
+    timeout:
+      minutes: 10
+    to: flasher
+    images:
+        image:
+            url: downloads://lmp-factory-image-imx8mmevk.wic
+        bootloader:
+            url: downloads://imx-boot-imx8mmevk
+        sitimg:
+            url: downloads://sit-imx8mmevk.bin
+        uboot:
+            url: downloads://u-boot-imx8mmevk.itb
+        mfgtools:
+            url: downloads://mfgtool-files.tgz
+        settings:
+            url: downloads://flash.settings
+- boot:
+    prompts:
+     - "fio@imx8mmevk"
+     - "Password:"
+     - "root@imx8mmevk"
+    timeout:
+      minutes: 8
+    auto_login:
+      login_prompt: 'login:'
+      username: fio
+      password_prompt: "Password:"
+      password: "fio"
+      login_commands:
+      - sudo su
+      - fio
+    method: minimal
+    transfer_overlay:
+      download_command: cd /tmp ; wget
+      unpack_command: tar -C /home/fio -xzf
+- command:
+    name: network_turn_on
+- test:
+    definitions:
+    - from: git
+      name: disable-aklite-reboot
+      path: automated/linux/disable-aklite-reboot/disable-aklite-reboot.yaml
+      repository: https://github.com/linaro/test-definitions.git
+    - from: git
+      name: fs-resize
+      path: automated/linux/fs-resize/fs-resize.yaml
+      repository: https://github.com/linaro/test-definitions.git
