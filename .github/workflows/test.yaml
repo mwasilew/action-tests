@@ -33,7 +33,8 @@ jobs:
         run: |
           JOBFILES=$(ls -mQ "lava/${{ matrix.machine }}/")
           JOBFILES="[${JOBFILES}]"
-          echo "jobmatrix=$(jq -cn --argjson jobfiles '$JOBFILES' '{target: $jobfiles}')" >> $GITHUB_OUTPUT
+          J=$(jq -cn --argjson jobfiles "$JOBFILES" '{target: $jobfiles}')
+          echo "jobmatrix=$J" >> $GITHUB_OUTPUT
     runs-on: ubuntu-latest
   submit-job:
     needs: retrieve-job-list
