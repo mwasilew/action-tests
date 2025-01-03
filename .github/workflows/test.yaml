@@ -25,7 +25,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ secrets.GH_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           name: testjobs-${{ github.event.workflow_run.id }}-${{ matrix.machine }}
           path: lava/${{ matrix.machine }}/
       - name: "List jobs"
