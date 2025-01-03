@@ -8,30 +8,27 @@ on:
 
 jobs:
   retrieve-job-list:
-    strategy:
-      fail-fast: true
-      matrix:
-        machine:
-          - rb3g2
-          - imx8mm
     outputs:
       jobmatrix: ${{ steps.listjobs.outputs.jobmatrix }}
     steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: testjobs
+          path: lava/
       - name: Print trigger
         run: |
           echo "Triggered by ${{ github.event_name }}"
           echo "Triggering workflow: ${{ github.event.workflow_run.id }}"
-      - name: 'Download Artifacts'
-        uses: actions/download-artifact@v4
-        with:
-          run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          name: testjobs-${{ github.event.workflow_run.id }}-${{ matrix.machine }}
-          path: lava/${{ matrix.machine }}/
       - name: "List jobs"
         id: listjobs
         run: |
-          JOBFILES=$(ls -mQ "lava/${{ matrix.machine }}/")
+          JOBFILES=$(find lava/ -name *.yaml)
+          JOBFILES=$(echo "$JOBFILES" | sed -e "s/^/\"/" | sed -e "s/$/\",/" | tr -d "\n" | sed -e "s/.$//")
           JOBFILES="[${JOBFILES}]"
           J=$(jq -cn --argjson jobfiles "$JOBFILES" '{target: $jobfiles}')
           echo "jobmatrix=$J" >> $GITHUB_OUTPUT
@@ -42,7 +39,13 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.retrieve-job-list.outputs.jobmatrix) }}
     steps:
-      - name: Submit
+      - name: 'Download Artifacts ${{ matrix.target }}'
+        uses: actions/download-artifact@v4
+        with:
+          name: testjobs
+          path: lava/
+
+      - name: Submit ${{ matrix.target }}
         run: |
           echo "Submitting ${{ matrix.target }}"
 
