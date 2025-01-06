@@ -15,16 +15,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v4
-        with:
-          name: testjobs
-          path: lava/
       - name: Print trigger
         run: |
           echo "Triggered by ${{ github.event_name }}"
-          echo "Triggering workflow: ${{ github.event.workflow_run.id }}"
-          echo "Triggering event: ${{ github.event.id }}"
           echo "Input: ${{ inputs.url }}"
       - name: "List jobs"
         id: listjobs
@@ -34,6 +27,13 @@ jobs:
           JOBFILES="[${JOBFILES}]"
           J=$(jq -cn --argjson jobfiles "$JOBFILES" '{target: $jobfiles}')
           echo "jobmatrix=$J" >> $GITHUB_OUTPUT
+          echo "Preparing testjob files"
+      - name: 'Upload test jobs'
+        uses: actions/download-artifact@v4
+        timeout-minutes: 20
+        with:
+          name: testjobs
+          path: lava/
     runs-on: ubuntu-latest
   submit-job:
     needs: retrieve-job-list

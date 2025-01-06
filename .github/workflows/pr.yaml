@@ -1,0 +1,8 @@
+name: Build on PR
+
+on:
+  pull_request:
+
+jobs:
+  nightly:
+    uses: ./.github/workflows/build.yml

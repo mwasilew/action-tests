@@ -2,11 +2,12 @@ name: On Workflow run tests
 
 on:
   workflow_run:
-    workflows: ["Build"]
+    workflows: ["Build on PR"]
     types:
       - completed
 
 jobs:
   test:
     uses: ./.github/workflows/test.yaml
-
+    with:
+      url: ${{ github.event.workflow_run.outputs.artifacts_url }}
