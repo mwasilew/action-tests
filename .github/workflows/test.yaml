@@ -51,9 +51,9 @@ jobs:
           env
           TARGET=${{ matrix.target }}
           echo "$TARGET"
-          FIND_PATH=${TARGET#/*}
+          FIND_PATH="${TARGET#/*}"
           echo "$FIND_PATH"
-          MACHINE=${FIND_PATH#/*}
+          MACHINE="${FIND_PATH#/*}"
           echo "$MACHINE"
           find "${FIND_PATH}" -name "*.yaml" -exec sed -i "s|{{ MACHINE }}|${MACHINE}|g" '{}' \;
           cat "${{ matrix.target }}"
