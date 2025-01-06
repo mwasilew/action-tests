@@ -25,7 +25,7 @@ jobs:
         id: printtrigger
         run: |
           echo "Triggered by ${{github.event_name}}"
-          echo "url=https://example.com/uploads/${{ github.id }}/" >> $GITHUB_OUTPUT
+          echo "url=https://example.com/uploads/${GITHUB_RUN_ID}/" >> $GITHUB_OUTPUT
       - name: Clone repository
         uses: actions/checkout@v4
         with:
