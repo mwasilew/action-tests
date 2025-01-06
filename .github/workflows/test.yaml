@@ -49,6 +49,11 @@ jobs:
           path: lava/
 
       - name: Submit ${{ matrix.target }}
-        run: |
-          echo "Submitting ${{ matrix.target }}"
+        uses: foundriesio/lava-action@v3
+        with:
+          lava_token: ${{ secrets.LAVA_TOKEN }}
+          lava_url: 'lava.infra.foundries.io'
+          job_definition: ${{ matrix.target }}
+          wait_for_job: 'true'
+          fail_action_on_failure: 'true'
 
