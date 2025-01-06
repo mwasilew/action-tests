@@ -11,5 +11,5 @@ jobs:
   test:
     needs: nightly
     uses: ./.github/workflows/test.yaml
-    with: 
-      url: ${{ jobs.nightly.outputs.url }}
+    with:
+      url: ${{ needs.nightly.outputs.url }}
