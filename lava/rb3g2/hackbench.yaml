@@ -44,7 +44,7 @@ actions:
     definitions:
     - branch: master
       from: git
-      name: hackbench
+      name: "{{ MACHINE }}-hackbench"
       parameters:
         LOOPS: 100
       path: automated/linux/hackbench/hackbench.yaml

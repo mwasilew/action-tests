@@ -79,13 +79,13 @@ actions:
 - test:
     definitions:
     - from: git
-      name: docker
+      name: "{{ MACHINE }}-docker"
       parameters:
         IMAGE: nuc-worker-06.fiolab.qualcomm.com/hello-world
       path: automated/linux/docker/docker.yaml
       repository: http://github.com/linaro/test-definitions.git
     - from: git
-      name: docker-networking
+      name: "{{ MACHINE }}-docker-networking"
       parameters:
         IMAGE: nuc-worker-06.fiolab.qualcomm.com/alpine:latest
       path: automated/linux/docker-networking/docker-networking.yaml

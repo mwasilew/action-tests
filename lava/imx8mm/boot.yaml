@@ -96,10 +96,10 @@ actions:
 - test:
     definitions:
     - from: git
-      name: disable-aklite-reboot
+      name: "{{ MACHINE }}-disable-aklite-reboot"
       path: automated/linux/disable-aklite-reboot/disable-aklite-reboot.yaml
       repository: https://github.com/linaro/test-definitions.git
     - from: git
-      name: fs-resize
+      name: "{{ MACHINE }}-fs-resize"
       path: automated/linux/fs-resize/fs-resize.yaml
       repository: https://github.com/linaro/test-definitions.git
