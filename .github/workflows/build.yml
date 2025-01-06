@@ -2,6 +2,10 @@ name: Build
 
 on:
   workflow_call:
+    outputs:
+      artifact_url:
+        description: "URL to retrieve build artifacts"
+        value: ${{ jobs.print-trigger.outputs.url }}
   pull_request:
   push:
 
@@ -14,10 +18,14 @@ jobs:
           - rb3g2
           - imx8mm
     runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.printtrigger.outputs.url }}
     steps:
       - name: Print trigger
+        id: printtrigger
         run: |
           echo "Triggered by ${{github.event_name}}"
+          echo "url=https://example.com/uploads/${{ github.id }}/" >> $GITHUB_OUTPUT
       - name: Clone repository
         uses: actions/checkout@v4
         with:

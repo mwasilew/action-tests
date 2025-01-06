@@ -2,7 +2,10 @@ name: Run tests
 
 on:
   workflow_call:
-
+    inputs:
+      url:
+        required: true
+        type: string
 jobs:
   retrieve-job-list:
     outputs:
@@ -22,6 +25,7 @@ jobs:
           echo "Triggered by ${{ github.event_name }}"
           echo "Triggering workflow: ${{ github.event.workflow_run.id }}"
           echo "Triggering event: ${{ github.event.id }}"
+          echo "Input: ${{ inputs.url }}"
       - name: "List jobs"
         id: listjobs
         run: |
