@@ -41,6 +41,7 @@ jobs:
     steps:
       - name: 'Download Artifacts ${{ matrix.target }}'
         uses: actions/download-artifact@v4
+        timeout-minutes: 20
         with:
           name: testjobs
           path: lava/
