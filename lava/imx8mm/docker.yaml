@@ -43,7 +43,7 @@ actions:
       bootloader:
         url: downloads://imx-boot-imx8mmevk
       image:
-        url: downloads://lmp-factory-image-imx8mmevk.rootfs.wic.gz
+        url: downloads://lmp-factory-image-imx8mmevk.wic.gz
       mfgtools:
         url: downloads://mfgtool-files.tgz
       settings:
