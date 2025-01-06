@@ -22,6 +22,7 @@ jobs:
       - name: "List jobs"
         id: listjobs
         run: |
+          find lava/ -name "*.yaml" -exec sed -i "s|{{ DOWNLOADS_URL }}|${{inputs.url}}|g" '{}' \;
           JOBFILES=$(find lava/ -name *.yaml)
           JOBFILES=$(echo "$JOBFILES" | sed -e "s/^/\"/" | sed -e "s/$/\",/" | tr -d "\n" | sed -e "s/.$//")
           JOBFILES="[${JOBFILES}]"
