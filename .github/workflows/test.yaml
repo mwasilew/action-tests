@@ -79,12 +79,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-          pattern: test-results-*.xml
 
       - name: "List files"
         run: |
-          ls -l
-          ls -l artifacts
+          echo $GITHUB_WORKSPACE
+          ls -R $GITHUB_WORKSPACE
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
