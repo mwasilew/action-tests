@@ -48,10 +48,11 @@ jobs:
           path: lava/
       - name: "Update test names"
         run: |
-          PATH=$(echo "${{ matrix.target }}" | awk -F/ '{print $2"/"$3}')
-          MACHINE=$(echo "${{ matrix.target }}" | awk -F/ '{print $2}')
+          TARGET=${{ matrix.target }}
+          PATH=${TARGET#/*}
+          MACHINE=${PATH#/*}
           FIND_PATH=$()
-          find "${FIND_PATH}" -name "*.yaml" -exec sed -i "s|{{ MACHINE }}|${MACHINE}|g" '{}' \;
+          find "${PATH}" -name "*.yaml" -exec sed -i "s|{{ MACHINE }}|${MACHINE}|g" '{}' \;
 
       - name: Submit ${{ matrix.target }}
         timeout-minutes: 20
