@@ -1,26 +1,26 @@
 actions:
-- deploy:
+ - deploy:
     images:
       bootloader:
         headers:
           OSF-TOKEN: OSF-TOKEN
-        url: 'https://api.foundries.io/projects/scarthgap/lmp/builds/103/runs/imx8mmevk//imx-boot-imx8mmevk'
+        url: 'https://api.foundries.io/projects/lmp-ci-testing/lmp/builds/700/runs/imx8mmevk/imx-boot-imx8mmevk'
       image:
         headers:
           OSF-TOKEN: OSF-TOKEN
-        url: 'https://api.foundries.io/projects/scarthgap/lmp/builds/103/runs/imx8mmevk//lmp-factory-image-imx8mmevk.rootfs.wic.gz'
+        url: 'https://api.foundries.io/projects/lmp-ci-testing/lmp/builds/700/runs/imx8mmevk/lmp-factory-image-imx8mmevk.wic.gz'
       mfgtools:
         headers:
           OSF-TOKEN: OSF-TOKEN
-        url: 'https://api.foundries.io/projects/scarthgap/lmp/builds/103/runs/imx8mmevk-mfgtools/mfgtool-files.tar.gz'
+        url: 'https://api.foundries.io/projects/lmp-ci-testing/lmp/builds/700/runs/imx8mmevk-mfgtools/mfgtool-files.tar.gz'
       sitimg:
         headers:
           OSF-TOKEN: OSF-TOKEN
-        url: 'https://api.foundries.io/projects/scarthgap/lmp/builds/103/runs/imx8mmevk//sit-imx8mmevk.bin'
+        url: 'https://api.foundries.io/projects/lmp-ci-testing/lmp/builds/700/runs/imx8mmevk/sit-imx8mmevk.bin'
       uboot:
         headers:
           OSF-TOKEN: OSF-TOKEN
-        url: 'https://api.foundries.io/projects/scarthgap/lmp/builds/103/runs/imx8mmevk//u-boot-imx8mmevk.itb'
+        url: 'https://api.foundries.io/projects/lmp-ci-testing/lmp/builds/700/runs/imx8mmevk/u-boot-imx8mmevk.itb'
     postprocess:
       docker:
         image: ghcr.io/foundriesio/lava-lmp-sign:main
@@ -97,6 +97,8 @@ context:
   test_character_delay: 10
 device_type: imx8mmevk
 job_name: docker tests (imx8mm) 103
+metadata:
+  downloads-url: "{{ DOWNLOADS_URL }}"
 priority: 50
 tags: []
 timeouts:

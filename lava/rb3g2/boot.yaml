@@ -55,7 +55,7 @@ context:
 device_type: qcs6490-rb3gen2-core-kit
 job_name: boot test (qcs6490-rb3gen2-core-kit) 12591501185
 metadata:
-  build-commit: '9fd1724b39423fde04c39a7c129ec2ba88ca5da9'
+  downloads-url: "{{ DOWNLOADS_URL }}"
 priority: 50
 tags:
 - cambridge-lab

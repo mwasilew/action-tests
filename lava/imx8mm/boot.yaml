@@ -13,9 +13,7 @@ job_name: boot test (lmp-ci-testing 125)
 priority: 50
 visibility: public
 metadata:
-  build-url: 'https://api.foundries.io/projects/lmp-ci-testing/lmp/builds/125/'
-  build-id: '125'
-  trigger: ''
+  downloads-url: "{{ DOWNLOADS_URL }}"
 actions:
 - deploy:
     timeout:
