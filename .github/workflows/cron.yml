@@ -5,6 +5,12 @@ on:
 #  schedule:
 #  - cron: "*/5 * * * *"
 
+permissions:
+  checks: write
+  pull-requests: write
+  contents: read
+  packages: read
+
 jobs:
   nightly:
     uses: ./.github/workflows/build.yml
