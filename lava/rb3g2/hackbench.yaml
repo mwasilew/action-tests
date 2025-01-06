@@ -46,6 +46,7 @@ actions:
       from: git
       name: "{{ MACHINE }}-hackbench"
       parameters:
+        ITERATION: 50
         LOOPS: 100
       path: automated/linux/hackbench/hackbench.yaml
       repository: https://github.com/Linaro/test-definitions.git
