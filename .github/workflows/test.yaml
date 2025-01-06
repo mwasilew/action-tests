@@ -49,12 +49,9 @@ jobs:
       - name: "Update test names"
         run: |
           TARGET=${{ matrix.target }}
-          echo "$TARGET"
           FIND_PATH="${TARGET#*/}"
-          echo "$FIND_PATH"
-          MACHINE="${FIND_PATH#*/}"
-          echo "$MACHINE"
-          find "${FIND_PATH}" -name "*.yaml" -exec sed -i "s|{{ MACHINE }}|${MACHINE}|g" '{}' \;
+          MACHINE="${FIND_PATH%/*}"
+          find "${{ matrix.target }} -name "*.yaml" -exec sed -i "s|{{ MACHINE }}|${MACHINE}|g" '{}' \;
           cat "${{ matrix.target }}"
 
       - name: Submit ${{ matrix.target }}
