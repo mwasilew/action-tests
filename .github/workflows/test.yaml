@@ -81,6 +81,11 @@ jobs:
           path: artifacts
           pattern: test-results-*.xml
 
+      - name: "List files"
+        run: |
+          ls -l
+          ls -l artifacts
+
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
