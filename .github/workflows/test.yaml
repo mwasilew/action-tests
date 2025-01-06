@@ -63,4 +63,4 @@ jobs:
           job_definition: ${{ matrix.target }}
           wait_for_job: 'true'
           fail_action_on_failure: 'true'
-
+          save_result_as_artifact: 'true'
