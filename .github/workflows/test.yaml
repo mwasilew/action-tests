@@ -30,7 +30,6 @@ jobs:
           echo "Preparing testjob files"
       - name: 'Upload test jobs'
         uses: actions/upload-artifact@v4
-        timeout-minutes: 20
         with:
           name: testjobs
           path: lava/
@@ -43,12 +42,12 @@ jobs:
     steps:
       - name: 'Download Artifacts ${{ matrix.target }}'
         uses: actions/download-artifact@v4
-        timeout-minutes: 20
         with:
           name: testjobs
           path: lava/
 
       - name: Submit ${{ matrix.target }}
+        timeout-minutes: 20
         uses: foundriesio/lava-action@v3
         with:
           lava_token: ${{ secrets.LAVA_TOKEN }}
