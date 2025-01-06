@@ -1,0 +1,12 @@
+name: On Workflow run tests
+
+on:
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yaml
+
