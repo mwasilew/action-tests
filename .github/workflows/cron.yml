@@ -7,9 +7,9 @@ on:
 
 jobs:
   nightly:
-    uses: ./.github/workflows/build.yml@HEAD
+    uses: ./.github/workflows/build.yml
   test:
     needs: nightly
-    uses: ./.github/workflows/test.yaml@HEAD
+    uses: ./.github/workflows/test.yaml
     with:
       url: ${{ needs.nightly.outputs.artifact_url }}
