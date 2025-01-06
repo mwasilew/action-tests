@@ -9,4 +9,5 @@ jobs:
   nightly:
     uses: ./.github/workflows/build.yml
   test:
+    needs: nightly
     uses: ./.github/workflows/test.yaml
