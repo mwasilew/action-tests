@@ -18,3 +18,35 @@ jobs:
     secrets: inherit
     with:
       url: ${{ github.event.workflow_run.outputs.artifacts_url }}
+  publish-test-results:
+    name: "Publish Tests Results"
+    needs: submit-job
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+       - name: Download event file
+         uses: dawidd6/action-download-artifact@e7466d1a7587ed14867642c2ca74b5bcc1e19a2d
+         with:
+            run_id: ${{ github.event.workflow_run.id }}
+            path: artifacts
+
+      - name: "List files"
+        run: |
+          echo $GITHUB_WORKSPACE
+          ls -R $GITHUB_WORKSPACE
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          commit: ${{ github.event.workflow_run.head_sha }}
+          event_file: artifacts/Event File/event.json
+          event_name: ${{ github.event.workflow_run.event }}
+          files: "${{ github.workspace }}/artifacts/**/*.xml"
