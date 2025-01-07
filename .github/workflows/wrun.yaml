@@ -6,6 +6,12 @@ on:
     types:
       - completed
 
+permissions:
+  checks: write
+  pull-requests: write
+  contents: read
+  packages: read
+
 jobs:
   test:
     uses: ./.github/workflows/test.yaml
