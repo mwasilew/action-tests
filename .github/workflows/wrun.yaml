@@ -33,7 +33,7 @@ jobs:
         with:
             run-id: ${{ github.event.workflow_run.id }}
             path: artifacts
-            repository: ${{ github.event.workflow_run.repository.full_name }}
+            github-token: ${{ github.token }}
 
       - name: "List files"
         run: |
