@@ -31,7 +31,7 @@ jobs:
       - name: Download event file
         uses: actions/download-artifact@v4
         with:
-            run_id: ${{ github.event.workflow_run.id }}
+            run-id: ${{ github.event.workflow_run.id }}
             path: artifacts
 
       - name: "List files"
