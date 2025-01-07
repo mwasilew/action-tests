@@ -22,10 +22,6 @@ jobs:
     name: "Publish Tests Results"
     needs: submit-job
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
-      pull-requests: write
-
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
