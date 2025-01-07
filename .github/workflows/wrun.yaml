@@ -20,7 +20,7 @@ jobs:
       url: ${{ github.event.workflow_run.outputs.artifacts_url }}
   publish-test-results:
     name: "Publish Tests Results"
-    needs: submit-job
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Download Artifacts
