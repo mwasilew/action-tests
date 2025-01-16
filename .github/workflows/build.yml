@@ -5,7 +5,7 @@ on:
     outputs:
       artifact_url:
         description: "URL to retrieve build artifacts"
-        value: ${{ jobs.print-trigger.outputs.url }}
+        value: ${{ jobs.save-build-url.outputs.url }}
 
 jobs:
   print-trigger:
@@ -23,4 +23,18 @@ jobs:
         id: printtrigger
         run: |
           echo "Triggered by ${{github.event_name}}"
+  save-build-url:
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.save-url.outputs.url }}
+    steps:
+      - name: Save URL
+        id: save-url
+        run: |
           echo "url=https://example.com/uploads/${GITHUB_RUN_ID}/" >> $GITHUB_OUTPUT
+          echo "https://example.com/uploads/${GITHUB_RUN_ID}" > build_url
+      - name: Upload build URL
+        uses: actions/upload-artifact@v4
+        with:
+          name: build_url
+          path: build_url
