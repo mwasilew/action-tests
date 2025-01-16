@@ -47,7 +47,9 @@ jobs:
       - name: 'Setup build URL'
         id: set-build-url
         run: |
-          unzip build_url.zip -d "${{ runner.temp }}/artifacts"
+          ls -l
+          ls -l "${{ runner.temp }}/artifacts/"
+          unzip "${{ runner.temp }}/artifacts/build_url.zip"
           BUILD_URL=$(cat "${{ runner.temp }}/artifacts/build_url")
           echo "Build URL: ${BUILD_URL}"
           echo "url=${BUILD_URL}" >> $GITHUB_OUTPUT
