@@ -6,6 +6,8 @@ on:
     types:
       - completed
 
+run-name: Tests triggered by ${{ github.event.workflow_run.id }}
+
 permissions:
   checks: write
   pull-requests: write
@@ -55,6 +57,7 @@ jobs:
           BUILD_URL=$(cat build_url)
           echo "Build URL: ${BUILD_URL}"
           echo "url=${BUILD_URL}" >> $GITHUB_OUTPUT
+          echo "${{ github.event.workflow_run.pull_requests }}"
 
   test:
     needs: retrieve-build-url
