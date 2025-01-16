@@ -6,7 +6,7 @@ on:
     types:
       - completed
 
-run-name: Tests triggered by PR: ${{ github.event.workflow_run.display_title }}
+run-name: "Tests triggered by PR: ${{ github.event.workflow_run.display_title }}"
 
 permissions:
   checks: write
