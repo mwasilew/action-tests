@@ -24,6 +24,7 @@ jobs:
         run: |
           echo "Triggered by ${{github.event_name}}"
   save-build-url:
+    needs: print-trigger
     runs-on: ubuntu-latest
     outputs:
       url: ${{ steps.save-url.outputs.url }}
