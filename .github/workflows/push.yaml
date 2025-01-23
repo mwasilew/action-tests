@@ -12,6 +12,8 @@ permissions:
 jobs:
   nightly:
     uses: ./.github/workflows/build.yml
+  schema-check:
+    uses: ./.github/workflows/lava-sanity.yml
   test:
     needs: nightly
     secrets: inherit
