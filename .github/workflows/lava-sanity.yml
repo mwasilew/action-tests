@@ -27,7 +27,9 @@ jobs:
             y = yaml.safe_load(f)
             validate(y)
           except:
+            print(f"{sys.argv[1]} is invalid")
             sys.exit(1)
+          print(f"{sys.argv[1]} is valid")
           sys.exit(0)
           EOF
           find lava/ -name "*.yaml" -exec python3 schemacheck.py '{}' \;
