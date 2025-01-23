@@ -21,7 +21,7 @@ jobs:
           tee -a schemacheck.py <<EOF
           import sys
           import yaml
-          from lava_common.schema import *
+          from lava_common.schemas import *
           try:
             f = open(sys.argv[1], "rb")
             y = yaml.safe_load(f)
