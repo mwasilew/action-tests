@@ -18,7 +18,7 @@ actions:
     timeout:
       minutes: 5
     to: downloads
- - deploy:
+- deploy:
     images:
       image:
         url: downloads://core-image-base-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz
@@ -41,7 +41,7 @@ actions:
 - command:
     name: network_turn_on
 - test:
-    definitions:
+    definitionssss:
     - from: git
       name: "{{ MACHINE }}-smoke-test"
       path: automated/linux/smoke/smoke.yaml
@@ -53,7 +53,7 @@ context:
   lava_test_results_dir: /home/lava-%s
   test_character_delay: 10
 device_type: qcs6490-rb3gen2-core-kit
-job_name: boot test (qcs6490-rb3gen2-core-kit) 12591501185
+job_name: boot test {{ ABC }} (qcs6490-rb3gen2-core-kit) 12591501185
 metadata:
   downloads-url: "{{ DOWNLOADS_URL }}"
 priority: 50
