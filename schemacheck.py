@@ -16,9 +16,13 @@ for root, dirs, files in os.walk("./lava"):
                 y = yaml.safe_load(f)
                 f.close()
                 validate(y)
-            except voluptuous.Invalid as exc:
+            except voluptuous.Invalid as e1:
                 print(f"{filename} is invalid")
-                print(exc.msg)
+                print(e1.msg)
+                exitcode += 1
+            except yaml.parser.ParserError as e2:
+                print(f"{filename} is invalid")
+                print(e2.msg)
                 exitcode += 1
             print(f"{filename} is valid")
 sys.exit(exitcode)
