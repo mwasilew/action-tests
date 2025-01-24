@@ -23,7 +23,9 @@ for root, dirs, files in os.walk("./lava"):
             except yaml.parser.ParserError as e2:
                 print(f"{filename} is invalid")
                 print(e2.problem)
-                print(e2.note)
+                print(e2.problem_mark)
+                print(e2.context)
+                print(e2.context_mark)
                 exitcode += 1
             print(f"{filename} is valid")
 sys.exit(exitcode)
