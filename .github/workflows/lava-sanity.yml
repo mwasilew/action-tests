@@ -18,21 +18,7 @@ jobs:
           DOWNLOADS_URL="https://bar.com"
           find lava/ -name "*.yaml" -exec sed -i "s|{{ DOWNLOADS_URL }}|${DOWNLOADS_URL}|g" '{}' \;
           find lava/ -name "*.yaml" -exec sed -i "s|{{ MACHINE }}|${MACHINE}|g" '{}' \;
-          tee -a schemacheck.py <<EOF
-          import sys
-          import yaml
-          from lava_common.schemas import *
-          try:
-            f = open(sys.argv[1], "rb")
-            y = yaml.safe_load(f)
-            validate(y)
-          except:
-            print(f"{sys.argv[1]} is invalid")
-            sys.exit(1)
-          print(f"{sys.argv[1]} is valid")
-          sys.exit(0)
-          EOF
-          find lava/ -name "*.yaml" -exec python3 schemacheck.py '{}' \;
+          python3 schemacheck.py
 
 
 
