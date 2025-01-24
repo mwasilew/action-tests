@@ -19,6 +19,7 @@ for root, dirs, files in os.walk("./lava"):
             except voluptuous.Invalid as e1:
                 print(f"{filename} is invalid")
                 print(e1.msg)
+                print(e1.path)
                 exitcode += 1
             except yaml.parser.ParserError as e2:
                 print(f"{filename} is invalid")
