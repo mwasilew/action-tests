@@ -98,6 +98,7 @@ jobs:
               DEVICE_TYPE=$(cat "$json_file" | jq ".requested_device_type")
               URL=$(cat "$json_file" | jq ".url")
               JOB_ID=$(cat "$json_file" | jq ".id")
+              echo " * [Job $JOB_ID on $DEVICE_TYPE]($URL)"
               echo " * [Job $JOB_ID on $DEVICE_TYPE]($URL)" >> $GITHUB_STEP_SUMMARY
           done
 
