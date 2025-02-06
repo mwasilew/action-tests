@@ -93,7 +93,7 @@ jobs:
 
       - name: Publish Test Job Details
         run: |
-          for json_file in "${{ github.workspace }}/artifacts/**/test-job-*.json"
+          for json_file in $(find ${{ github.workspace }} -name "test-job-*.json")
           do
               DEVICE_TYPE=$(cat "$json_file" | jq ".requested_device_type")
               URL=$(cat "$json_file" | jq ".url")
