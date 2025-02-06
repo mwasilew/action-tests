@@ -93,12 +93,11 @@ jobs:
 
       - name: Publish Test Job Details
         run: |
-          which jq
           for json_file in "${{ github.workspace }}/artifacts/**/test-job-*.json"
           do
-              DEVICE_TYPE=$(js ".requested_device_type" < $json_file)
-              URL=$(js ".url" < $json_file)
-              JOB_ID=$(js ".id" < $json_file)
+              DEVICE_TYPE=$(cat "$json_file" | jq ".requested_device_type")
+              URL=$(cat "$json_file" | jq ".url")
+              JOB_ID=$(cat "$json_file" | jq ".id")
               echo " * [Job $JOB_ID on $DEVICE_TYPE]($URL)" >> $GITHUB_STEP_SUMMARY
           done
 
