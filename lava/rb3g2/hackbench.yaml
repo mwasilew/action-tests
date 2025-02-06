@@ -4,7 +4,7 @@ actions:
       image:
         headers:
           Authentication: Q_GITHUB_TOKEN
-        url: "https://quic-yocto-fileserver-1029608027416.us-central1.run.app/12591501185/qcs6490-rb3gen2-core-kit/core-image-base-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz"
+        url: "https://quic-yocto-fileserver-1029608027416.us-central1.run.app/13170238590/qcs6490-rb3gen2-core-kit/core-image-base-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz"
     postprocess:
       docker:
         image: ghcr.io/foundriesio/lava-lmp-sign:main
