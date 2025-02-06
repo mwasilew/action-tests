@@ -19,5 +19,7 @@ jobs:
       with:
         name: Event File
         path: ${{ github.event_path }}
+  schema-check:
+    uses: ./.github/workflows/lava-sanity.yml
   nightly:
     uses: ./.github/workflows/build.yml
