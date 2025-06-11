@@ -10,14 +10,14 @@ for root, dirs, files in os.walk("./lava"):
         if fname.endswith(".yaml"):
             filename = os.path.join(root, fname)
 
-            try:
-                f = open(filename, "rb")
-                y = yaml.safe_load(f)
-                f.close()
-                validate(y)
-            except:
-                print(f"{filename} is invalid")
-                exitcode += 1
+#            try:
+            f = open(filename, "rb")
+            y = yaml.safe_load(f)
+            f.close()
+            validate(y)
+#            except:
+#                print(f"{filename} is invalid")
+#                exitcode += 1
             print(f"{filename} is valid")
 sys.exit(exitcode)
 

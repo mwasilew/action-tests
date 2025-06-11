@@ -62,7 +62,7 @@ actions:
       path: automated/linux/wlan-download/wlan-download.yaml
       repository: http://github.com/linaro/test-definitions.git
     timeout:
-      minutes: 30 
+      minutes: 10 
 context:
   lava_test_results_dir: /home/lava-%s
   test_character_delay: 10
