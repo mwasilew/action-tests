@@ -30,7 +30,6 @@ jobs:
         id: set-build-url
         run: |
           ls -l
-          ls -l "${{ runner.temp }}/artifacts/"
           BUILD_URL=$(cat build_url)
           echo "Build URL: ${BUILD_URL}"
           echo "url=${BUILD_URL}" >> $GITHUB_OUTPUT
