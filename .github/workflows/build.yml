@@ -18,6 +18,9 @@ jobs:
         machine:
           - rb3g2
           - imx8mm
+          - imx6ull
+          - imx8mp
+          - imx8mn
     runs-on: ubuntu-latest
     outputs:
       url: ${{ steps.printtrigger.outputs.url }}
@@ -26,6 +29,61 @@ jobs:
         id: printtrigger
         run: |
           echo "Triggered by ${{github.event_name}}"
+          for i in {1..10}
+          do
+              echo "hello world ${1}" > "${{matrix.machine}}-${i}.txt"
+          done
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{matrix.machine}}-1.txt"
+          path: "${{matrix.machine}}-1.txt"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{matrix.machine}}-2.txt"
+          path: "${{matrix.machine}}-2.txt"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{matrix.machine}}-3.txt"
+          path: "${{matrix.machine}}-3.txt"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{matrix.machine}}-4.txt"
+          path: "${{matrix.machine}}-4.txt"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{matrix.machine}}-5.txt"
+          path: "${{matrix.machine}}-5.txt"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{matrix.machine}}-6.txt"
+          path: "${{matrix.machine}}-6.txt"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{matrix.machine}}-7.txt"
+          path: "${{matrix.machine}}-7.txt"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{matrix.machine}}-8.txt"
+          path: "${{matrix.machine}}-8.txt"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{matrix.machine}}-9.txt"
+          path: "${{matrix.machine}}-9.txt"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{matrix.machine}}-10.txt"
+          path: "${{matrix.machine}}-10.txt"
+
   save-build-url:
     needs: print-trigger
     runs-on: ubuntu-latest
