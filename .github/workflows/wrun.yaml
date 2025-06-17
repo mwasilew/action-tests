@@ -24,7 +24,7 @@ jobs:
         id: download-artifact
         uses: dawidd6/action-download-artifact@v11
         with:
-          run_id: context.payload.workflow_run.id
+          run_id: ${{github.event.workflow_run.id}}
           name: build_url
       - name: 'Setup build URL'
         id: set-build-url
