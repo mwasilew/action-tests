@@ -52,7 +52,7 @@ jobs:
           TARGET=${{ matrix.target }}
           FIND_PATH="${TARGET#*/}"
           MACHINE="${FIND_PATH%/*}"
-          FILE_NAME=$("${FIND_PATH%.yaml}" | tr "/" "-")
+          FILE_NAME=$(echo "${FIND_PATH%.yaml}" | tr "/" "-")
           find "${{ matrix.target }}" -name "*.yaml" -exec sed -i "s|{{ MACHINE }}|${MACHINE}|g" '{}' \;
           find "${{ matrix.target }}" -name "*.yaml" -exec sed -i "s|{{ AP_NAME }}|${{secrets.AP_NAME}}|g" '{}' \;
           find "${{ matrix.target }}" -name "*.yaml" -exec sed -i "s|{{ AP_PASSWORD }}|${{secrets.AP_PASSWORD}}|g" '{}' \;
