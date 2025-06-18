@@ -65,4 +65,4 @@ tags:
 timeouts:
   job:
     minutes: 40
-visibility: public
+visibility: personal
