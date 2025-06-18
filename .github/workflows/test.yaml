@@ -56,8 +56,11 @@ jobs:
           find "${{ matrix.target }}" -name "*.yaml" -exec sed -i "s|{{ AP_NAME }}|${{secrets.AP_NAME}}|g" '{}' \;
           find "${{ matrix.target }}" -name "*.yaml" -exec sed -i "s|{{ AP_PASSWORD }}|${{secrets.AP_PASSWORD}}|g" '{}' \;
           cat "${{ matrix.target }}"
+          echo "MACHINE=${MACHINE}" >> $GITHUB_ENV
 
       - name: Submit ${{ matrix.target }}
+        env:
+          MACHINE: ${{ env.MACHINE }}
         timeout-minutes: 20
         uses: mwasilew/lava-action@auth-token
         with:
@@ -68,6 +71,7 @@ jobs:
           fail_action_on_failure: false
           save_result_as_artifact: true
           save_job_details: true
+          result_file_name: "${MACHINE}"
 
   publish-test-results:
     name: "Publish Tests Results"
