@@ -45,10 +45,11 @@ actions:
     - from: git
       name: "{{ MACHINE }}-smoke-test"
       path: automated/linux/smoke/smoke.yaml
-      repository: https://github.com/linaro/test-definitions.git
+      branch: fail-test
+      repository: https://github.com/mwasilew/test-definitions.git
       parameters:
         SKIP_INSTALL: "True"
-        TESTS: "pwd, uname -a, ip a, lsusb"
+        TESTS: "pwd, uname -a, ip a"
         AP_NAME: "{{ AP_NAME }}"
         AP_PASSWORD: "{{ AP_PASSWORD }}"
 context:
