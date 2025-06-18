@@ -62,7 +62,7 @@ jobs:
         env:
           MACHINE: ${{ env.MACHINE }}
         timeout-minutes: 20
-        uses: mwasilew/lava-action@auth-token
+        uses: mwasilew/lava-action@result-file-overwrite
         with:
           lava_token: ${{ secrets.LAVA_TOKEN }}
           lava_url: 'lava.infra.foundries.io'
