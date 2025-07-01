@@ -29,8 +29,7 @@ jobs:
       - name: Save URL
         id: save-url
         run: |
-          echo "url=${BASE_ARTIFACT_URL}" >> $GITHUB_OUTPUT
-          echo "${BASE_ARTIFACT_URL}" > build_url
+          echo "${BASE_ARTIFACT_URL}" > build_url-${{ matrix.machine }}
       - name: Upload build URL
         uses: actions/upload-artifact@v4
         with:
