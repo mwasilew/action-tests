@@ -16,7 +16,6 @@ permissions:
 
 jobs:
   test:
-    needs: retrieve-build-url
     uses: ./.github/workflows/test.yaml
     secrets: inherit
   publish-test-results:
