@@ -15,32 +15,10 @@ permissions:
   packages: read
 
 jobs:
-  retrieve-build-url:
-    runs-on: ubuntu-latest
-    outputs:
-      url: ${{ steps.set-build-url.outputs.url }}
-    steps:
-      - name: 'Download build URL'
-        id: download-artifact
-        uses: actions/download-artifact@v4
-        with:
-          run-id: ${{github.event.workflow_run.id}}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          name: build_url
-      - name: 'Setup build URL'
-        id: set-build-url
-        run: |
-          ls -l
-          BUILD_URL=$(cat build_url)
-          echo "Build URL: ${BUILD_URL}"
-          echo "url=${BUILD_URL}" >> $GITHUB_OUTPUT
-
   test:
     needs: retrieve-build-url
     uses: ./.github/workflows/test.yaml
     secrets: inherit
-    with:
-      url: ${{ needs.retrieve-build-url.outputs.url }}
   publish-test-results:
     name: "Publish Tests Results"
     needs: test
