@@ -55,6 +55,7 @@ jobs:
               BASE_ARTIFACT_URL=$(cat "build_url-${MACHINE}")
           else
               # fail the job because of missing URL file
+              ls -l
               echo "Build URL file build_url-${MACHINE} is missing"
               exit 1
           fi
