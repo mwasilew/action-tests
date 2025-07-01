@@ -8,7 +8,7 @@ on:
         value: ${{ jobs.save-build-url.outputs.url }}
 
 env:
-  BASE_ARTIFACT_URL: "https://example.com/uploads/${{ github.run_id }}"
+  BASE_ARTIFACT_URL: "https://example.com/uploads/${{ github.run_id }}-${{ github.run_attempt }}"
 
 jobs:
   print-trigger:
