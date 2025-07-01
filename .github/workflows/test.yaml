@@ -51,8 +51,8 @@ jobs:
           TARGET=${{ matrix.target }}
           FIND_PATH="${TARGET#*/}"
           MACHINE="${FIND_PATH%/*}"
-          if [ -f "build_url-${MACHINE}" ]; then
-              BASE_ARTIFACT_URL=$(cat "build_url-${MACHINE}")
+          if [ -d "build_url-${MACHINE}" ]; then
+              BASE_ARTIFACT_URL=$(cat "build_url-${MACHINE}/build_url-${MACHINE}")
           else
               # fail the job because of missing URL file
               ls -l
