@@ -60,8 +60,6 @@ job_name: boot test (qcs9075-iq-9075-evk) 15987997819-1
 metadata:
   downloads-url: "{{ DOWNLOADS_URL }}"
 priority: 50
-tags:
-- cambridge-lab
 timeouts:
   job:
     minutes: 15
