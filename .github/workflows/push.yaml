@@ -18,3 +18,5 @@ jobs:
     needs: nightly
     secrets: inherit
     uses: ./.github/workflows/test.yaml
+    with:
+      build_id: ${{ github.run_id }}

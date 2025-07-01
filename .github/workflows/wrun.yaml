@@ -18,6 +18,8 @@ jobs:
   test:
     uses: ./.github/workflows/test.yaml
     secrets: inherit
+    with:
+      build_id: ${{ github.event.workflow_run.id }}
   publish-test-results:
     name: "Publish Tests Results"
     needs: test

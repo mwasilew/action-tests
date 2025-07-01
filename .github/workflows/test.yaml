@@ -2,6 +2,10 @@ name: Run tests
 
 on:
   workflow_call:
+    inputs:
+      build_id:
+        required: true
+        type: string
 
 jobs:
   retrieve-job-list:
@@ -44,6 +48,7 @@ jobs:
       - name: 'Download build URLs'
         uses: actions/download-artifact@v4
         with:
+          run-id: ${{ inputs.build_id }}
           pattern: build_url-*
 
       - name: "Update test names"
