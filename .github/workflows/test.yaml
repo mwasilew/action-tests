@@ -2,10 +2,6 @@ name: Run tests
 
 on:
   workflow_call:
-    inputs:
-      url:
-        required: true
-        type: string
 
 jobs:
   retrieve-job-list:
@@ -23,7 +19,6 @@ jobs:
       - name: "List jobs"
         id: listjobs
         run: |
-          find lava/ -name "*.yaml" -exec sed -i "s|{{ DOWNLOADS_URL }}|${{inputs.url}}|g" '{}' \;
           JOBFILES=$(find lava/ -name *.yaml)
           JOBFILES=$(echo "$JOBFILES" | sed -e "s/^/\"/" | sed -e "s/$/\",/" | tr -d "\n" | sed -e "s/.$//")
           JOBFILES="[${JOBFILES}]"
@@ -42,20 +37,33 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.retrieve-job-list.outputs.jobmatrix) }}
     steps:
-      - name: 'Download Artifacts ${{ matrix.target }}'
+      - name: 'Download job templates'
         uses: actions/download-artifact@v4
         with:
           name: testjobs
           path: lava/
+      - name: 'Download build URLs'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: build_url-*
+
       - name: "Update test names"
         run: |
           TARGET=${{ matrix.target }}
           FIND_PATH="${TARGET#*/}"
           MACHINE="${FIND_PATH%/*}"
+          if [ -f "build_url-${MACHINE}" ]; then
+              BASE_ARTIFACT_URL=$(cat "build_url-${MACHINE}")
+          else
+              # fail the job because of missing URL file
+              echo "Build URL file build_url-${MACHINE} is missing"
+              exit 1
+          fi
           FILE_NAME=$(echo "${FIND_PATH%.yaml}" | tr "/" "-")
           find "${{ matrix.target }}" -name "*.yaml" -exec sed -i "s|{{ MACHINE }}|${MACHINE}|g" '{}' \;
           find "${{ matrix.target }}" -name "*.yaml" -exec sed -i "s|{{ AP_NAME }}|${{secrets.AP_NAME}}|g" '{}' \;
           find "${{ matrix.target }}" -name "*.yaml" -exec sed -i "s|{{ AP_PASSWORD }}|${{secrets.AP_PASSWORD}}|g" '{}' \;
+          find "${{ matrix.target }}" -name "*.yaml" -exec sed -i "s|{{ DOWNLOADS_URL }}|${BASE_ARTIFACT_URL}|g" '{}' \;
           cat "${{ matrix.target }}"
           echo "MACHINE=${FILE_NAME}" >> $GITHUB_ENV
 
