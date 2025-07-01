@@ -15,7 +15,6 @@ jobs:
       - name: Print trigger
         run: |
           echo "Triggered by ${{ github.event_name }}"
-          echo "Input: ${{ inputs.url }}"
       - name: "List jobs"
         id: listjobs
         run: |
