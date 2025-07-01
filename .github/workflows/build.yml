@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build_url-${{ matrix.machine }}
-          path: build_url
+          path: build_url-${{ matrix.machine }}
   save-build-url:
     needs: print-trigger
     runs-on: ubuntu-latest
