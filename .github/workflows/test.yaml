@@ -47,6 +47,7 @@ jobs:
           path: ${{ matrix.machine }}-${{ matrix.os }}-*.yaml
 
   prepare-job-list:
+    needs: prepare-jobs
     runs-on: ubuntu-latest
     outputs:
       jobmatrix: ${{ steps.listjobs.outputs.jobmatrix }}
