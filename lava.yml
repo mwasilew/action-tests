@@ -1,0 +1,78 @@
+plan:
+  qcs6490-rb3gen2-core-kit:
+    qcom:
+      jobs:
+        - name: smoke
+          tests:
+            - name: smoke
+              parameters:
+                SKIP_INSTALL: "True"
+                TESTS: "pwd, uname -a, ip a, dmesg"
+          visibility: public
+          download: path/to/download/relative/to/base.tar.gz
+        - name: smoke
+          tests:
+            - name: wifi
+              parameters:
+                DEVICE: 'wlp1s0'
+                ETHERNET_DEVICE: 'end0'
+                FILE_CHECKSUM: 8388f7232b400bdc80279668847f90da
+                FILE_URL: http://archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso
+                SSID_NAME: "{secrets.AP_NAME}"
+                SSID_PASSWORD: "{secrets.AP_PASSWORD}"
+                TIME_DELAY: 120s
+          visibility: personal
+          download: path/to/download/relative/to/base.tar.gz
+          secrets:
+            - AP_NAME
+            - AP_PASSWORD
+    debian:
+      jobs:
+        - name: smoke
+          tests:
+            - name: smoke
+              parameters:
+                SKIP_INSTALL: "True"
+                TESTS: "pwd, uname -a, ip a, dmesg"
+          visibility: public
+          download: path/to/download/relative/to/base.tar.gz
+
+  qrb2210-rb1:
+    debian:
+      jobs:
+        - name: smoke
+          tests:
+            - name: smoke
+              parameters:
+                SKIP_INSTALL: "True"
+                TESTS: "pwd, uname -a, ip a, dmesg"
+          visibility: public
+          download: path/to/download/relative/to/base.tar.gz
+        - name: wifi
+          tests:
+            - name: wifi
+              parameters:
+                DEVICE: 'wlp1s0'
+                ETHERNET_DEVICE: 'end0'
+                FILE_CHECKSUM: 8388f7232b400bdc80279668847f90da
+                FILE_URL: http://archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso
+                SSID_NAME: "{secrets.AP_NAME}"
+                SSID_PASSWORD: "{secrets.AP_PASSWORD}"
+                TIME_DELAY: 120s
+          visibility: personal
+          download: path/to/download/relative/to/base.tar.gz
+          secrets:
+            - AP_NAME
+            - AP_PASSWORD
+    ubuntu:
+      jobs:
+        - name: smoke
+          tests:
+            - name: smoke
+              parameters:
+                SKIP_INSTALL: "True"
+                TESTS: "pwd, uname -a, ip a, dmesg"
+          visibility: public
+          download: path/to/download/relative/to/base.tar.gz
+
+

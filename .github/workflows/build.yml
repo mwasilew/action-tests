@@ -2,10 +2,6 @@ name: Build
 
 on:
   workflow_call:
-    outputs:
-      artifact_url:
-        description: "URL to retrieve build artifacts"
-        value: ${{ jobs.save-build-url.outputs.url }}
 
 env:
   BASE_ARTIFACT_URL: "https://example.com/uploads/${{ github.run_id }}-${{ github.run_attempt }}"
@@ -18,9 +14,10 @@ jobs:
         machine:
           - rb3g2
           - rb8
+        os:
+          - debian
+          - ubuntu
     runs-on: ubuntu-latest
-    outputs:
-      url: ${{ steps.printtrigger.outputs.url }}
     steps:
       - name: Print trigger
         id: printtrigger
@@ -34,9 +31,9 @@ jobs:
       - name: Save URL
         id: save-url
         run: |
-          echo "${BASE_ARTIFACT_URL}" > build_url-${{ matrix.machine }}
+          echo "${BASE_ARTIFACT_URL}" > build_url-${{ matrix.machine }}-${{ matrix.os }}
       - name: Upload build URL
         uses: actions/upload-artifact@v4
         with:
-          name: build_url-${{ matrix.machine }}
-          path: build_url-${{ matrix.machine }}
+          name: build_url-${{ matrix.machine }}-${{ matrix-os }}
+          path: build_url-${{ matrix.machine }}-${{ matrix-os }}

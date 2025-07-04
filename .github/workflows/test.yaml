@@ -8,74 +8,75 @@ on:
         type: string
 
 jobs:
-  retrieve-job-list:
-    outputs:
-      jobmatrix: ${{ steps.listjobs.outputs.jobmatrix }}
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Print trigger
-        run: |
-          echo "Triggered by ${{ github.event_name }}"
-      - name: "List jobs"
-        id: listjobs
-        run: |
-          JOBFILES=$(find lava/ -name *.yaml)
-          JOBFILES=$(echo "$JOBFILES" | sed -e "s/^/\"/" | sed -e "s/$/\",/" | tr -d "\n" | sed -e "s/.$//")
-          JOBFILES="[${JOBFILES}]"
-          J=$(jq -cn --argjson jobfiles "$JOBFILES" '{target: $jobfiles}')
-          echo "jobmatrix=$J" >> $GITHUB_OUTPUT
-          echo "Preparing testjob files"
-      - name: 'Upload test jobs'
-        uses: actions/upload-artifact@v4
-        with:
-          name: testjobs
-          path: lava/
-    runs-on: ubuntu-latest
-  submit-job:
-    needs: retrieve-job-list
+  prepare-jobs:
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.retrieve-job-list.outputs.jobmatrix) }}
+      matrix:
+        machine:
+          - rb3g2
+          - rb8
+        os:
+          - debian
+          - ubuntu
     steps:
-      - name: 'Download job templates'
-        uses: actions/download-artifact@v4
-        with:
-          name: testjobs
-          path: lava/
       - name: 'Download build URLs'
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ inputs.build_id }}
-          pattern: build_url-*
+          pattern: build_url-${{ matrix.machine }}-${{ matrix.os }}
 
-      - name: "Update test names"
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "Generate testjobs"
         run: |
-          TARGET=${{ matrix.target }}
-          FIND_PATH="${TARGET#*/}"
-          MACHINE="${FIND_PATH%/*}"
-          if [ -d "build_url-${MACHINE}" ]; then
-              BASE_ARTIFACT_URL=$(cat "build_url-${MACHINE}/build_url-${MACHINE}")
-          else
-              # fail the job because of missing URL file
-              ls -l
-              echo "Build URL file build_url-${MACHINE} is missing"
-              exit 1
-          fi
-          FILE_NAME=$(echo "${FIND_PATH%.yaml}" | tr "/" "-")
-          find "${{ matrix.target }}" -name "*.yaml" -exec sed -i "s|{{ MACHINE }}|${MACHINE}|g" '{}' \;
-          find "${{ matrix.target }}" -name "*.yaml" -exec sed -i "s|{{ AP_NAME }}|${{secrets.AP_NAME}}|g" '{}' \;
-          find "${{ matrix.target }}" -name "*.yaml" -exec sed -i "s|{{ AP_PASSWORD }}|${{secrets.AP_PASSWORD}}|g" '{}' \;
-          find "${{ matrix.target }}" -name "*.yaml" -exec sed -i "s|{{ DOWNLOADS_URL }}|${BASE_ARTIFACT_URL}|g" '{}' \;
-          cat "${{ matrix.target }}"
-          echo "MACHINE=${FILE_NAME}" >> $GITHUB_ENV
+          export AP_NAME="${{ secrets.AP_NAME }}"
+          export AP_PASSWORD="${{ secrets.AP_PASSWORD }}"
+          export BUILD_URL=$(cat build_url-${{ matrix.machine }}-${{ matrix.os }})
+          # install dependencies
+          pip install PyYAML
+          git clone -b flasher https://gitlab.com/mwasilew/tuxlava.git
+          cd tuxlava && pip install . && cd ..
+          python3 generatetests.py --config lava.yml --os ${{ matix.os }} --device ${{ matrix.machine }} --build-url "${BUILD_URL}"
+      - name: 'Upload test jobs'
+        uses: actions/upload-artifact@v4
+        with:
+          name: testjobs-${{ matrix.machine }}-${{ matrix.os }}
+          path: ${{ matrix.machine }}-${{ matrix.os }}-*.yaml
+
+  prepare-job-list:
+    outputs:
+      jobmatrix: ${{ steps.listjobs.outputs.jobmatrix }}
+    steps:
+      - name: 'Download job templates'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: testjobs-*
+
+      - name: "List jobs"
+        id: listjobs
+        run: |
+          JOBFILES=$(find . -name *.yaml)
+          JOBFILES=$(echo "$JOBFILES" | sed -e "s/^/\"/" | sed -e "s/$/\",/" | tr -d "\n" | sed -e "s/.$//")
+          JOBFILES="[${JOBFILES}]"
+          J=$(jq -cn --argjson jobfiles "$JOBFILES" '{target: $jobfiles}')
+          echo "jobmatrix=$J" >> $GITHUB_OUTPUT
+          echo "Preparing testjob files"
+
+  submit-job:
+    needs: prepare-job-list
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.prepare-job-list.outputs.jobmatrix) }}
+    steps:
+      - name: 'Download job templates'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: testjobs-*
 
       - name: Submit ${{ matrix.target }}
-        env:
-          MACHINE: ${{ env.MACHINE }}
         timeout-minutes: 20
         uses: foundriesio/lava-action@v8
         with:
@@ -87,7 +88,7 @@ jobs:
           fail_action_on_incomplete: false
           save_result_as_artifact: true
           save_job_details: true
-          result_file_name: "${{ env.MACHINE }}"
+          result_file_name: "${{ matrix.target }}"
 
   publish-test-results:
     name: "Publish Tests Results"
