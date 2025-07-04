@@ -35,6 +35,7 @@ jobs:
           export AP_NAME="${{ secrets.AP_NAME }}"
           export AP_PASSWORD="${{ secrets.AP_PASSWORD }}"
           export BUILD_URL=$(cat build_url-${{ matrix.machine }}-${{ matrix.os }})
+          ls -l
           # install dependencies
           pip install PyYAML
           git clone -b flasher https://gitlab.com/mwasilew/tuxlava.git
@@ -78,6 +79,11 @@ jobs:
         with:
           pattern: testjobs-*
 
+      - name: 'Prepare output file name'
+        run: |
+          OUTPUT_NAME=$(echo "${{ matrix.target }}" | sed "s|\/|-|g")
+          echo "RESULT_NAME=${OUTPUT_NAME#??}" >> $GITHUB_ENV
+
       - name: Submit ${{ matrix.target }}
         timeout-minutes: 20
         uses: foundriesio/lava-action@v8
@@ -90,7 +96,7 @@ jobs:
           fail_action_on_incomplete: false
           save_result_as_artifact: true
           save_job_details: true
-          result_file_name: "${{ matrix.target }}"
+          result_file_name: "${RESULT_NAME}"
 
   publish-test-results:
     name: "Publish Tests Results"
