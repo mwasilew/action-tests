@@ -12,11 +12,11 @@ jobs:
       fail-fast: true
       matrix:
         machine:
-          - rb3g2
-          - rb8
+          - qcs6490-rb3gen2-core-kit 
+          - qrb2210-rb1
         os:
           - debian
-          - ubuntu
+          - qcom
     runs-on: ubuntu-latest
     steps:
       - name: Print trigger
