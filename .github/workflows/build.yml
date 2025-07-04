@@ -23,11 +23,6 @@ jobs:
         id: printtrigger
         run: |
           echo "Triggered by ${{github.event_name}}"
-          if [ ${{ matrix.machine }} = rb3g2 ] && [ ${{ github.run_attempt }} = 1 ]; then
-              echo "Failing ${{ matrix.machine }} in attempt ${{ github.run_attempt }}"
-              sleep 30
-              exit 1
-          fi
       - name: Save URL
         id: save-url
         run: |
