@@ -24,7 +24,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ inputs.build_id }}
-          pattern: build_url-${{ matrix.machine }}-${{ matrix.os }}
+          pattern: build_url-*
 
       - uses: actions/checkout@v4
         with:
