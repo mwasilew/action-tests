@@ -64,7 +64,7 @@ plan:
           secrets:
             - AP_NAME
             - AP_PASSWORD
-    ubuntu:
+    qcom:
       jobs:
         - name: smoke
           tests:

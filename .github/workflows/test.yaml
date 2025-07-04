@@ -96,7 +96,7 @@ jobs:
           fail_action_on_incomplete: false
           save_result_as_artifact: true
           save_job_details: true
-          result_file_name: "${RESULT_NAME}"
+          result_file_name: "${{ env.RESULT_NAME }}"
 
   publish-test-results:
     name: "Publish Tests Results"
