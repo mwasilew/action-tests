@@ -22,7 +22,7 @@ plan:
                 SSID_PASSWORD: "{secrets.AP_PASSWORD}"
                 TIME_DELAY: 120s
           visibility: personal
-          download: path/to/download/relative/to/base.tar.gz
+          download: qcom/qcs6490-rb3gen2-core-kit/qcom-multimedia-image-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz
           secrets:
             - AP_NAME
             - AP_PASSWORD
@@ -35,7 +35,7 @@ plan:
                 SKIP_INSTALL: "True"
                 TESTS: "pwd, uname -a, ip a, dmesg"
           visibility: public
-          download: path/to/download/relative/to/base.tar.gz
+          download: qcom/qcs6490-rb3gen2-core-kit/qcom-multimedia-image-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz
 
   qrb2210-rb1:
     debian:
@@ -47,7 +47,7 @@ plan:
                 SKIP_INSTALL: "True"
                 TESTS: "pwd, uname -a, ip a, dmesg"
           visibility: public
-          download: path/to/download/relative/to/base.tar.gz
+          download: qcom/qrb2210-rb1-core-kit/qcom-multimedia-image-qrb2210-rb1-core-kit.rootfs.qcomflash.tar.gz
         - name: wifi
           tests:
             - name: wifi
@@ -73,6 +73,6 @@ plan:
                 SKIP_INSTALL: "True"
                 TESTS: "pwd, uname -a, ip a, dmesg"
           visibility: public
-          download: path/to/download/relative/to/base.tar.gz
+          download: qcom/qrb2210-rb1-core-kit/qcom-multimedia-image-qrb2210-rb1-core-kit.rootfs.qcomflash.tar.gz
 
 

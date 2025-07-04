@@ -41,7 +41,7 @@ if __name__ == "__main__":
     for job in build.get("jobs"):
         job_name = job.get("name")
         tests = [d["name"] for d in job.get("tests")]
-        rootfs = args.build_url + job.get("download")  # fixme: use urljoin
+        rootfs = args.build_url + "/" + job.get("download")  # fixme: use urljoin
         parameters = {}
         for test in job.get("tests"):
             parameters.update(test.get("parameters", {}))
