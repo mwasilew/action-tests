@@ -19,6 +19,10 @@ jobs:
           - debian
           - qcom
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: 'Download build URLs'
         uses: actions/download-artifact@v4
         with:
@@ -26,15 +30,11 @@ jobs:
           run-id: ${{ inputs.build_id }}
           pattern: build_url-*
 
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: "Generate testjobs"
         run: |
           export AP_NAME="${{ secrets.AP_NAME }}"
           export AP_PASSWORD="${{ secrets.AP_PASSWORD }}"
-          export BUILD_URL=$(cat build_url-${{ matrix.machine }}-${{ matrix.os }})
+          export BUILD_URL=$(cat "$GITHUB_WORKSPACE/build_url-${{ matrix.machine }}-${{ matrix.os }}")
           ls -l
           # install dependencies
           pip install PyYAML
