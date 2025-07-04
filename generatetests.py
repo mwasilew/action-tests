@@ -27,15 +27,15 @@ if __name__ == "__main__":
     device = conf['plan'].get(args.device)
     if not device:
         # device not found in config
-        logger.error(f"Device {args.device} not found in config")
-        sys.exit(1)
+        logger.warning(f"Device {args.device} not found in config")
+        sys.exit(0)
 
     # find OS for the device
     build = device.get(args.os)
     if not build:
         # device not found in config
-        logger.error(f"OS {args.os} not found for {args.device}")
-        sys.exit(1)
+        logger.warning(f"OS {args.os} not found for {args.device}")
+        sys.exit(0)
 
 
     for job in build.get("jobs"):
