@@ -34,7 +34,7 @@ jobs:
         run: |
           export AP_NAME="${{ secrets.AP_NAME }}"
           export AP_PASSWORD="${{ secrets.AP_PASSWORD }}"
-          export BUILD_URL=$(cat "$GITHUB_WORKSPACE/build_url-${{ matrix.machine }}-${{ matrix.os }}")
+          export BUILD_URL=$(cat "$GITHUB_WORKSPACE/build_url-${{ matrix.machine }}-${{ matrix.os }}/build_url-${{ matrix.machine }}-${{ matrix.os }}")
           ls -l
           # install dependencies
           pip install PyYAML
