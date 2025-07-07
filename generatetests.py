@@ -59,12 +59,16 @@ if __name__ == "__main__":
                 params.update({key: value})
             parameters = params
 
-        print (parameters)
+        header_secrets = {}
+        for header in job.get("headers"):
+            header_secrets.update(header)
         def_arguments = {
             "device": f"flasher-{args.os}-{args.device}",
             "parameters": parameters,
             "rootfs": rootfs,
             "tests": tests }
+        if header_secrets:
+            def_arguments.update({"secrets": header_secrets})
         j = Job(**def_arguments)
         j.initialize()
         with open(f"{args.device}-{args.os}-{job_name}.yaml", "w") as deffile:
