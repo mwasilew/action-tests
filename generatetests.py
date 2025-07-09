@@ -62,11 +62,14 @@ if __name__ == "__main__":
         header_secrets = {}
         for header in job.get("headers"):
             header_secrets.update(header)
+        visibility = job.get("visibility", "public")
         def_arguments = {
             "device": f"flasher-{args.os}-{args.device}",
             "parameters": parameters,
             "rootfs": rootfs,
-            "tests": tests }
+            "tests": tests,
+            "visibility": visibility
+        }
         if header_secrets:
             def_arguments.update({"secrets": header_secrets})
         j = Job(**def_arguments)

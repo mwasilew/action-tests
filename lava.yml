@@ -9,7 +9,7 @@ plan:
                 SKIP_INSTALL: "True"
                 TESTS: "pwd, uname -a, ip a, dmesg"
           visibility: public
-          download: path/to/download/relative/to/base.tar.gz
+          download: qcom/qcs6490-rb3gen2-core-kit/qcom-multimedia-image-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz
           headers:
             - Authorization: LAVA_BASIC_AUTH
         - name: wifi
