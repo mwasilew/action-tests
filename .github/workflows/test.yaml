@@ -37,9 +37,7 @@ jobs:
           export BUILD_URL=$(cat "$GITHUB_WORKSPACE/build_url-${{ matrix.machine }}-${{ matrix.os }}/build_url-${{ matrix.machine }}-${{ matrix.os }}")
           ls -l
           # install dependencies
-          pip install PyYAML
-          git clone -b flasher https://gitlab.com/mwasilew/tuxlava.git
-          cd tuxlava && pip install . && cd ..
+          pip install tuxlava >= 0.8.0
           python3 generatetests.py --config lava.yml --os ${{ matrix.os }} --device ${{ matrix.machine }} --build-url "${BUILD_URL}"
       - name: 'Upload test jobs'
         uses: actions/upload-artifact@v4
