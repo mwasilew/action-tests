@@ -9,9 +9,9 @@ plan:
                 SKIP_INSTALL: "True"
                 TESTS: "pwd, uname -a, ip a, dmesg"
           visibility: public
-          download: qcom/qcs6490-rb3gen2-core-kit/qcom-multimedia-image-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz
+          download: qcom-distro/qcs6490-rb3gen2-core-kit/qcom-multimedia-image-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz
           headers:
-            - Authorization: LAVA_BASIC_AUTH
+            - Authentication: Q_GITHUB_TOKEN
         - name: wifi
           tests:
             - name: wifi
@@ -24,9 +24,9 @@ plan:
                 SSID_PASSWORD: "{secrets.AP_PASSWORD}"
                 TIME_DELAY: 120s
           visibility: personal
-          download: qcom/qcs6490-rb3gen2-core-kit/qcom-multimedia-image-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz
+          download: qcom-distro/qcs6490-rb3gen2-core-kit/qcom-multimedia-image-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz
           headers:
-            - Authorization: LAVA_BASIC_AUTH
+            - Authentication: Q_GITHUB_TOKEN
           secrets:
             - AP_NAME
             - AP_PASSWORD
@@ -39,9 +39,9 @@ plan:
                 SKIP_INSTALL: "True"
                 TESTS: "pwd, uname -a, ip a, dmesg"
           visibility: public
-          download: qcom/qcs6490-rb3gen2-core-kit/qcom-multimedia-image-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz
+          download: qcom-distro/qcs6490-rb3gen2-core-kit/qcom-multimedia-image-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz
           headers:
-            - Authorization: LAVA_BASIC_AUTH
+            - Authentication: Q_GITHUB_TOKEN
 
   qrb2210-rb1:
     debian:
@@ -53,9 +53,9 @@ plan:
                 SKIP_INSTALL: "True"
                 TESTS: "pwd, uname -a, ip a, dmesg"
           visibility: public
-          download: qcom/qrb2210-rb1-core-kit/qcom-multimedia-image-qrb2210-rb1-core-kit.rootfs.qcomflash.tar.gz
+          download: qcom-distro/qrb2210-rb1-core-kit/qcom-multimedia-image-qrb2210-rb1-core-kit.rootfs.qcomflash.tar.gz
           headers:
-            - Authorization: LAVA_BASIC_AUTH
+            - Authentication: Q_GITHUB_TOKEN
         - name: wifi
           tests:
             - name: wifi
@@ -70,7 +70,7 @@ plan:
           visibility: personal
           download: path/to/download/relative/to/base.tar.gz
           headers:
-            - Authorization: LAVA_BASIC_AUTH
+            - Authentication: Q_GITHUB_TOKEN
           secrets:
             - AP_NAME
             - AP_PASSWORD
@@ -83,8 +83,8 @@ plan:
                 SKIP_INSTALL: "True"
                 TESTS: "pwd, uname -a, ip a, dmesg"
           visibility: public
-          download: qcom/qrb2210-rb1-core-kit/qcom-multimedia-image-qrb2210-rb1-core-kit.rootfs.qcomflash.tar.gz
+          download: qcom-distro/qrb2210-rb1-core-kit/qcom-multimedia-image-qrb2210-rb1-core-kit.rootfs.qcomflash.tar.gz
           headers:
-            - Authorization: LAVA_BASIC_AUTH
+            - Authentication: Q_GITHUB_TOKEN
 
 
