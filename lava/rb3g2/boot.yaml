@@ -3,8 +3,8 @@ actions:
     images:
       image:
         headers:
-          Authentication: Q_GITHUB_TOKEN
-        url: "https://quic-yocto-fileserver-1029608027416.us-central1.run.app/qualcomm-linux/meta-qcom/15987997819-1//poky-altcfg/qcs6490-rb3gen2-core-kit/core-image-base-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz"
+          Authorization: LAVA_BASIC_AUTH
+        url: 'https://s.lava.infra.foundries.io/lmp-factory-image-qcm6490.qcomflash.kernelci.tar.gz'
     postprocess:
       docker:
         image: ghcr.io/foundriesio/lava-lmp-sign:main
@@ -21,7 +21,7 @@ actions:
 - deploy:
     images:
       image:
-        url: downloads://core-image-base-qcs6490-rb3gen2-core-kit.rootfs.qcomflash.tar.gz
+        url: downloads://lmp-factory-image-qcm6490.qcomflash.kernelci.tar.gz
       settings:
         url: downloads://flash.settings
       overlay:
