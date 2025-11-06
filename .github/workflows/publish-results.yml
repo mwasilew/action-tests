@@ -28,12 +28,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download result files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
-#            run-id: ${{ inputs.workflow_id }}
+            run-id: ${{ inputs.workflow_id }}
             path: artifacts
-#            github-token: ${{ github.token }}
-#            pattern: testjobs-*
+            github-token: ${{ github.token }}
+            pattern: testjobs-*
 
       - name: "List files"
         run: |
