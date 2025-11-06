@@ -26,12 +26,12 @@ jobs:
       - name: Save URL
         id: save-url
         run: |
-          echo "${BASE_ARTIFACT_URL}" > build_url-${{ matrix.machine }}-${{ matrix.os }}
+          echo "${BASE_ARTIFACT_URL}" > build-url_${{ matrix.machine }}_${{ matrix.os }}
       - name: Upload build URL
         uses: actions/upload-artifact@v4
         with:
-          name: build_url-${{ matrix.machine }}-${{ matrix.os }}
-          path: build_url-${{ matrix.machine }}-${{ matrix.os }}
+          name: build-url_${{ matrix.machine }}_${{ matrix.os }}
+          path: build-url_${{ matrix.machine }}_${{ matrix.os }}
   additional-artifacts:
     strategy:
       fail-fast: true
