@@ -10,13 +10,20 @@ permissions:
   packages: read
 
 jobs:
-  nightly:
+  build:
     uses: ./.github/workflows/build.yml
-  schema-check:
-    uses: ./.github/workflows/lava-sanity.yml
   test:
-    needs: nightly
-    secrets: inherit
     uses: ./.github/workflows/test.yaml
+    needs: [build]
+    secrets: inherit
     with:
       build_id: ${{ github.run_id }}
+  publish-test-results:
+    uses: ./.github/workflows/publish-results.yml
+    needs: test
+    secrets: inherit
+    with:
+      workflow_id: ${{ github.run_id }}
+      event_name: ${{ github.event_name }}
+      event_file: ${{ github.event_path }}
+      commit: ${{ github.sha }}

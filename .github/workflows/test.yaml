@@ -14,10 +14,10 @@ jobs:
       matrix:
         machine:
           - qcs6490-rb3gen2-core-kit
-          - qrb2210-rb1
-        os:
-          - debian
-          - qcom
+          - qrb2210-rb1-core-kit
+        distro:
+          - name: poky-altcfg
+          - name: qcom-distro
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,13 +32,22 @@ jobs:
 
       - name: "Generate testjobs"
         run: |
-          export AP_NAME="${{ secrets.AP_NAME }}"
-          export AP_PASSWORD="${{ secrets.AP_PASSWORD }}"
-          export BUILD_URL=$(cat "$GITHUB_WORKSPACE/build_url-${{ matrix.machine }}-${{ matrix.os }}/build_url-${{ matrix.machine }}-${{ matrix.os }}")
-          ls -l
-          # install dependencies
-          pip install tuxlava>=0.8.0
-          python3 generatetests.py --config lava.yml --os ${{ matrix.os }} --device ${{ matrix.machine }} --build-url "${BUILD_URL}"
+          export BUILD_URL_FILE="$GITHUB_WORKSPACE/build-url_${{ matrix.machine }}_${{ matrix.distro.name }}/build-url_${{ matrix.machine }}_${{ matrix.distro.name }}"
+          echo "${BUILD_URL_FILE}"
+          if [ -f "$BUILD_URL_FILE" ]; then
+              # install dependencies
+              export BUILD_URL=$(cat "${BUILD_URL_FILE}")
+              pip install jinja2
+              if [ "${{ matrix.machine }}" = "qcom-armv8a" ]; then
+                  python3 ci/generatetests.py --templates ci/lava --os ${{ matrix.distro.name }} --device dragonboard-410c --build-url "${BUILD_URL}"
+                  python3 ci/generatetests.py --templates ci/lava --os ${{ matrix.distro.name }} --device dragonboard-820c --build-url "${BUILD_URL}"
+                  echo "MACHINE=dragonboard" >> $GITHUB_ENV
+              else
+                  python3 ci/generatetests.py --templates ci/lava --os ${{ matrix.distro.name }} --device ${{ matrix.machine }} --build-url "${BUILD_URL}"
+                  echo "MACHINE=${{ matrix.machine }}" >> $GITHUB_ENV
+              fi
+          fi
+
       - name: 'Upload test jobs'
         uses: actions/upload-artifact@v4
         with:
@@ -84,7 +93,7 @@ jobs:
 
       - name: Submit ${{ matrix.target }}
         timeout-minutes: 20
-        uses: foundriesio/lava-action@v8
+        uses: foundriesio/lava-action@9
         with:
           lava_token: ${{ secrets.LAVA_TOKEN }}
           lava_url: 'lava.infra.foundries.io'
@@ -96,8 +105,8 @@ jobs:
           save_job_details: true
           result_file_name: "${{ env.RESULT_NAME }}"
 
-  publish-test-results:
-    name: "Publish Tests Results"
+  publish-test-summary:
+    name: "Publish Tests Summary"
     needs: submit-job
     runs-on: ubuntu-latest
     permissions:
@@ -115,11 +124,6 @@ jobs:
           echo $GITHUB_WORKSPACE
           ls -R $GITHUB_WORKSPACE
 
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        with:
-          files: "${{ github.workspace }}/artifacts/**/*.xml"
-
       - name: Publish Test Job Details
         run: |
           for json_file in $(find ${{ github.workspace }} -name "test-job-*.json")
@@ -127,7 +131,7 @@ jobs:
               DEVICE_TYPE=$(cat "$json_file" | jq -r ".requested_device_type")
               URL=$(cat "$json_file" | jq -r ".url")
               JOB_ID=$(cat "$json_file" | jq -r ".id")
-              echo " * [Job $JOB_ID on $DEVICE_TYPE]($URL)"
-              echo " * [Job $JOB_ID on $DEVICE_TYPE]($URL)" >> $GITHUB_STEP_SUMMARY
+              JOB_TITLE=$(cat "$json_file"| jq -r ".description")
+              echo " * [Job $JOB_ID on $DEVICE_TYPE]($URL) - ${JOB_TITLE}"
+              echo " * [Job $JOB_ID on $DEVICE_TYPE]($URL) - ${JOB_TITLE}" >> $GITHUB_STEP_SUMMARY
           done
-
