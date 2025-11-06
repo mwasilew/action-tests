@@ -32,3 +32,12 @@ jobs:
         with:
           name: build_url-${{ matrix.machine }}-${{ matrix.os }}
           path: build_url-${{ matrix.machine }}-${{ matrix.os }}
+      - name: Additional Artifacts
+        run: |
+          for i in $(seq 100); do
+              echo "artifact ${i}" > "artifact.${i}.txt"
+          done
+      - name: Upload Additional artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: artifact*.txt
