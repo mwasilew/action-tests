@@ -41,4 +41,5 @@ if __name__ == "__main__":
                 lava_job = template.render(context)
                 with open(f"{args.device}-{args.os}-{entry.name}", "w") as lava_job_file:
                     lava_job_file.write(lava_job)
+                    print(f"Generated {args.device}-{args.os}-{entry.name}")
 
