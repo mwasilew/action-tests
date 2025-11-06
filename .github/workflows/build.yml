@@ -15,8 +15,8 @@ jobs:
           - qcs6490-rb3gen2-core-kit 
           - qrb2210-rb1
         os:
-          - debian
-          - qcom
+          - poky-altcfg
+          - qcom-distro
     runs-on: ubuntu-latest
     steps:
       - name: Print trigger
