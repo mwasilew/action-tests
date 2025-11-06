@@ -35,7 +35,7 @@ jobs:
       - name: Additional Artifacts
         run: |
           for i in $(seq 100); do
-              echo "artifact ${i}" > "artifact.${i}.txt"
+              echo "artifact ${i}" > "artifact.${i}${{ matrix.machine }}-${{ matrix.os }}.txt"
           done
       - name: Upload Additional artifacts
         uses: actions/upload-artifact@v4
