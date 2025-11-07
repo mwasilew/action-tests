@@ -35,7 +35,7 @@ jobs:
             github-token: ${{ github.token }}
 
       - name: Download result files PR
-        if: ${{ github.workflow_id != inputs.workflow_id }}
+        if: ${{ github.run_id != inputs.workflow_id }}
         uses: actions/download-artifact@v6
         with:
             path: artifacts
