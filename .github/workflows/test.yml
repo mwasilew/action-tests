@@ -26,6 +26,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: qualcomm-linux/lava-test-plans
+          path: lava-test-plans
           ref: 054bc5d39fa5014851ec97ff38940df7bd0f5bd6
 
       - name: 'Download build URLs'
