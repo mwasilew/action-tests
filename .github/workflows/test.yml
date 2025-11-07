@@ -43,7 +43,7 @@ jobs:
 
       - name: Run lava-test-plans
         run: |
-          pip install lava-test-plans
+          $(cd lava-test-plans && pip install .)
           lava-test-plans --help
           #echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> variables.ini
           echo "PROJECT_NAME=meta-qcom" >> variables.ini
