@@ -23,12 +23,27 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/checkout@v4
+        with:
+          repository: qualcomm-linux/lava-test-plans
+          ref: 054bc5d39fa5014851ec97ff38940df7bd0f5bd6
+
       - name: 'Download build URLs'
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ inputs.build_id }}
           pattern: build-url_*
+
+      - name: "List files"
+        run: |
+          echo $GITHUB_WORKSPACE
+          ls -R $GITHUB_WORKSPACE
+
+      - name: Run lava-test-plans
+        run: |
+          pip install lava-test-plans/lava_test_plans
+          lava-test-plans --help
 
       - name: "Generate testjobs"
         run: |
