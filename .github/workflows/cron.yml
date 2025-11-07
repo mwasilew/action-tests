@@ -17,6 +17,6 @@ jobs:
   test:
     needs: nightly
     secrets: inherit
-    uses: ./.github/workflows/test.yaml
+    uses: ./.github/workflows/test.yml
     with:
       url: ${{ needs.nightly.outputs.artifact_url }}
