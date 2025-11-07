@@ -34,6 +34,12 @@ jobs:
             path: artifacts
             github-token: ${{ github.token }}
 
+      - name: Download result files PR
+        uses: actions/download-artifact@v6
+        with:
+            path: artifacts
+            github-token: ${{ github.token }}
+
       - name: "List files"
         run: |
           echo $GITHUB_WORKSPACE
