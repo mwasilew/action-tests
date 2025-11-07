@@ -66,7 +66,7 @@ jobs:
           echo "AUTO_LOGIN_PASSWORD_PROMPT=Password" >> variables.ini
           echo "AUTO_LOGIN_PASSWORD=oelinux123" >> variables.ini
           #lava-test-plans --dry-run --variables variables.ini --test-plan "${GITHUB_REPOSITORY#*/}" --device-type "${{ matrix.machine }}" --verbose 10
-          lava-test-plans --dry-run --variables variables.ini --test-plan "meta-qcom" --device-type "${{ matrix.machine }}" --verbose 10
+          lava-test-plans --dry-run --variables variables.ini --test-plan "meta-qcom/${{ matrix.distro.name }}" --device-type "${{ matrix.machine }}" --verbose 10
 
       - name: "Generate testjobs"
         run: |
