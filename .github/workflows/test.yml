@@ -43,7 +43,7 @@ jobs:
 
       - name: Run lava-test-plans
         run: |
-          pip install lava-test-plans/lava_test_plans
+          pip install lava-test-plans
           lava-test-plans --help
 
       - name: "Generate testjobs"
