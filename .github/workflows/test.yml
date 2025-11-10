@@ -43,9 +43,9 @@ jobs:
           cd lava-test-plans && pip install .
           lava-test-plans --help
           #echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> variables.ini
-          #echo "PROJECT=projects/${GITHUB_REPOSITORY#*/}" >> variables.ini
+          #echo "PROJECT=projects/${GITHUB_REPOSITORY#*/}/" >> variables.ini
           echo "PROJECT_NAME=meta-qcom" >> qh-variables.ini
-          echo "PROJECT=projects/meta-qcom" >> qh-variables.ini
+          echo "PROJECT=projects/meta-qcom/" >> qh-variables.ini
           echo "LAVA_JOB_PRIORTIY=50" >> qh-variables.ini
           echo "DEVICE_TYPE=${{ matrix.machine }}" >> qh-variables.ini
           echo "OS_INFO=qcom-distro" >> qh-variables.ini
