@@ -69,7 +69,7 @@ jobs:
               # install dependencies
               export BUILD_URL=$(cat "${BUILD_URL_FILE}")
           fi
-          if [ -z "${BUILD_URL}" ]
+          if [ -z "${BUILD_URL}" ]; then
              echo "BUILD_URL missing"
              exit 0
           fi
