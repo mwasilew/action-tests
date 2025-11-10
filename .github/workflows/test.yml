@@ -64,7 +64,7 @@ jobs:
           echo "AUTO_LOGIN_PASSWORD=oelinux123" >> qh-variables.ini
           cat qh-variables.ini
           #lava-test-plans --dry-run --variables qh-variables.ini --test-plan "${GITHUB_REPOSITORY#*/}" --device-type "${{ matrix.machine }}" --verbose 10
-          lava-test-plans --dry-run --variables qh-variables.ini --test-plan "meta-qcom/${{ matrix.distro.name }}" --device-type "${{ matrix.machine }}" --dry-run-path ../testjobs-${{ matrix.machine }}-${{ matrix.distro.name }}
+          lava-test-plans --dry-run --variables qh-variables.ini --test-plan "meta-qcom/${{ matrix.distro.name }}" --device-type "${{ matrix.machine }}" --dry-run-path ../${{ matrix.machine }}-${{ matrix.distro.name }}
 
       - name: "Generate testjobs"
         run: |
