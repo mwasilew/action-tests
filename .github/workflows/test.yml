@@ -25,9 +25,11 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          repository: qualcomm-linux/lava-test-plans
+          #repository: qualcomm-linux/lava-test-plans
+          repository: mwasilew/lava-test-plans
           path: lava-test-plans
-          ref: 054bc5d39fa5014851ec97ff38940df7bd0f5bd6
+          #ref: 054bc5d39fa5014851ec97ff38940df7bd0f5bd6
+          ref: dry-run-path
 
       - name: 'Download build URLs'
         uses: actions/download-artifact@v4
@@ -67,7 +69,7 @@ jobs:
           echo "AUTO_LOGIN_PASSWORD=oelinux123" >> qh-variables.ini
           cat qh-variables.ini
           #lava-test-plans --dry-run --variables qh-variables.ini --test-plan "${GITHUB_REPOSITORY#*/}" --device-type "${{ matrix.machine }}" --verbose 10
-          lava-test-plans --dry-run --variables qh-variables.ini --test-plan "meta-qcom/${{ matrix.distro.name }}" --device-type "${{ matrix.machine }}" --verbose 10
+          lava-test-plans --dry-run --variables qh-variables.ini --test-plan "meta-qcom/${{ matrix.distro.name }}" --device-type "${{ matrix.machine }}" --dry-run-path testjobs-${{ matrix.machine }}-${{ matrix.distro.name }}
 
       - name: "Generate testjobs"
         run: |
