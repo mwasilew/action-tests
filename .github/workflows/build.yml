@@ -51,6 +51,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           pattern: build-url*
+          path: urlfiles
+          merge-multiple: true
 
       - name: "Print output"
         shell: python
@@ -60,7 +62,7 @@ jobs:
           ftable = {}
           oslist = set()
           machinelist = set()
-          for fname in os.listdir():
+          for fname in os.listdir("./urlfiles"):
               if fname.startswith("build-url"):
                   b, m, o = fname.split("_")
                   oslist.add(o)
