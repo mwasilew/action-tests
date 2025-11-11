@@ -100,6 +100,7 @@ jobs:
               with open(summary_file_name, "a") as summaryfile:
                   summaryfile.write("## Download URLs\n")
                   summaryfile.write(table_str)
+          print(table_str)
 
 #  additional-artifacts:
 #    strategy:
