@@ -86,11 +86,11 @@ runs:
           else
               echo "DEVICE_TYPE=${{ inputs.machine }}" >> gh-variables.ini
 
+              cat gh-variables.ini
               #lava-test-plans --dry-run --variables gh-variables.ini --test-plan "${GITHUB_REPOSITORY#*/}" --device-type "${{ inputs.machine }}" --verbose 10
               lava-test-plans --dry-run --variables gh-variables.ini --test-plan "meta-qcom/${{ inputs.distro_name }}" --device-type "${{ inputs.machine }}" --dry-run-path ../${{ inputs.machine }}-${{ inputs.distro_name }}
               echo "MACHINE=${{ inputs.machine }}" >> $GITHUB_ENV
           fi
-          cat gh-variables.ini
 
       - name: "List files"
         shell: bash
