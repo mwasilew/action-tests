@@ -68,7 +68,7 @@ jobs:
                   oslist.add(o)
                   machinelist.add(m)
                   url = ""
-                  with open(fname, "r") as urlfile:
+                  with open(f"./urlfiles/{fname}", "r") as urlfile:
                       url = urlfile.read()
                   if not o in ftable:
                       ftable.update({o:{m: url}})
