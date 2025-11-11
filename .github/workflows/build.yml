@@ -14,9 +14,20 @@ jobs:
         machine:
           - qcs6490-rb3gen2-core-kit 
           - qrb2210-rb1-core-kit
+          - qcom-armv8a
+          - iq-8275-evk
+          - iq-9075-evk
+          - qcm6490-idp
+          - qcs615-adp-air
+          - qcs8300-ride-sx
+          - qcs9100-ride-sx
+          - qrb2210-rb1-core-kit
+          - qcom-armv7a
+          - sm8750-mtp
         os:
           - poky-altcfg
           - qcom-distro
+          - qcom-distro-prop-image
     runs-on: ubuntu-latest
     steps:
       - name: Print trigger
@@ -32,6 +43,62 @@ jobs:
         with:
           name: build-url_${{ matrix.machine }}_${{ matrix.os }}
           path: build-url_${{ matrix.machine }}_${{ matrix.os }}
+  publish_summary:
+    needs: print-trigger
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Download build URLs'
+        uses: actions/download-artifact@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: build-url*
+
+      - name: "Print output"
+        shell: python
+        id: print-output
+        run: |
+          import os
+          ftable = {}
+          oslist = set()
+          machinelist = set()
+          for fname in os.listdir():
+              if fname.startswith("build-url"):
+                  b, m, o = fname.split("_")
+                  oslist.add(o)
+                  machinelist.add(m)
+                  url = ""
+                  with open(fname, "r") as urlfile:
+                      url = urlfile.read()
+                  if not o in ftable:
+                      ftable.update({o:{m: url}})
+                  else:
+                      ftable[o].update({m: url})
+
+          table_str = "| |"
+
+          for m in sorted(machinelist):
+              table_str += f" {m} |"
+
+          table_str += "\n|"
+          for i in range(len(machinelist) + 1):
+              table_str += " ---- |"
+
+          table_str += "\n"
+
+          for o in sorted(ftable.keys()):
+              table_str += f"| {o} |"
+              for m in sorted(machinelist):
+                  url = ftable[o].get(m)
+                  if url:
+                      table_str += f" [Files]({url}/{o}/{m}/) |"
+                  else:
+                      table_str += " |"
+              table_str += "\n"
+          summary_file_name = os.environ("GITHUB_STEP_SUMMARY")
+          with open(summary_file_name, "a") as summaryfile:
+              summaryfile.write("## Download URLs\n")
+              summaryfile.write(table_str)
+
 #  additional-artifacts:
 #    strategy:
 #      fail-fast: true
