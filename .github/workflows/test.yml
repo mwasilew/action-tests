@@ -23,12 +23,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run kas build
+      - name: Run lava-test-plans
         uses: ./.github/actions/lava-test-plans
         with:
-          machine: ${{matrix.machine}}
-          distro_name: ${{matrix.distro.name}}
-          build_id: ${{github.build_id}}
+          machine: ${{ matrix.machine }}
+          distro_name: ${{ matrix.distro.name }}
+          build_id: ${{ github.run_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
 
   prepare-job-list:
