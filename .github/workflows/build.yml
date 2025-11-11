@@ -12,7 +12,7 @@ jobs:
       fail-fast: true
       matrix:
         machine:
-          - qcs6490-rb3gen2-core-kit 
+          - qcs6490-rb3gen2-core-kit
           - qrb2210-rb1-core-kit
           - qcom-armv8a
           - iq-8275-evk
