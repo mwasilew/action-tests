@@ -27,6 +27,7 @@ jobs:
           - poky-altcfg
           - qcom-distro
           - qcom-distro-prop-image
+          - qcom-distro_+linux-yocto-lts
     runs-on: ubuntu-latest
     steps:
       - name: Print trigger
@@ -64,7 +65,7 @@ jobs:
           machinelist = set()
           for fname in os.listdir("./urlfiles"):
               if fname.startswith("build-url"):
-                  b, m, o = fname.split("_")
+                  b, m, o = fname.split("_", 2)
                   oslist.add(o)
                   machinelist.add(m)
                   url = ""
