@@ -91,6 +91,7 @@ jobs:
               for m in sorted(machinelist):
                   url = ftable[o].get(m)
                   if url:
+                      url = url.strip()
                       table_str += f" [Files]({url}/{o}/{m}/) |"
                   else:
                       table_str += " |"
