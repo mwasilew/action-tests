@@ -88,6 +88,7 @@ runs:
               lava-test-plans --dry-run --variables gh-variables.ini --test-plan "meta-qcom/${{ inputs.distro_name }}" --device-type "${{ inputs.machine }}" --dry-run-path ../${{ inputs.machine }}-${{ inputs.distro_name }}
               echo "MACHINE=${{ inputs.machine }}" >> $GITHUB_ENV
           fi
+          return 0
 
       - name: "List files"
         shell: bash
