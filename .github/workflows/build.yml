@@ -27,7 +27,6 @@ jobs:
           - name: poky-altcfg
           - name: qcom-distro
           - name: qcom-distro-prop-image
-          - name: qcom-distro_+linux-yocto-lts
         include:
           # Additional builds for specific machines
           - machine: qcom-armv8a
