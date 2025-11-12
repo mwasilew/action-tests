@@ -56,8 +56,8 @@ jobs:
       - name: Save URL
         id: print-output
         run: |
-          KERNEL_DIRNAME="${{ inputs.kernel_dirname }}"
-          BUILDNAME="${{ inputs.machine }}_${{ inputs.distro_name }}${KERNEL_DIRNAME}"
+          KERNEL_DIRNAME="${{ matrix.kernel.dirname }}"
+          BUILDNAME="${{ matrix.machine }}_${{ matrix.distro.name }}${KERNEL_DIRNAME}"
           FILENAME="build-url_${BUILDNAME}"
           echo "${BASE_ARTIFACT_URL}" > "${FILENAME}"
           echo "filename=${FILENAME}" >> $GITHUB_OUTPUT
