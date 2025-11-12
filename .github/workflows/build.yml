@@ -23,11 +23,30 @@ jobs:
           - qcs9100-ride-sx
           - qcom-armv7a
           - sm8750-mtp
-        os:
-          - poky-altcfg
-          - qcom-distro
-          - qcom-distro-prop-image
-          - qcom-distro_+linux-yocto-lts
+        distro:
+          - name: poky-altcfg
+          - name: qcom-distro
+          - name: qcom-distro-prop-image
+          - name: qcom-distro_+linux-yocto-lts
+        include:
+          # Additional builds for specific machines
+          - machine: qcom-armv8a
+            distro:
+                name: qcom-distro
+                yamlfile: ':ci/qcom-distro.yml'
+            kernel:
+                type: additional
+                dirname: "+linux-yocto-dev"
+                yamlfile: ":ci/linux-yocto-dev.yml"
+          - machine: qcom-armv8a
+            distro:
+                name: qcom-distro
+                yamlfile: ':ci/qcom-distro.yml'
+            kernel:
+                type: additional
+                dirname: "+linux-yocto-lts"
+                yamlfile: ":ci/linux-yocto-lts.yml"
+
     runs-on: ubuntu-latest
     steps:
       - name: Print trigger
@@ -35,14 +54,20 @@ jobs:
         run: |
           echo "Triggered by ${{github.event_name}}"
       - name: Save URL
-        id: save-url
+        id: print-output
         run: |
-          echo "${BASE_ARTIFACT_URL}" > build-url_${{ matrix.machine }}_${{ matrix.os }}
+          KERNEL_DIRNAME="${{ inputs.kernel_dirname }}"
+          BUILDNAME="${{ inputs.machine }}_${{ inputs.distro_name }}${KERNEL_DIRNAME}"
+          FILENAME="build-url_${BUILDNAME}"
+          echo "${BASE_ARTIFACT_URL}" > "${FILENAME}"
+          echo "filename=${FILENAME}" >> $GITHUB_OUTPUT
       - name: Upload build URL
         uses: actions/upload-artifact@v4
         with:
-          name: build-url_${{ matrix.machine }}_${{ matrix.os }}
-          path: build-url_${{ matrix.machine }}_${{ matrix.os }}
+          overwrite: true
+          name: ${{ steps.print-output.outputs.filename }}
+          path: ${{ steps.print-output.outputs.filename }}
+
   publish_summary:
     needs: print-trigger
     runs-on: ubuntu-latest
@@ -144,9 +169,9 @@ jobs:
 #
 #      - name: Additional Artifacts
 #        run: |
-#          echo "artifact" > "artifact.${{ matrix.machine }}-${{ matrix.os }}.txt"
+#          echo "artifact" > "artifact.${{ matrix.machine }}-${{ matrix.distro.name }}.txt"
 #      - name: Upload Additional artifacts
 #        uses: actions/upload-artifact@v4
 #        with:
-#          name: artifact.${{ matrix.machine }}-${{ matrix.os }}.txt
-#          path: artifact.${{ matrix.machine }}-${{ matrix.os }}.txt
+#          name: artifact.${{ matrix.machine }}-${{ matrix.distro.name }}.txt
+#          path: artifact.${{ matrix.machine }}-${{ matrix.distro.name }}.txt
