@@ -36,7 +36,7 @@ jobs:
         with:
           machine: ${{ matrix.machine }}
           distro_name: ${{ matrix.distro.name }}
-          build_id: ${{ github.run_id }}
+          build_id: ${{ inputs.build_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
 
   prepare-job-list:
