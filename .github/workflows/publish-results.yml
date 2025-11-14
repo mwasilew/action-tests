@@ -46,8 +46,18 @@ jobs:
           echo $GITHUB_WORKSPACE
           ls -R $GITHUB_WORKSPACE
 
+      - id: app_token
+        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92
+        if: always()
+        env:
+          OPENSSL_CONF: /dev/null  # https://github.com/tibdex/github-app-token/issues/54
+        with:
+          app_id: 2291458
+          private_key: ${{ secrets.PRIVATE_KEY_ENRICOMI_PUBLISH }}
+
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
         with:
           commit: ${{ inputs.commit }}
           event_file: ${{ inputs.event_file}}
@@ -55,3 +65,4 @@ jobs:
           files: "${{ github.workspace }}/artifacts/**/*.xml"
           action_fail: true
           action_fail_on_inconclusive: true
+          github_token: ${{ steps.app_token.outputs.token }}
