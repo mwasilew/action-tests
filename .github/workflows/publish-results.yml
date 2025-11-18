@@ -47,12 +47,10 @@ jobs:
           ls -R $GITHUB_WORKSPACE
 
       - id: app_token
-        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92
+        uses: actions/create-github-app-token@v2
         if: always()
-        env:
-          OPENSSL_CONF: /dev/null  # https://github.com/tibdex/github-app-token/issues/54
         with:
-          app_id: 2291458
+          app_id: 2311695
           private_key: ${{ secrets.PRIVATE_KEY_ENRICOMI_PUBLISH }}
 
       - name: Publish Test Results
