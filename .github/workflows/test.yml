@@ -79,13 +79,14 @@ jobs:
       - name: Submit ${{ matrix.target }}
         timeout-minutes: 20
         uses: foundriesio/lava-action@v9
+        continue-on-error: true
         with:
           lava_token: ${{ secrets.LAVA_TOKEN }}
           lava_url: 'lava.infra.foundries.io'
           job_definition: ${{ matrix.target }}
           wait_for_job: true
-          fail_action_on_failure: false
-          fail_action_on_incomplete: false
+          fail_action_on_failure: true
+          fail_action_on_incomplete: true
           save_result_as_artifact: true
           save_job_details: true
           result_file_name: "${{ env.RESULT_NAME }}"
