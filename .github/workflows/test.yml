@@ -63,6 +63,7 @@ jobs:
   submit-job:
     needs: prepare-job-list
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
       matrix: ${{ fromJson(needs.prepare-job-list.outputs.jobmatrix) }}
     steps:
@@ -79,7 +80,6 @@ jobs:
       - name: Submit ${{ matrix.target }}
         timeout-minutes: 20
         uses: foundriesio/lava-action@v9
-        continue-on-error: true
         with:
           lava_token: ${{ secrets.LAVA_TOKEN }}
           lava_url: 'lava.infra.foundries.io'
