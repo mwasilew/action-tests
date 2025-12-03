@@ -67,7 +67,7 @@ jobs:
     continue-on-error: true
     name: Boot ${{ matrix.target }}
     strategy:
-      matrix: ${{ fromJson(needs.prepare-job-list.outputs.jobmatrix) }}
+      matrix: ${{ fromJson(needs.prepare-boot-job-list.outputs.jobmatrix) }}
     steps:
       - name: 'Download job templates'
         uses: actions/download-artifact@v4
