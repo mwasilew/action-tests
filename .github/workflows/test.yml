@@ -96,7 +96,7 @@ jobs:
   prepare-premerge-jobs:
     needs: submit-boot-jobs
     # run only if boot jobs are successful
-    if: steps.submit-boot-job.outcome == 'success'
+    if: jobs.submit-boot-job.outcome == 'success'
     runs-on: ubuntu-latest
     strategy:
       matrix:
