@@ -107,5 +107,5 @@ runs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.prefix }}-${{ inputs.machine }}-${{ inputs.distro_name }}
-          path: ${{ env.MACHINE}}*-${{ inputs.distro_name }}
+          path: ${{ env.MACHINE}}*-${{ inputs.distro_name }}*
 
