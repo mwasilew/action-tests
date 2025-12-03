@@ -93,6 +93,95 @@ jobs:
           save_job_details: true
           result_file_name: "${{ env.RESULT_NAME }}"
 
+  prepare-premerge-jobs:
+    needs: submit-boot-jobs
+    # run only if boot jobs are successful
+    if: steps.submit-boot-job.outcome == 'success'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        machine:
+          - iq-8275-evk
+          - iq-9075-evk
+          - qcm6490-idp
+          - qcs615-adp-air
+          - rb3gen2-core-kit
+          - qcs8300-ride-sx
+          - qcs9100-ride-sx
+          - rb1-core-kit
+          #- qcom-armv8a
+          #- qcom-armv7a
+        distro:
+          - name: poky-altcfg
+          - name: qcom-distro
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run lava-test-plans
+        uses: ./.github/actions/lava-test-plans
+        with:
+          machine: ${{ matrix.machine }}
+          distro_name: ${{ matrix.distro.name }}
+          build_id: ${{ inputs.build_id }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: pre-merge
+          testplan: pre-merge
+
+  prepare-premerge-job-list:
+    needs: prepare-premerge-jobs
+    runs-on: ubuntu-latest
+    outputs:
+      jobmatrix: ${{ steps.listjobs.outputs.jobmatrix }}
+    steps:
+      - name: 'Download job templates'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: pre-merge-*
+
+      - name: "List jobs"
+        id: listjobs
+        run: |
+          JOBFILES=$(find . -name *.yaml)
+          JOBFILES=$(echo "$JOBFILES" | sed -e "s/^/\"/" | sed -e "s/$/\",/" | tr -d "\n" | sed -e "s/.$//")
+          JOBFILES="[${JOBFILES}]"
+          J=$(jq -cn --argjson jobfiles "$JOBFILES" '{target: $jobfiles}')
+          echo "jobmatrix=$J" >> $GITHUB_OUTPUT
+          echo "Preparing testjob files"
+
+  submit-premerge-job:
+    needs: prepare-premerge-job-list
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    name: Pre-merge ${{ matrix.target }}
+    strategy:
+      matrix: ${{ fromJson(needs.prepare-premerge-job-list.outputs.jobmatrix) }}
+    steps:
+      - name: 'Download job templates'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: pre-merge-*
+
+      - name: 'Prepare output file name'
+        run: |
+          OUTPUT_NAME=$(echo "${{ matrix.target }}" | sed "s|\/|-|g")
+          echo "RESULT_NAME=${OUTPUT_NAME#??}" >> $GITHUB_ENV
+
+      - name: Submit ${{ matrix.target }}
+        timeout-minutes: 20
+        uses: foundriesio/lava-action@v9
+        with:
+          lava_token: ${{ secrets.LAVA_TOKEN }}
+          lava_url: 'lava.infra.foundries.io'
+          job_definition: ${{ matrix.target }}
+          wait_for_job: true
+          fail_action_on_failure: true
+          fail_action_on_incomplete: true
+          save_result_as_artifact: true
+          save_job_details: true
+          result_file_name: "${{ env.RESULT_NAME }}"
+
   publish-test-summary:
     name: "Publish Tests Summary"
     needs: submit-boot-job
