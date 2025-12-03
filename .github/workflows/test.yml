@@ -38,6 +38,7 @@ jobs:
           distro_name: ${{ matrix.distro.name }}
           build_id: ${{ inputs.build_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: boottest
 
   prepare-job-list:
     needs: prepare-jobs
@@ -48,7 +49,7 @@ jobs:
       - name: 'Download job templates'
         uses: actions/download-artifact@v4
         with:
-          pattern: testjobs-*
+          pattern: boottest-*
 
       - name: "List jobs"
         id: listjobs
