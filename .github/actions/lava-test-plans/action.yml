@@ -53,6 +53,7 @@ runs:
           echo "DOCKER_IMAGE_POSTPROCESS=ghcr.io/foundriesio/lava-lmp-sign:main" >> gh-variables.ini
           echo "AUTH_HEADER_NAME=Authentication" >> gh-variables.ini
           echo "AUTH_HEADER_TOKEN=Q_GITHUB_TOKEN" >> gh-variables.ini
+          echo "TEST_DEFINITIONS_REPOSITORY=https://github.com/mwasilew/qcom-linux-testkit/" >> gh-variables.ini
           IMAGE_TYPE="core-image-base"
           if [ "${{ inputs.distro_name }}" = "qcom-distro" ]; then
               IMAGE_TYPE="qcom-multimedia-image"

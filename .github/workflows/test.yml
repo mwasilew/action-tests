@@ -184,7 +184,7 @@ jobs:
 
   publish-test-summary:
     name: "Publish Tests Summary"
-    needs: submit-boot-job
+    needs: submit-premerge-job
     runs-on: ubuntu-latest
     permissions:
       checks: write
