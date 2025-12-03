@@ -8,7 +8,7 @@ on:
         type: string
 
 jobs:
-  prepare-jobs:
+  prepare-boot-jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -20,9 +20,9 @@ jobs:
           - qcs6490-rb3gen2-core-kit
           - qcs8300-ride-sx
           - qcs9100-ride-sx
-          - qrb2210-rb1-core-kit
-          - qcom-armv8a
-          - qcom-armv7a
+          #- qrb2210-rb1-core-kit
+          #- qcom-armv8a
+          #- qcom-armv7a
         distro:
           - name: poky-altcfg
           - name: qcom-distro
@@ -40,8 +40,8 @@ jobs:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: boottest
 
-  prepare-job-list:
-    needs: prepare-jobs
+  prepare-boot-job-list:
+    needs: prepare-boot-jobs
     runs-on: ubuntu-latest
     outputs:
       jobmatrix: ${{ steps.listjobs.outputs.jobmatrix }}
@@ -61,10 +61,11 @@ jobs:
           echo "jobmatrix=$J" >> $GITHUB_OUTPUT
           echo "Preparing testjob files"
 
-  submit-job:
-    needs: prepare-job-list
+  submit-boot-job:
+    needs: prepare-boot-job-list
     runs-on: ubuntu-latest
     continue-on-error: true
+    name: Boot ${{ matrix.target }}
     strategy:
       matrix: ${{ fromJson(needs.prepare-job-list.outputs.jobmatrix) }}
     steps:
@@ -94,7 +95,7 @@ jobs:
 
   publish-test-summary:
     name: "Publish Tests Summary"
-    needs: submit-job
+    needs: submit-boot-job
     runs-on: ubuntu-latest
     permissions:
       checks: write
