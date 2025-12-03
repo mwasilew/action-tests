@@ -94,7 +94,7 @@ jobs:
           result_file_name: "${{ env.RESULT_NAME }}"
 
   prepare-premerge-jobs:
-    needs: submit-boot-jobs
+    needs: submit-boot-job
     # run only if boot jobs are successful
     if: ${{ needs.submit-boot-job.result == 'success' }}
     runs-on: ubuntu-latest
