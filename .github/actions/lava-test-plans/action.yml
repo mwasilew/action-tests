@@ -5,9 +5,14 @@ inputs:
   distro_name:
     required: true
   build_id:
+    description: "ID of the workflow from which build URL will be downloaded"
     required: true
   gh_token:
+    description: "Github token. It's required to download artifacts from the workflow"
     required: true
+  prefix:
+    description: "Prefix for the compressed file that is uploaded as workflow artifact"
+    default: testjobs
 outputs:
   url:
     description: Location of the published binaries
@@ -98,6 +103,6 @@ runs:
       - name: 'Upload test jobs'
         uses: actions/upload-artifact@v4
         with:
-          name: testjobs-${{ inputs.machine }}-${{ inputs.distro_name }}
+          name: ${{ inputs.prefix }}-${{ inputs.machine }}-${{ inputs.distro_name }}
           path: ${{ env.MACHINE}}*-${{ inputs.distro_name }}
 
