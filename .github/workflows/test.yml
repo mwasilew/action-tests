@@ -62,6 +62,7 @@ jobs:
           echo "Preparing testjob files"
 
   submit-boot-job:
+    id: submit_boot_job
     needs: prepare-boot-job-list
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -96,7 +97,7 @@ jobs:
   prepare-premerge-jobs:
     needs: submit-boot-jobs
     # run only if boot jobs are successful
-    if: ${{ jobs.submit-boot-job.result }} == 'success'
+    if: ${{ jobs.submit_boot_job.result == 'success' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
