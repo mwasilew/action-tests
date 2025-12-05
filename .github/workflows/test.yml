@@ -66,8 +66,8 @@ jobs:
                 for filename in filenames:
                     if filename.endswith(('.yaml', '.yml')):
                         full_path = os.path.join(dirpath, filename)
-                        result_file = ""
-                        name = ""
+                        result_file = full_path.replace("/", "-")[2:]
+                        name = full_path.split("-", 1)[1].split("/")[0]
                         target.append({"path": full_path, "result_file": result_file, "name": name})
             set_output("jobmatrix", str({"target": target}))
             print({"target": target})
