@@ -118,6 +118,7 @@ jobs:
 #          result_file_name: "${{ env.RESULT_NAME }}"
           result_file_name: "${{ matrix.target.result_file }}"
       - uses: cloudposse/github-action-matrix-outputs-write@v1
+        if: always()
         id: out
         with:
           matrix-step-name: ${{ github.job }}
