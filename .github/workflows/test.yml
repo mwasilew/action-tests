@@ -91,6 +91,16 @@ jobs:
 #          echo "jobmatrix=$J" >> $GITHUB_OUTPUT
 #          echo "Preparing testjob files"
 
+  debug-output:
+    needs: prepare-boot-job-list
+    runs-on: ubuntu-latest
+    steps:
+      - name: "List jobs"
+        id: listjobs
+        run: |
+          echo "${{ needs.prepare-boot-job-list.outputs.jobmatrix }}"
+
+
   submit-boot-job:
     needs: prepare-boot-job-list
     runs-on: ubuntu-latest
