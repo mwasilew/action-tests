@@ -69,7 +69,7 @@ jobs:
                         result_file = ""
                         name = ""
                         target.append({"path": full_path, "result_file": result_file, "name": name})
-            set_output("jobmatrix", {"target": target})
+            set_output("jobmatrix", str({"target": target}))
 
       - name: Print errors
         if: steps.script.outputs.error == 'true'
