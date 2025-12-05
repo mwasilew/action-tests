@@ -141,7 +141,7 @@ jobs:
           jq --version
           dpkg -l | grep yq
           dpkg -l | grep jq
-          VALUES=$(echo '${{ steps.read.outputs.result }}' | yq '.[] | values | .[]')
+          VALUES=$(echo '${{ steps.read.outputs.result }}' | yq '.[] | .[]')
           BOOT_RESULT="success"
           for v in $VALUES
           do
