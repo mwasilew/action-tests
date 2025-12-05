@@ -136,10 +136,19 @@ jobs:
       - id: print-boot-result
         name: "Print boot result"
         run: |
-          echo "${{ steps.read.outputs.result }}"
-
+          echo "${{ steps.read.outputs.result }}" | jq
+          echo "${{ steps.read.outputs.result }}" | yq
+          VALUES=$(echo "${{ steps.read.outputs.result }}" | yq '.[] | values[]')
+          BOOT_RESULT="success"
+          for v in $VALUES
+          do
+            if [ "$v" != "success" ]; then
+              BOOT_RESULT="failure"
+            fi
+          done
+          echo "boot_result=$BOOT_RESULT" >> "$GITHUB_OUTPUTS"
     outputs:
-      result: "${{ steps.read.outputs.result }}"
+      result: "${{ steps.read.outputs.boot_result }}"
 
   prepare-premerge-jobs:
     needs: boot-job-result
