@@ -70,9 +70,10 @@ jobs:
                         name = ""
                         target.append({"path": full_path, "result_file": result_file, "name": name})
             set_output("jobmatrix", str({"target": target}))
+            print({"target": target})
 
       - name: Print errors
-        if: steps.script.outputs.error == 'true'
+#        if: steps.script.outputs.error == 'true'
         run: |
           printenv "SCRIPT_STDOUT"
           printenv "SCRIPT_STDERR"
