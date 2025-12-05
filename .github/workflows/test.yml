@@ -16,9 +16,9 @@ jobs:
           - iq-8275-evk
           - iq-9075-evk
           - qcm6490-idp
-          - qcs615-adp-air
+          #- qcs615-adp-air
           - rb3gen2-core-kit
-          - qcs8300-ride-sx
+          #- qcs8300-ride-sx
           - qcs9100-ride-sx
           - rb1-core-kit
           #- qcom-armv8a
@@ -142,9 +142,9 @@ jobs:
       result: "${{ steps.read.outputs.result }}"
 
   prepare-premerge-jobs:
-    needs: submit-boot-job
+    needs: boot-job-result
     # run only if boot jobs are successful
-    if: ${{ needs.submit-boot-job.result == 'success' }}
+    if: ${{ needs.boot-job-result.result == 'success' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
