@@ -57,6 +57,7 @@ jobs:
       - uses: jannekem/run-python-script-action@v1
         name: "List jobs"
         with:
+          fail-on-error: false
           script: |
             import os
 
@@ -68,9 +69,16 @@ jobs:
                         result_file = ""
                         name = ""
                         target.append({"path": full_path, "result_file": result_file, "name": name})
-            gh_output_filename = os.environ.get("GITHUB_OUTPUT")
-            with open(gh_output_filename, "a") as gh_output:
-                gh_output.write(f"jobmatrix={target}")
+            set_output("jobmatrix", {"target": target})
+
+      - name: Print errors
+        if: steps.script.outputs.error == 'true'
+        run: |
+          printenv "SCRIPT_STDOUT"
+          printenv "SCRIPT_STDERR"
+        env:
+          SCRIPT_STDOUT: ${{ steps.script.outputs.stdout }}
+          SCRIPT_STDERR: ${{ steps.script.outputs.stderr }}
 
 #      - name: "List jobs"
 #        id: listjobs
