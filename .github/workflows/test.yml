@@ -116,12 +116,12 @@ jobs:
 #          result_file_name: "${{ env.RESULT_NAME }}"
           result_file_name: "${{ matrix.target.result_file }}"
       - uses: cloudposse/github-action-matrix-outputs-write@v1
-          id: out
-          with:
-            matrix-step-name: ${{ github.job }}
-            matrix-key: ${{ matrix.platform }}
-            outputs: |-
-              result: ${{ steps.submit.outcome }}
+        id: out
+        with:
+          matrix-step-name: ${{ github.job }}
+          matrix-key: ${{ matrix.platform }}
+          outputs: |-
+            result: ${{ steps.submit.outcome }}
 
   boot-job-result:
     runs-on: ubuntu-latest
