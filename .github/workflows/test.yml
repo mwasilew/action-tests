@@ -142,7 +142,7 @@ jobs:
           if [ -z "$BOOT_RESULT" ]; then
             BOOT_RESULT="success"
           fi
-          echo "boot_result=$BOOT_RESULT" >> "$GITHUB_OUTPUTS"
+          echo "boot_result=$BOOT_RESULT" >> "$GITHUB_OUTPUT"
     outputs:
       result: "${{ steps.read.outputs.boot_result }}"
 
