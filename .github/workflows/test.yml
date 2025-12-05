@@ -137,6 +137,10 @@ jobs:
         name: "Print boot result"
         run: |
           echo '${{ steps.read.outputs.result }}' | yq
+          yq --version
+          jq --version
+          dpkg -l | grep yq
+          dpkg -l | grep jq
           VALUES=$(echo '${{ steps.read.outputs.result }}' | yq '.[] | values | .[]')
           BOOT_RESULT="success"
           for v in $VALUES
