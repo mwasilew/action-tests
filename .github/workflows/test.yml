@@ -50,22 +50,43 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: boottest-*
+      - uses: actions/setup-python@v4
+        name: "Setup python"
+        with:
+          python-version: '3.x'
+      - uses: jannekem/run-python-script-action@v1
+        name: "List jobs"
+        with:
+          script: |
+            import os
 
-      - name: "List jobs"
-        id: listjobs
-        run: |
-          JOBFILES=$(find . -name *.yaml)
-          JOBFILES=$(echo "$JOBFILES" | sed -e "s/^/\"/" | sed -e "s/$/\",/" | tr -d "\n" | sed -e "s/.$//")
-          JOBFILES="[${JOBFILES}]"
-          J=$(jq -cn --argjson jobfiles "$JOBFILES" '{target: $jobfiles}')
-          echo "jobmatrix=$J" >> $GITHUB_OUTPUT
-          echo "Preparing testjob files"
+            target = []
+            for dirpath, dirnames, filenames in os.walk("."):
+                for filename in filenames:
+                    if filename.endswith(('.yaml', '.yml')):
+                        full_path = os.path.join(dirpath, filename)
+                        result_file = ""
+                        name = ""
+                        target.append({"path": full_path, "result_file": result_file, "name": name})
+            gh_output_filename = os.environ.get("GITHUB_OUTPUT")
+            with open(gh_output_filename, "a") as gh_output:
+                gh_output.write(f"jobmatrix={target}")
+
+#      - name: "List jobs"
+#        id: listjobs
+#        run: |
+#          JOBFILES=$(find . -name *.yaml)
+#          JOBFILES=$(echo "$JOBFILES" | sed -e "s/^/\"/" | sed -e "s/$/\",/" | tr -d "\n" | sed -e "s/.$//")
+#          JOBFILES="[${JOBFILES}]"
+#          J=$(jq -cn --argjson jobfiles "$JOBFILES" '{target: $jobfiles}')
+#          echo "jobmatrix=$J" >> $GITHUB_OUTPUT
+#          echo "Preparing testjob files"
 
   submit-boot-job:
     needs: prepare-boot-job-list
     runs-on: ubuntu-latest
     continue-on-error: true
-    name: Boot ${{ matrix.target }}
+    name: Boot ${{ matrix.target.name }}
     strategy:
       matrix: ${{ fromJson(needs.prepare-boot-job-list.outputs.jobmatrix) }}
     steps:
@@ -74,24 +95,49 @@ jobs:
         with:
           pattern: boottest-*
 
-      - name: 'Prepare output file name'
-        run: |
-          OUTPUT_NAME=$(echo "${{ matrix.target }}" | sed "s|\/|-|g")
-          echo "RESULT_NAME=${OUTPUT_NAME#??}" >> $GITHUB_ENV
+#      - name: 'Prepare output file name'
+#        run: |
+#          OUTPUT_NAME=$(echo "${{ matrix.target }}" | sed "s|\/|-|g")
+#          echo "RESULT_NAME=${OUTPUT_NAME#??}" >> $GITHUB_ENV
 
-      - name: Submit ${{ matrix.target }}
+      - name: Submit ${{ matrix.target.name }}
         timeout-minutes: 20
+        id: submit
         uses: foundriesio/lava-action@v9
         with:
           lava_token: ${{ secrets.LAVA_TOKEN }}
           lava_url: 'lava.infra.foundries.io'
-          job_definition: ${{ matrix.target }}
+          job_definition: ${{ matrix.target.path }}
           wait_for_job: true
           fail_action_on_failure: true
           fail_action_on_incomplete: true
           save_result_as_artifact: true
           save_job_details: true
-          result_file_name: "${{ env.RESULT_NAME }}"
+#          result_file_name: "${{ env.RESULT_NAME }}"
+          result_file_name: "${{ matrix.target.result_file }}"
+      - uses: cloudposse/github-action-matrix-outputs-write@v1
+          id: out
+          with:
+            matrix-step-name: ${{ github.job }}
+            matrix-key: ${{ matrix.platform }}
+            outputs: |-
+              result: ${{ steps.submit.outcome }}
+
+  boot-job-result:
+    runs-on: ubuntu-latest
+    needs: [submit-boot-job]
+    steps:
+      - uses: cloudposse/github-action-matrix-outputs-read@v1
+        id: read
+        with:
+          matrix-step-name: "submit-boot-job"
+      - id: print-boot-result
+        name: "Print boot result"
+        run: |
+          echo "${{ steps.read.outputs.result }}"
+
+    outputs:
+      result: "${{ steps.read.outputs.result }}"
 
   prepare-premerge-jobs:
     needs: submit-boot-job
