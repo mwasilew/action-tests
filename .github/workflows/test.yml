@@ -137,7 +137,7 @@ jobs:
         name: "Print boot result"
         run: |
           echo '${{ steps.read.outputs.result }}' | yq
-          VALUES=$(echo '${{ steps.read.outputs.result }}' | yq '.[] | values[]')
+          VALUES=$(echo '${{ steps.read.outputs.result }}' | yq '.[] | values | .[]')
           BOOT_RESULT="success"
           for v in $VALUES
           do
