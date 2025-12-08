@@ -102,6 +102,8 @@ jobs:
   boot-job-result:
     runs-on: ubuntu-latest
     needs: [submit-boot-job]
+    outputs:
+      boot_result: ${{ steps.print-boot-result.boot_result }}
     steps:
       - uses: cloudposse/github-action-matrix-outputs-read@v1
         id: read
