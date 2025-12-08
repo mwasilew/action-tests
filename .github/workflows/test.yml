@@ -74,11 +74,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: boottest-*
-      - name: "Fail here"
-        if: ${{ github.run_attempt }} == 1
-        run: |
-          echo "Failing job on 1st run"
-          exit 1
       - name: Submit ${{ matrix.target.name }}
         timeout-minutes: 20
         id: submit
