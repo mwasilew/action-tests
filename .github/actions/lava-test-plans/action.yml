@@ -16,10 +16,10 @@ inputs:
   testplan:
     description: "Name of the test plan to use in job generation"
     default: boot
-outputs:
-  url:
-    description: Location of the published binaries
-    value: ${{ steps.upload_artifacts.outputs.url }}
+#outputs:
+#  url:
+#    description: Location of the published binaries
+#    value: ${{ steps.upload_artifacts.outputs.url }}
 runs:
   using: "composite"
   steps:

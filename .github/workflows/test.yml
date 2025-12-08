@@ -50,51 +50,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: boottest-*
-#      - uses: actions/setup-python@v4
-#        name: "Setup python"
-#        with:
-#          python-version: '3.x'
-#      - uses: jannekem/run-python-script-action@v1
-#        name: "List jobs"
-#        id: listjobs
-#        with:
-#          fail-on-error: false
-#          script: |
-#            import os
-#
-#            target = []
-#            for dirpath, dirnames, filenames in os.walk("."):
-#                for filename in filenames:
-#                    if filename.endswith(('.yaml', '.yml')):
-#                        full_path = os.path.join(dirpath, filename)
-#                        result_file = full_path.replace("/", "-")[2:]
-#                        name = full_path.split("-", 1)[1].split("/")[0]
-#                        target.append({"path": full_path, "result_file": result_file, "name": name})
-#            set_output("jobmatrix", str({"target": target}))
-#            print({"target": target})
-
 
       - name: "List jobs"
         id: listjobs
-        run: |
-          JOBFILES=$(find . -name *.yaml)
-          RESULT_JSON=$(jq -n '{target: []}')
-          for J in $JOBFILES
-            do
-                echo $J
-                J_TMP="${J#*-}"
-                NAME="${J_TMP%%/*}"
-                echo $NAME
-                F_TMP="${J#*/}"
-                RESULT_NAME="${F_TMP//\//-}"
-                echo $RESULT_NAME
-                RESULT_JSON=$(echo "$RESULT_JSON" | jq -c --arg path "${J}" --arg result_file "${RESULT_NAME}" --arg name "${NAME}" '.target += [$ARGS.named]')
-                echo "$RESULT_JSON"
-            done
-            echo "$RESULT_JSON"
-
-          echo "jobmatrix=$RESULT_JSON" >> $GITHUB_OUTPUT
-          echo "Preparing testjob files"
+        uses: ./.github/actions/list-jobs
 
   submit-boot-job:
     needs: prepare-boot-job-list
@@ -108,12 +67,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: boottest-*
-
-#      - name: 'Prepare output file name'
-#        run: |
-#          OUTPUT_NAME=$(echo "${{ matrix.target }}" | sed "s|\/|-|g")
-#          echo "RESULT_NAME=${OUTPUT_NAME#??}" >> $GITHUB_ENV
-
+      - name: "Fail here"
+        if: |
+          ${{ matrix.target.name == "iq-9075-evk-poky-altcfg" }}
+          && ${{ github.run_attempt == 1 }}
+        run: |
+          echo "Failing job on 1st run"
+          exit 1
       - name: Submit ${{ matrix.target.name }}
         timeout-minutes: 20
         id: submit
@@ -149,7 +109,7 @@ jobs:
       - id: print-boot-result
         name: "Print boot result"
         run: |
-          # collaps results of matrix of boot test jobs to a single result
+          # collapse results of matrix of boot test jobs to a single result
           echo '${{ steps.read.outputs.result }}' | yq
           BOOT_RESULT=$(echo '${{ steps.read.outputs.result }}' | yq '.[] | .[] | select (. != "success")')
           if [ -z "$BOOT_RESULT" ]; then
@@ -208,13 +168,7 @@ jobs:
 
       - name: "List jobs"
         id: listjobs
-        run: |
-          JOBFILES=$(find . -name *.yaml)
-          JOBFILES=$(echo "$JOBFILES" | sed -e "s/^/\"/" | sed -e "s/$/\",/" | tr -d "\n" | sed -e "s/.$//")
-          JOBFILES="[${JOBFILES}]"
-          J=$(jq -cn --argjson jobfiles "$JOBFILES" '{target: $jobfiles}')
-          echo "jobmatrix=$J" >> $GITHUB_OUTPUT
-          echo "Preparing testjob files"
+        uses: ./.github/actions/list-jobs
 
   submit-premerge-job:
     needs: prepare-premerge-job-list
