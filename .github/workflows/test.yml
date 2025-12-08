@@ -50,39 +50,51 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: boottest-*
-      - uses: actions/setup-python@v4
-        name: "Setup python"
-        with:
-          python-version: '3.x'
-      - uses: jannekem/run-python-script-action@v1
-        name: "List jobs"
-        id: listjobs
-        with:
-          fail-on-error: false
-          script: |
-            import os
-
-            target = []
-            for dirpath, dirnames, filenames in os.walk("."):
-                for filename in filenames:
-                    if filename.endswith(('.yaml', '.yml')):
-                        full_path = os.path.join(dirpath, filename)
-                        result_file = full_path.replace("/", "-")[2:]
-                        name = full_path.split("-", 1)[1].split("/")[0]
-                        target.append({"path": full_path, "result_file": result_file, "name": name})
-            set_output("jobmatrix", str({"target": target}))
-            print({"target": target})
-
-
-#      - name: "List jobs"
+#      - uses: actions/setup-python@v4
+#        name: "Setup python"
+#        with:
+#          python-version: '3.x'
+#      - uses: jannekem/run-python-script-action@v1
+#        name: "List jobs"
 #        id: listjobs
-#        run: |
-#          JOBFILES=$(find . -name *.yaml)
-#          JOBFILES=$(echo "$JOBFILES" | sed -e "s/^/\"/" | sed -e "s/$/\",/" | tr -d "\n" | sed -e "s/.$//")
-#          JOBFILES="[${JOBFILES}]"
-#          J=$(jq -cn --argjson jobfiles "$JOBFILES" '{target: $jobfiles}')
-#          echo "jobmatrix=$J" >> $GITHUB_OUTPUT
-#          echo "Preparing testjob files"
+#        with:
+#          fail-on-error: false
+#          script: |
+#            import os
+#
+#            target = []
+#            for dirpath, dirnames, filenames in os.walk("."):
+#                for filename in filenames:
+#                    if filename.endswith(('.yaml', '.yml')):
+#                        full_path = os.path.join(dirpath, filename)
+#                        result_file = full_path.replace("/", "-")[2:]
+#                        name = full_path.split("-", 1)[1].split("/")[0]
+#                        target.append({"path": full_path, "result_file": result_file, "name": name})
+#            set_output("jobmatrix", str({"target": target}))
+#            print({"target": target})
+
+
+      - name: "List jobs"
+        id: listjobs
+        run: |
+          JOBFILES=$(find . -name *.yaml)
+          RESULT_JSON=$(jq -n '{target: []}')
+          for J in $JOBFILES
+            do
+                echo $J
+                J_TMP="${J#*-}"
+                NAME="${J_TMP%%/*}"
+                echo $NAME
+                F_TMP="${J#*/}"
+                RESULT_NAME="${F_TMP//\//-}"
+                echo $RESULT_NAME
+                RESULT_JSON=$(echo "$RESULT_JSON" | jq --arg path "${J}" --arg result_file "${RESULT_NAME}" --arg name "${NAME}" '.target += [$ARGS.named]')
+                echo "$RESULT_JSON"
+            done
+            echo "$RESULT_JSON"
+
+          echo "jobmatrix=$RESULT_JSON" >> $GITHUB_OUTPUT
+          echo "Preparing testjob files"
 
   submit-boot-job:
     needs: prepare-boot-job-list
