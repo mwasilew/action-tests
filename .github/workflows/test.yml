@@ -147,6 +147,11 @@ jobs:
           - name: poky-altcfg
           - name: qcom-distro
     steps:
+      - id: print-condition
+        name: "Print condition"
+        run: |
+          echo '${{ needs.boot-job-result.boot_result }}'
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
