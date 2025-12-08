@@ -118,7 +118,7 @@ jobs:
         run: |
           # collapse results of matrix of boot test jobs to a single result
           echo '${{ steps.read.outputs.result }}' | yq
-          BOOT_RESULT=$(echo '${{ steps.read.outputs.result }}' | yq '.[] | .[] | select (. != "success")')
+          BOOT_RESULT=$(echo '${{ steps.read.outputs.result }}' | yq '.[] | first (. != "success")')
           if [ -z "$BOOT_RESULT" ]; then
             BOOT_RESULT="success"
           fi
