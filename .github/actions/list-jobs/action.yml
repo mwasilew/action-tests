@@ -8,6 +8,7 @@ runs:
   steps:
     - name: "List jobs"
       id: listjobs
+      shell: bash
       run: |
         JOBFILES=$(find . -name *.yaml)
         RESULT_JSON=$(jq -n '{target: []}')
