@@ -1,4 +1,8 @@
-name: Run lava-test-plans
+name: List LAVA test jobs for subsequent steps
+inputs:
+  prefix:
+    description: Test job name prefix. Will be used for searching .yaml files
+    required: true
 outputs:
   jobmatrix:
     description: Job matrix composed from downloaded LAVA test job files
@@ -10,7 +14,7 @@ runs:
       id: listjobs
       shell: bash
       run: |
-        JOBFILES=$(find . -name *.yaml)
+        JOBFILES=$(find . -name "${{ inputs.prefix }}*.yaml")
         RESULT_JSON=$(jq -n '{target: []}')
         for J in $JOBFILES
           do

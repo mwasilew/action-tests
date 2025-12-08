@@ -57,6 +57,8 @@ jobs:
       - name: "List jobs"
         id: listjobs
         uses: ./.github/actions/list-jobs
+        with:
+          prefix: "boottest"
 
   submit-boot-job:
     needs: prepare-boot-job-list
@@ -175,6 +177,8 @@ jobs:
       - name: "List jobs"
         id: listjobs
         uses: ./.github/actions/list-jobs
+        with:
+          prefix: "pre-merge"
 
   submit-premerge-job:
     needs: prepare-premerge-job-list
