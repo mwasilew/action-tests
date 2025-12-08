@@ -3,6 +3,13 @@ inputs:
   prefix:
     description: Test job name prefix. Will be used for searching .yaml files
     required: true
+  build_id:
+    description: "ID of the workflow from which build URL will be downloaded"
+    required: true
+  gh_token:
+    description: "Github token. It's required to download artifacts from the workflow"
+    required: true
+
 outputs:
   jobmatrix:
     description: Job matrix composed from downloaded LAVA test job files
@@ -10,6 +17,19 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: 'Download build URLs'
+      uses: actions/download-artifact@v6
+      with:
+        github-token: ${{ inputs.gh_token }}
+        run-id: ${{ inputs.build_id }}
+        pattern: ${{ inputs.prefix }}*
+
+    - name: "List files"
+      shell: bash
+      run: |
+        echo $GITHUB_WORKSPACE
+        ls -R $GITHUB_WORKSPACE
+
     - name: "List jobs"
       id: listjobs
       shell: bash
