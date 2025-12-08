@@ -69,8 +69,8 @@ jobs:
           pattern: boottest-*
       - name: "Fail here"
         if: |
-          ${{ matrix.target.name == "iq-9075-evk-poky-altcfg" }}
-          && ${{ github.run_attempt == 1 }}
+          ${{ matrix.target.name }} == "iq-9075-evk-poky-altcfg"
+          && ${{ github.run_attempt }} == 1
         run: |
           echo "Failing job on 1st run"
           exit 1
