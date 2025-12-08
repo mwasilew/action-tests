@@ -149,8 +149,10 @@ jobs:
     steps:
       - id: print-condition
         name: "Print condition"
+        env:
+          RESULT: ${{ needs.boot-job-result.boot_result }}
         run: |
-          echo '${{ needs.boot-job-result.boot_result }}'
+          echo "${RESULT}"
 
       - uses: actions/checkout@v4
         with:
