@@ -89,12 +89,13 @@ jobs:
           save_job_details: true
 #          result_file_name: "${{ env.RESULT_NAME }}"
           result_file_name: "${{ matrix.target.result_file }}"
-      - uses: cloudposse/github-action-matrix-outputs-write@v1
+      - uses: mwasilew/github-action-matrix-outputs-write@v2
         if: always()
         id: out
         with:
           matrix-step-name: ${{ github.job }}
           matrix-key: ${{ matrix.target.name }}
+          artifact-name: ${{ matrix.target.name }}
           outputs: |-
             result: ${{ steps.submit.outcome }}
 
