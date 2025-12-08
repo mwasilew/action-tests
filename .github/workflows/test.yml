@@ -120,7 +120,7 @@ jobs:
           fi
           echo "boot_result=$BOOT_RESULT" >> "$GITHUB_OUTPUT"
     outputs:
-      result: "${{ steps.read.outputs.boot_result }}"
+      result: "${{ steps.print-boot-result.outputs.boot_result }}"
 
   prepare-premerge-jobs:
     needs: boot-job-result
