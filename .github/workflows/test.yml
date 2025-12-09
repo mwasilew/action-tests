@@ -128,7 +128,7 @@ jobs:
     # https://github.com/actions/runner/issues/491
     if: |
       always() &&
-      ${{ needs.boot-job-result.boot_result == 'success' }}
+      ${{ needs.boot-job-result.outputs.boot_result == 'success' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -150,7 +150,7 @@ jobs:
       - id: print-condition
         name: "Print condition"
         env:
-          RESULT: ${{ needs.boot-job-result.boot_result }}
+          RESULT: ${{ needs.boot-job-result.outputs.boot_result }}
         run: |
           echo "${RESULT}"
 
