@@ -124,11 +124,7 @@ jobs:
   prepare-premerge-jobs:
     needs: boot-job-result
     # run only if boot jobs are successful
-    # The condition is formatted strangely because of a bug:
-    # https://github.com/actions/runner/issues/491
-    if: |
-      always() &&
-      ${{ needs.boot-job-result.outputs.boot_result == 'success' }}
+    if: ${{ needs.boot-job-result.outputs.boot_result == 'success' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
