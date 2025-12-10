@@ -161,7 +161,7 @@ jobs:
           distro_name: ${{ matrix.distro.name }}
           build_id: ${{ inputs.build_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
-          prefix: pre-merge
+          prefix: premerge
           testplan: pre-merge
 
   prepare-premerge-job-list:
@@ -176,7 +176,7 @@ jobs:
       - name: 'Download job templates'
         uses: actions/download-artifact@v4
         with:
-          pattern: pre-merge-*
+          pattern: premerge-*
 
       - name: "List jobs"
         id: listjobs
@@ -197,7 +197,7 @@ jobs:
       - name: 'Download job templates'
         uses: actions/download-artifact@v4
         with:
-          pattern: pre-merge-*
+          pattern: premerge-*
 
       - name: 'Prepare output file name'
         run: |
