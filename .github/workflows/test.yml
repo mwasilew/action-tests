@@ -50,7 +50,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: 'Download job templates'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           pattern: boottest-*
 
@@ -71,7 +71,7 @@ jobs:
       matrix: ${{ fromJson(needs.prepare-boot-job-list.outputs.jobmatrix) }}
     steps:
       - name: 'Download job templates'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           pattern: boottest-*
       - name: Submit ${{ matrix.target.name }}
@@ -174,7 +174,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: 'Download job templates'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           pattern: premerge-*
 
@@ -195,7 +195,7 @@ jobs:
       matrix: ${{ fromJson(needs.prepare-premerge-job-list.outputs.jobmatrix) }}
     steps:
       - name: 'Download job templates'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           pattern: premerge-*
 
@@ -227,7 +227,7 @@ jobs:
 
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           path: artifacts
 
