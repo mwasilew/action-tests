@@ -39,8 +39,7 @@ runs:
         for J in $JOBFILES
           do
               echo $J
-              J_TMP="${J#*-}"
-              NAME="${J_TMP%%/*}"
+              NAME=$(echo "$J" | cut --delimiter "/" --field 3)
               echo $NAME
               F_TMP="${J#*/}"
               RESULT_NAME="${F_TMP//\//-}"

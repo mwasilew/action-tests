@@ -21,7 +21,7 @@ jobs:
           #- qcs8300-ride-sx
           - qcs9100-ride-sx
           - rb1-core-kit
-          #- qcom-armv8a
+          - qcom-armv8a
           #- qcom-armv7a
         distro:
           - name: poky-altcfg
