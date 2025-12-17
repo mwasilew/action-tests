@@ -64,3 +64,5 @@ jobs:
           action_fail: true
           action_fail_on_inconclusive: true
           github_token: ${{ steps.app_token.outputs.token }}
+          report_individual_runs: true
+          report_suite_logs: any
