@@ -54,15 +54,28 @@ jobs:
           private-key: ${{ secrets.PRIVATE_KEY_ENRICOMI_PUBLISH }}
 
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: ctrf-io/github-test-reporter@v1
         if: always()
         with:
-          commit: ${{ inputs.commit }}
-          event_file: ${{ inputs.event_file}}
-          event_name: ${{ inputs.event_name }}
-          files: "${{ github.workspace }}/artifacts/**/*.xml"
-          action_fail: true
-          action_fail_on_inconclusive: true
-          github_token: ${{ steps.app_token.outputs.token }}
-          report_individual_runs: true
-          report_suite_logs: any
+            report-path: '${{ github.workspace }}/artifacts/**/*.xml'
+            suite-folded-report: true
+            status-check: true
+            status-check-name: 'GitHub Test Reporter Results'
+            exit-on-no-files: true
+            exit-on-fail: true
+            exit-on-empty: true
+            integrations-config: |
+              {
+                "junit-to-ctrf": {
+                  "enabled": true,
+                  "action": "convert",
+                  "options": {
+                    "output": "./ctrf-reports/ctrf-report.json",
+                    "toolname": "junit-to-ctrf",
+                    "useSuiteName": false,
+                    "env": {
+                      "appName": "my-app"
+                    }
+                  }
+                }
+              }
