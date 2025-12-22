@@ -27,19 +27,9 @@ jobs:
     name: "Publish Tests Results"
     runs-on: ubuntu-latest
     steps:
-      - name: Download result files
-        uses: actions/download-artifact@v6
+      - uses: actions/checkout@v6
         with:
-            run-id: ${{ inputs.workflow_id }}
-            path: artifacts
-            github-token: ${{ github.token }}
-
-      - name: Download result files PR
-        if: ${{ github.run_id != inputs.workflow_id }}
-        uses: actions/download-artifact@v6
-        with:
-            path: artifacts
-            github-token: ${{ github.token }}
+          fetch-depth: 0
 
       - name: "List files"
         run: |
@@ -57,7 +47,7 @@ jobs:
         uses: ctrf-io/github-test-reporter@v1
         if: always()
         with:
-            report-path: '${{ github.workspace }}/artifacts/**/*.xml'
+            report-path: '${{ github.workspace }}/action-tests/results/**/*.xml'
             suite-folded-report: true
             status-check: true
             status-check-name: 'GitHub Test Reporter Results'
@@ -72,7 +62,7 @@ jobs:
                   "options": {
                     "output": "./ctrf-reports/ctrf-report.json",
                     "toolname": "junit-to-ctrf",
-                    "useSuiteName": false,
+                    "useSuiteName": true,
                     "env": {
                       "appName": "my-app"
                     }

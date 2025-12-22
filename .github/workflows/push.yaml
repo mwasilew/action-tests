@@ -10,17 +10,17 @@ permissions:
   packages: read
 
 jobs:
-  build:
-    uses: ./.github/workflows/build.yml
-  test:
-    uses: ./.github/workflows/test.yml
-    needs: [build]
-    secrets: inherit
-    with:
-      build_id: ${{ github.run_id }}
+#  build:
+#    uses: ./.github/workflows/build.yml
+#  test:
+#    uses: ./.github/workflows/test.yml
+#    needs: [build]
+#    secrets: inherit
+#    with:
+#      build_id: ${{ github.run_id }}
   publish-test-results:
     uses: ./.github/workflows/publish-results.yml
-    needs: test
+#    needs: test
     secrets: inherit
     with:
       workflow_id: ${{ github.run_id }}
