@@ -47,7 +47,7 @@ jobs:
         uses: ctrf-io/github-test-reporter@v1
         if: always()
         with:
-            report-path: '${{ github.workspace }}/action-tests/results/**/*.xml'
+            report-path: '${{ github.workspace }}/results/**/*.xml'
             suite-folded-report: true
             status-check: true
             status-check-name: 'GitHub Test Reporter Results'
