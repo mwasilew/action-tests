@@ -47,7 +47,8 @@ jobs:
         uses: ctrf-io/github-test-reporter@v1
         if: always()
         with:
-            report-path: '${{ github.workspace }}/results/**/*.xml'
+            #report-path: '${{ github.workspace }}/results/**/*.xml'
+            report-path: '${{ github.workspace }}/results/ctrf/ctrf-report.json'
             suite-folded-report: true
             status-check: true
             status-check-name: 'GitHub Test Reporter Results'
@@ -55,21 +56,21 @@ jobs:
             exit-on-fail: true
             exit-on-empty: true
             upload-artifact: true
-            integrations-config: |
-              {
-                "junit-to-ctrf": {
-                  "enabled": true,
-                  "action": "convert",
-                  "options": {
-                    "output": "./ctrf-reports/ctrf-report.json",
-                    "toolname": "junit-to-ctrf",
-                    "useSuiteName": true,
-                    "env": {
-                      "appName": "my-app"
-                    }
-                  }
-                }
-              }
+#            integrations-config: |
+#              {
+#                "junit-to-ctrf": {
+#                  "enabled": true,
+#                  "action": "convert",
+#                  "options": {
+#                    "output": "./ctrf-reports/ctrf-report.json",
+#                    "toolname": "junit-to-ctrf",
+#                    "useSuiteName": true,
+#                    "env": {
+#                      "appName": "my-app"
+#                    }
+#                  }
+#                }
+#              }
       - name: "List files"
         run: |
           echo $GITHUB_WORKSPACE
