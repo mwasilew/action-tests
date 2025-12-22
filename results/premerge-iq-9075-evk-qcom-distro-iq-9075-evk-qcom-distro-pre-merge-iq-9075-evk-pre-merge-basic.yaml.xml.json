@@ -1,0 +1,879 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "0.0.0",
+  "generatedBy": "junit-to-ctrf",
+  "timestamp": "2025-12-22T16:17:41.825Z",
+  "results": {
+    "tool": {
+      "name": "junit-to-ctrf"
+    },
+    "summary": {
+      "tests": 107,
+      "passed": 105,
+      "failed": 0,
+      "skipped": 2,
+      "pending": 0,
+      "other": 0,
+      "start": 0,
+      "stop": 0
+    },
+    "tests": [
+      {
+        "name": "lava: validate",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 450,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 400,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 410,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 410,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 400,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 380,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 390,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 380,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 400,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 380,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: http-download",
+        "status": "passed",
+        "duration": 8410,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 440,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 400,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 410,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 420,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 410,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 430,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 410,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 410,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 410,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: git-repo-action",
+        "status": "passed",
+        "duration": 430,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-install-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: test-runscript-overlay",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: pdu-reboot",
+        "status": "passed",
+        "duration": 2480,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: kernel-messages",
+        "status": "passed",
+        "duration": 18450,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: login-action",
+        "status": "passed",
+        "duration": 22430,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: 0_hotplug",
+        "status": "passed",
+        "duration": 18910,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: 1_CPUFreq_Validation",
+        "status": "passed",
+        "duration": 9820,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: 2_Interrupts",
+        "status": "passed",
+        "duration": 121130,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: 3_cdsp_remoteproc",
+        "status": "passed",
+        "duration": 1620,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: 4_adsp_remoteproc",
+        "status": "passed",
+        "duration": 31440,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: 5_WiFi_Firmware_Driver",
+        "status": "passed",
+        "duration": 1130,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: 6_WiFi_OnOff",
+        "status": "passed",
+        "duration": 1090,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: 7_OpenCV",
+        "status": "passed",
+        "duration": 5730,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: 8_irq",
+        "status": "passed",
+        "duration": 21140,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: 9_BT_ON_OFF",
+        "status": "passed",
+        "duration": 6220,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: power-off",
+        "status": "passed",
+        "duration": 240,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: job",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "0_hotplug: hotplug",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "0_hotplug"
+        ]
+      },
+      {
+        "name": "1_CPUFreq_Validation: CPUFreq_Validation",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "1_CPUFreq_Validation"
+        ]
+      },
+      {
+        "name": "2_Interrupts: Interrupts",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "2_Interrupts"
+        ]
+      },
+      {
+        "name": "3_cdsp_remoteproc: cdsp_remoteproc",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "3_cdsp_remoteproc"
+        ]
+      },
+      {
+        "name": "4_adsp_remoteproc: adsp_remoteproc",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "4_adsp_remoteproc"
+        ]
+      },
+      {
+        "name": "5_WiFi_Firmware_Driver: WiFi_Firmware_Driver",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "5_WiFi_Firmware_Driver"
+        ]
+      },
+      {
+        "name": "6_WiFi_OnOff: WiFi_OnOff",
+        "status": "skipped",
+        "duration": 0,
+        "suite": [
+          "6_WiFi_OnOff"
+        ]
+      },
+      {
+        "name": "7_OpenCV: OpenCV",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "7_OpenCV"
+        ]
+      },
+      {
+        "name": "8_irq: irq",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "8_irq"
+        ]
+      },
+      {
+        "name": "9_BT_ON_OFF: BT_ON_OFF",
+        "status": "skipped",
+        "duration": 0,
+        "suite": [
+          "9_BT_ON_OFF"
+        ]
+      }
+    ]
+  }
+}

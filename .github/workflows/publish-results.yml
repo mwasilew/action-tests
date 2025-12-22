@@ -48,7 +48,7 @@ jobs:
         if: always()
         with:
             #report-path: '${{ github.workspace }}/results/**/*.xml'
-            report-path: '${{ github.workspace }}/results/ctrf/ctrf-report.json'
+            report-path: '${{ github.workspace }}/results/*.json'
             suite-folded-report: true
             status-check: true
             status-check-name: 'GitHub Test Reporter Results'

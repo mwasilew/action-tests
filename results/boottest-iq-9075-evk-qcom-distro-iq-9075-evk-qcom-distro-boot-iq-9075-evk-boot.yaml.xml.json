@@ -1,0 +1,79 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "0.0.0",
+  "generatedBy": "junit-to-ctrf",
+  "timestamp": "2025-12-22T16:17:33.332Z",
+  "results": {
+    "tool": {
+      "name": "junit-to-ctrf"
+    },
+    "summary": {
+      "tests": 7,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "pending": 0,
+      "other": 0,
+      "start": 0,
+      "stop": 0
+    },
+    "tests": [
+      {
+        "name": "lava: validate",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: http-download",
+        "status": "passed",
+        "duration": 48120,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: pdu-reboot",
+        "status": "passed",
+        "duration": 2270,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: kernel-messages",
+        "status": "passed",
+        "duration": 19040,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: login-action",
+        "status": "passed",
+        "duration": 23020,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: power-off",
+        "status": "passed",
+        "duration": 130,
+        "suite": [
+          "lava"
+        ]
+      },
+      {
+        "name": "lava: job",
+        "status": "passed",
+        "duration": 0,
+        "suite": [
+          "lava"
+        ]
+      }
+    ]
+  }
+}
