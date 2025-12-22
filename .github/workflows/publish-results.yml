@@ -70,6 +70,11 @@ jobs:
                   }
                 }
               }
+      - name: "List files"
+        run: |
+          echo $GITHUB_WORKSPACE
+          ls -R $GITHUB_WORKSPACE
+
       - name: "Debug results"
         run: |
           cat ctrf/ctrf-report.json
