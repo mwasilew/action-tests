@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites disabled="0" errors="0" failures="0" tests="107" time="340.72999999999996">
+	<testsuite disabled="0" errors="0" failures="0" name="lava" skipped="0" tests="97" time="340.72999999999996" timestamp="2025-12-22T12:49:19.669969+00:00">
+		<testcase name="validate" timestamp="2025-12-22T12:43:12.190296+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="1.080000" timestamp="2025-12-22T12:43:12.190355+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:43:12.190391+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:43:12.190424+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:43:12.190457+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="0.970000" timestamp="2025-12-22T12:43:12.190489+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:43:12.190521+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:43:12.190552+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:43:12.190582+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="0.950000" timestamp="2025-12-22T12:43:12.190613+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:43:12.190643+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:43:12.190674+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:43:12.190704+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="1.400000" timestamp="2025-12-22T12:43:16.899694+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:43:16.899746+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:43:16.899781+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:43:16.899814+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="0.960000" timestamp="2025-12-22T12:43:16.899845+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:43:16.899877+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:43:16.899909+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:43:16.899940+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="1.060000" timestamp="2025-12-22T12:43:16.899971+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:43:16.900002+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:43:16.900032+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:43:16.900063+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="0.950000" timestamp="2025-12-22T12:43:16.900093+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:43:16.900124+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:43:16.900201+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:43:16.900328+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="0.980000" timestamp="2025-12-22T12:43:16.900361+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:43:16.900391+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:43:16.900431+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:43:16.900473+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="1.260000" timestamp="2025-12-22T12:43:26.685118+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:43:26.685179+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:43:26.685222+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:43:26.685265+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="1.080000" timestamp="2025-12-22T12:43:26.685305+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:43:26.685344+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:43:26.685387+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:43:26.685429+00:00" classname="lava"/>
+		<testcase name="http-download" time="55.090000" timestamp="2025-12-22T12:44:19.999168+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="1.070000" timestamp="2025-12-22T12:44:19.999220+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:44:19.999256+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:44:19.999290+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:44:19.999323+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="0.940000" timestamp="2025-12-22T12:44:19.999356+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:44:19.999388+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:44:19.999420+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:44:19.999451+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="0.970000" timestamp="2025-12-22T12:44:19.999483+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:44:19.999514+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:44:19.999546+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:44:19.999577+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="0.990000" timestamp="2025-12-22T12:44:19.999650+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:44:19.999683+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:44:19.999714+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:44:19.999747+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="1.080000" timestamp="2025-12-22T12:44:24.869527+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:44:24.869579+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:44:24.869615+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:44:24.869649+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="1.090000" timestamp="2025-12-22T12:44:24.869682+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:44:24.869714+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:44:24.869746+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:44:24.869778+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="1.030000" timestamp="2025-12-22T12:44:24.869810+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:44:24.869841+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:44:24.869873+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:44:24.869905+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="0.980000" timestamp="2025-12-22T12:44:24.869937+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:44:24.869969+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:44:24.870000+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:44:24.870031+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="1.040000" timestamp="2025-12-22T12:44:24.870063+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:44:24.870095+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:44:24.870126+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:44:24.870158+00:00" classname="lava"/>
+		<testcase name="git-repo-action" time="1.070000" timestamp="2025-12-22T12:44:29.528730+00:00" classname="lava"/>
+		<testcase name="test-overlay" timestamp="2025-12-22T12:44:29.528782+00:00" classname="lava"/>
+		<testcase name="test-install-overlay" timestamp="2025-12-22T12:44:29.528817+00:00" classname="lava"/>
+		<testcase name="test-runscript-overlay" timestamp="2025-12-22T12:44:29.528849+00:00" classname="lava"/>
+		<testcase name="pdu-reboot" time="2.150000" timestamp="2025-12-22T12:45:06.517468+00:00" classname="lava"/>
+		<testcase name="kernel-messages" time="20.900000" timestamp="2025-12-22T12:45:33.270446+00:00" classname="lava"/>
+		<testcase name="login-action" time="25.090000" timestamp="2025-12-22T12:45:40.262798+00:00" classname="lava"/>
+		<testcase name="0_hotplug" time="19.030000" timestamp="2025-12-22T12:46:01.497387+00:00" classname="lava"/>
+		<testcase name="1_CPUFreq_Validation" time="6.910000" timestamp="2025-12-22T12:46:05.943140+00:00" classname="lava"/>
+		<testcase name="2_Interrupts" time="121.200000" timestamp="2025-12-22T12:48:14.943667+00:00" classname="lava"/>
+		<testcase name="3_cdsp_remoteproc" time="1.840000" timestamp="2025-12-22T12:48:14.943734+00:00" classname="lava"/>
+		<testcase name="4_adsp_remoteproc" time="31.550000" timestamp="2025-12-22T12:48:44.831405+00:00" classname="lava"/>
+		<testcase name="5_WiFi_Firmware_Driver" time="1.170000" timestamp="2025-12-22T12:48:44.831470+00:00" classname="lava"/>
+		<testcase name="6_WiFi_OnOff" time="3.230000" timestamp="2025-12-22T12:48:50.351900+00:00" classname="lava"/>
+		<testcase name="7_OpenCV" time="7.940000" timestamp="2025-12-22T12:48:59.072956+00:00" classname="lava"/>
+		<testcase name="8_irq" time="21.220000" timestamp="2025-12-22T12:49:18.412991+00:00" classname="lava"/>
+		<testcase name="9_BT_ON_OFF" time="2.380000" timestamp="2025-12-22T12:49:18.413056+00:00" classname="lava"/>
+		<testcase name="power-off" time="0.080000" timestamp="2025-12-22T12:49:18.413087+00:00" classname="lava"/>
+		<testcase name="job" timestamp="2025-12-22T12:49:18.709504+00:00" classname="lava"/>
+	</testsuite>
+	<testsuite disabled="0" errors="0" failures="0" name="0_hotplug" skipped="0" tests="1" time="0" timestamp="2025-12-22T12:49:19.669969+00:00">
+		<testcase name="hotplug" timestamp="2025-12-22T12:46:01.497329+00:00" classname="0_hotplug"/>
+	</testsuite>
+	<testsuite disabled="0" errors="0" failures="0" name="1_CPUFreq_Validation" skipped="0" tests="1" time="0" timestamp="2025-12-22T12:49:19.669969+00:00">
+		<testcase name="CPUFreq_Validation" timestamp="2025-12-22T12:46:05.943084+00:00" classname="1_CPUFreq_Validation"/>
+	</testsuite>
+	<testsuite disabled="0" errors="0" failures="0" name="2_Interrupts" skipped="0" tests="1" time="0" timestamp="2025-12-22T12:49:19.669969+00:00">
+		<testcase name="Interrupts" timestamp="2025-12-22T12:48:14.943610+00:00" classname="2_Interrupts"/>
+	</testsuite>
+	<testsuite disabled="0" errors="0" failures="0" name="3_cdsp_remoteproc" skipped="0" tests="1" time="0" timestamp="2025-12-22T12:49:19.669969+00:00">
+		<testcase name="cdsp_remoteproc" timestamp="2025-12-22T12:48:14.943701+00:00" classname="3_cdsp_remoteproc"/>
+	</testsuite>
+	<testsuite disabled="0" errors="0" failures="0" name="4_adsp_remoteproc" skipped="0" tests="1" time="0" timestamp="2025-12-22T12:49:19.669969+00:00">
+		<testcase name="adsp_remoteproc" timestamp="2025-12-22T12:48:44.831350+00:00" classname="4_adsp_remoteproc"/>
+	</testsuite>
+	<testsuite disabled="0" errors="0" failures="0" name="5_WiFi_Firmware_Driver" skipped="0" tests="1" time="0" timestamp="2025-12-22T12:49:19.669969+00:00">
+		<testcase name="WiFi_Firmware_Driver" timestamp="2025-12-22T12:48:44.831438+00:00" classname="5_WiFi_Firmware_Driver"/>
+	</testsuite>
+	<testsuite disabled="0" errors="0" failures="0" name="6_WiFi_OnOff" skipped="0" tests="1" time="0" timestamp="2025-12-22T12:49:19.669969+00:00">
+		<testcase name="WiFi_OnOff" timestamp="2025-12-22T12:48:50.351845+00:00" classname="6_WiFi_OnOff"/>
+	</testsuite>
+	<testsuite disabled="0" errors="0" failures="0" name="7_OpenCV" skipped="0" tests="1" time="0" timestamp="2025-12-22T12:49:19.669969+00:00">
+		<testcase name="OpenCV" timestamp="2025-12-22T12:48:59.072896+00:00" classname="7_OpenCV"/>
+	</testsuite>
+	<testsuite disabled="0" errors="0" failures="0" name="8_irq" skipped="0" tests="1" time="0" timestamp="2025-12-22T12:49:19.669969+00:00">
+		<testcase name="irq" timestamp="2025-12-22T12:49:18.412936+00:00" classname="8_irq"/>
+	</testsuite>
+	<testsuite disabled="0" errors="0" failures="0" name="9_BT_ON_OFF" skipped="0" tests="1" time="0" timestamp="2025-12-22T12:49:19.669969+00:00">
+		<testcase name="BT_ON_OFF" timestamp="2025-12-22T12:49:18.413024+00:00" classname="9_BT_ON_OFF"/>
+	</testsuite>
+</testsuites>

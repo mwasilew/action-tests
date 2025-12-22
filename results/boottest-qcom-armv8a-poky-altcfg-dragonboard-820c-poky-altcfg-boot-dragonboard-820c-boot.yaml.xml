@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites disabled="0" errors="0" failures="0" tests="13" time="175.86">
+	<testsuite disabled="0" errors="0" failures="0" name="lava" skipped="0" tests="13" time="175.86" timestamp="2025-12-22T12:39:05.502614+00:00">
+		<testcase name="validate" timestamp="2025-12-22T12:36:11.460095+00:00" classname="lava"/>
+		<testcase name="http-download" time="0.100000" timestamp="2025-12-22T12:36:11.460202+00:00" classname="lava"/>
+		<testcase name="http-download" time="7.200000" timestamp="2025-12-22T12:36:18.495553+00:00" classname="lava"/>
+		<testcase name="pre-power-command" time="0.010000" timestamp="2025-12-22T12:36:31.158524+00:00" classname="lava"/>
+		<testcase name="pdu-reboot" time="30.100000" timestamp="2025-12-22T12:37:02.737193+00:00" classname="lava"/>
+		<testcase name="fastboot-flash-action" time="71.050000" timestamp="2025-12-22T12:38:14.183877+00:00" classname="lava"/>
+		<testcase name="pdu-reboot" time="30.070000" timestamp="2025-12-22T12:38:43.826261+00:00" classname="lava"/>
+		<testcase name="boot-fastboot" time="0.780000" timestamp="2025-12-22T12:38:43.826310+00:00" classname="lava"/>
+		<testcase name="pre-os-command" time="0.020000" timestamp="2025-12-22T12:38:43.826343+00:00" classname="lava"/>
+		<testcase name="kernel-messages" time="15.280000" timestamp="2025-12-22T12:39:03.626250+00:00" classname="lava"/>
+		<testcase name="login-action" time="21.200000" timestamp="2025-12-22T12:39:05.315022+00:00" classname="lava"/>
+		<testcase name="power-off" time="0.050000" timestamp="2025-12-22T12:39:05.315072+00:00" classname="lava"/>
+		<testcase name="job" timestamp="2025-12-22T12:39:05.315105+00:00" classname="lava"/>
+	</testsuite>
+</testsuites>

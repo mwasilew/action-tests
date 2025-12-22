@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites disabled="0" errors="0" failures="0" tests="7" time="92.58">
+	<testsuite disabled="0" errors="0" failures="0" name="lava" skipped="0" tests="7" time="92.58" timestamp="2025-12-22T12:02:39.806048+00:00">
+		<testcase name="validate" timestamp="2025-12-22T12:00:36.810274+00:00" classname="lava"/>
+		<testcase name="http-download" time="48.120000" timestamp="2025-12-22T12:01:23.884853+00:00" classname="lava"/>
+		<testcase name="pdu-reboot" time="2.270000" timestamp="2025-12-22T12:02:13.986865+00:00" classname="lava"/>
+		<testcase name="kernel-messages" time="19.040000" timestamp="2025-12-22T12:02:37.451100+00:00" classname="lava"/>
+		<testcase name="login-action" time="23.020000" timestamp="2025-12-22T12:02:38.872765+00:00" classname="lava"/>
+		<testcase name="power-off" time="0.130000" timestamp="2025-12-22T12:02:38.872839+00:00" classname="lava"/>
+		<testcase name="job" timestamp="2025-12-22T12:02:38.872895+00:00" classname="lava"/>
+	</testsuite>
+</testsuites>
