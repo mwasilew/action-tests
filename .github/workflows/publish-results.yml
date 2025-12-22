@@ -54,6 +54,7 @@ jobs:
             exit-on-no-files: true
             exit-on-fail: true
             exit-on-empty: true
+            write-ctrf-to-file: true
             integrations-config: |
               {
                 "junit-to-ctrf": {
@@ -69,3 +70,7 @@ jobs:
                   }
                 }
               }
+      - name: "Debug results"
+        run: |
+          cat ctrf/ctrf-report.json
+
