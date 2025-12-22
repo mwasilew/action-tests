@@ -56,7 +56,8 @@ jobs:
             exit-on-fail: true
             exit-on-empty: true
             upload-artifact: true
-            group-by: suite
+            group-by: filePath
+            always-group-by: true
 #            integrations-config: |
 #              {
 #                "junit-to-ctrf": {
