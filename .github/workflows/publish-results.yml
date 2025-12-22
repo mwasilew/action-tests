@@ -58,6 +58,7 @@ jobs:
             upload-artifact: true
             group-by: filePath
             always-group-by: true
+            file-report: true
 #            integrations-config: |
 #              {
 #                "junit-to-ctrf": {
