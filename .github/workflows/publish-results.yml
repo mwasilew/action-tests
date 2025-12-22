@@ -54,7 +54,7 @@ jobs:
             exit-on-no-files: true
             exit-on-fail: true
             exit-on-empty: true
-            write-ctrf-to-file: true
+            upload-artifact: true
             integrations-config: |
               {
                 "junit-to-ctrf": {
