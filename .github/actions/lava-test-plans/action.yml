@@ -28,6 +28,9 @@ runs:
           repository: qualcomm-linux/lava-test-plans
           path: lava-test-plans
           ref: master
+      - uses: actions/setup-python@v6
+        with:
+          python-version: 3.11
 
       - name: 'Download build URLs'
         uses: actions/download-artifact@v6
@@ -40,7 +43,7 @@ runs:
         shell: bash
         run: |
           set -euo pipefail
-          cd lava-test-plans && pip install .
+          cd lava-test-plans && python -m pip install -U pip && python -m pip install .
           lava-test-plans --version
           #echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> variables.ini
           #echo "PROJECT=projects/${GITHUB_REPOSITORY#*/}/" >> variables.ini
