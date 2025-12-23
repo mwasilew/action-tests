@@ -262,29 +262,29 @@ jobs:
               fi
               echo "{\"key\": \"$JOB_DEVICE_TYPE\", \"value\": $TEST_RESULTS}" | jq
           done | jq -s -c 'from_entries')
+          DEVICES=$(echo "$INPUT" | jq -r 'keys[]' | sort)
 
-          HEADERS=$(echo "$INPUT" | jq -r '.[] | keys[]?' | sort -u)
+          RESULTS=$(echo "$INPUT" | jq -r '.[] | keys[]?' | sort -u)
 
           # Print header row
-          printf "| %s |" "Device" >> $GITHUB_STEP_SUMMARY
-          for H in $HEADERS; do
-            printf " %s |" "$H" >> $GITHUB_STEP_SUMMARY
+          printf "| %s |" "Test" >> $GITHUB_STEP_SUMMARY
+          for D in $DEVICES; do
+            printf " %s |" "$D" >> $GITHUB_STEP_SUMMARY
           done
           echo >> $GITHUB_STEP_SUMMARY
 
           ## Print separator
           printf "| ---- |" >> $GITHUB_STEP_SUMMARY
-          for _ in $HEADERS; do 
+          for _ in $DEVICES; do
             printf " ---- |" >> $GITHUB_STEP_SUMMARY
           done
           echo >> $GITHUB_STEP_SUMMARY
 
-          ## Print each device row
-          echo "$INPUT" | jq -r 'keys[]' | while read -r DEVICE; do
-            printf "| %s |" "$DEVICE" >> $GITHUB_STEP_SUMMARY
+          for R in $RESULTS; do
+            printf "| %s |" "$R" >> $GITHUB_STEP_SUMMARY
 
-            for H in $HEADERS; do
-              VALUE=$(echo "$INPUT" | jq -r --arg d "$DEVICE" --arg k "$H" '.[$d][$k] // ""')
+            for D in $DEVICES; do
+              VALUE=$(echo "$INPUT" | jq -r --arg d "$D" --arg r "$R" '.[$d][$r] // ""')
               CHECKMARK=":white_check_mark:"
               if [ "${VALUE}" = "fail" ]; then CHECKMARK=":x:"; fi
               if [ "${VALUE}" = "skip" ]; then CHECKMARK=":warning:"; fi
