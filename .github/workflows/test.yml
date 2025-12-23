@@ -256,7 +256,16 @@ jobs:
                       if [ "$SUITE_NAME" != "lava" ]; then
                           TEST_NAME=$(echo "$SUITE_TESTS" | jq -r -c ".results[] | .name")
                           TEST_RESULT=$(echo "$SUITE_TESTS" | jq -r -c ".results[] | .result")
-                          echo "$TEST_NAME=$TEST_RESULT" | jq -R './"=" | {key:first,value:last}'
+                          TEST_URL="${JOB_URL}"
+                          TEST_RESULT_OBJ=$(jq --arg url "$TEST_URL" --arg result "$TEST_RESULT" -n -c '$ARGS.named')
+                          if [ -n "$TEST_NAME" ]; then
+                              jq -n -c --arg key "$TEST_NAME" --argjson value "$TEST_RESULT_OBJ" '$ARGS.named'
+                          fi
+                      else
+                          TEST_NAME="boot"
+                          TEST_URL="${JOB_URL}"
+                          TEST_RESULT_OBJ=$(jq --arg url "$TEST_URL" --arg result "pass" -n -c '$ARGS.named')
+                          jq -n -c --arg key "$TEST_NAME" --argjson value "$TEST_RESULT_OBJ" '$ARGS.named'
                       fi
                   done | jq -s -c --sort-keys 'from_entries')
               fi
@@ -284,12 +293,13 @@ jobs:
             printf "| %s |" "$R" >> $GITHUB_STEP_SUMMARY
 
             for D in $DEVICES; do
-              VALUE=$(echo "$INPUT" | jq -r --arg d "$D" --arg r "$R" '.[$d][$r] // ""')
+              VALUE=$(echo "$INPUT" | jq -r --arg d "$D" --arg r "$R" '.[$d][$r].result // ""')
+              URL=$(echo "$INPUT" | jq -r --arg d "$D" --arg r "$R" '.[$d][$r].url // ""')
               CHECKMARK=":white_check_mark:"
               if [ "${VALUE}" = "fail" ]; then CHECKMARK=":x:"; fi
               if [ "${VALUE}" = "skip" ]; then CHECKMARK=":warning:"; fi
               if [ -z "${VALUE}" ]; then CHECKMARK=":no_entry_sign:"; fi
-              printf " %s %s |" "$CHECKMARK" "$VALUE" >> $GITHUB_STEP_SUMMARY
+              printf " %s [%s](%s) |" "$CHECKMARK" "$VALUE" "$URL"
             done
             echo >> $GITHUB_STEP_SUMMARY
           done
