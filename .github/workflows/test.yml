@@ -241,6 +241,7 @@ jobs:
           INPUT=$(for TESTJOB in $(find ${{ github.workspace }} -name "test-job-*.json")
           do
               JOB_ID=$(cat "${TESTJOB}" | jq ".id")
+              JOB_URL="https://lava.infra.foundries.io/results/$JOB_ID"
               JOB_DETAILS=$(curl -s "https://lava.infra.foundries.io/api/v0.2/jobs/$JOB_ID/")
               JOB_HEALTH=$(echo "$JOB_DETAILS" | jq -r ".health")
               JOB_STATE=$(echo "$JOB_DETAILS" | jq -r ".state")
