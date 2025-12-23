@@ -299,7 +299,7 @@ jobs:
               if [ "${VALUE}" = "fail" ]; then CHECKMARK=":x:"; fi
               if [ "${VALUE}" = "skip" ]; then CHECKMARK=":warning:"; fi
               if [ -z "${VALUE}" ]; then CHECKMARK=":no_entry_sign:"; fi
-              printf " %s [%s](%s) |" "$CHECKMARK" "$VALUE" "$URL"
+              printf " %s [%s](%s) |" "$CHECKMARK" "$VALUE" "$URL" >> $GITHUB_STEP_SUMMARY
             done
             echo >> $GITHUB_STEP_SUMMARY
           done
