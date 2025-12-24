@@ -296,7 +296,7 @@ jobs:
             printf " ---- |" >> $GITHUB_STEP_SUMMARY
           done
           echo
-          echo >> $GITHUB_yySTEP_SUMMARY
+          echo >> $GITHUB_STEP_SUMMARY
 
           for R in $RESULTS; do
             printf "| %s |" "$R"
