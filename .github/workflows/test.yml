@@ -318,7 +318,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Job ID | Device | State | Health |" >> $GITHUB_STEP_SUMMARY
           echo "| ---- | ---- | ---- | ---- |" >> $GITHUB_STEP_SUMMARY
-          for TESTJOB in $(find ${{ github.workspace }} -name "test-job-*.json"
+          for TESTJOB in $(find ${{ github.workspace }} -name "test-job-*.json")
           do
               JOB_ID=$(cat "${TESTJOB}" | jq ".id")
               JOB_URL="https://lava.infra.foundries.io/results/$JOB_ID"
