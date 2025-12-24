@@ -326,5 +326,5 @@ jobs:
               JOB_HEALTH=$(echo "$JOB_DETAILS" | jq -r ".health")
               JOB_STATE=$(echo "$JOB_DETAILS" | jq -r ".state")
               JOB_DEVICE_TYPE=$(echo "$JOB_DETAILS" | jq -r ".requested_device_type")
-              echo "| [$JOB_ID]($JOB_URL) | $JOB_DEVICE_TYPE | $JOB_STATE | $JOB_HEALT |" >> $GITHUB_STEP_SUMMARY
+              echo "| [$JOB_ID]($JOB_URL) | $JOB_DEVICE_TYPE | $JOB_STATE | $JOB_HEALTH |" >> $GITHUB_STEP_SUMMARY
           done
