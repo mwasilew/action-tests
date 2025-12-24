@@ -271,7 +271,7 @@ jobs:
                   done | jq -s -c --sort-keys 'from_entries')
               fi
               echo "{\"key\": \"$JOB_DEVICE_TYPE\", \"value\": $TEST_RESULTS}" | jq
-          done | jq -s -c 'from_entries')
+          done | jq -s -c 'reduce .[] as $i ({}; .[$i.key] = ((.[$i.key] // {}) + $i.value))')
           echo "$INPUT"
           DEVICES=$(echo "$INPUT" | jq -r 'keys[]' | sort)
 
