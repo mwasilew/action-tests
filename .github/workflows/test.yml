@@ -272,25 +272,33 @@ jobs:
               fi
               echo "{\"key\": \"$JOB_DEVICE_TYPE\", \"value\": $TEST_RESULTS}" | jq
           done | jq -s -c 'from_entries')
+          echo "$INPUT"
           DEVICES=$(echo "$INPUT" | jq -r 'keys[]' | sort)
 
           RESULTS=$(echo "$INPUT" | jq -r '.[] | keys[]?' | sort -u)
 
           # Print header row
+          printf "| %s |" "Test"
           printf "| %s |" "Test" >> $GITHUB_STEP_SUMMARY
           for D in $DEVICES; do
+            printf " %s |" "$D"
             printf " %s |" "$D" >> $GITHUB_STEP_SUMMARY
           done
+          echo
           echo >> $GITHUB_STEP_SUMMARY
 
           ## Print separator
+          printf "| ---- |"
           printf "| ---- |" >> $GITHUB_STEP_SUMMARY
           for _ in $DEVICES; do
+            printf " ---- |"
             printf " ---- |" >> $GITHUB_STEP_SUMMARY
           done
+          echo
           echo >> $GITHUB_STEP_SUMMARY
 
           for R in $RESULTS; do
+            printf "| %s |" "$R"
             printf "| %s |" "$R" >> $GITHUB_STEP_SUMMARY
 
             for D in $DEVICES; do
@@ -300,6 +308,7 @@ jobs:
               if [ "${VALUE}" = "fail" ]; then CHECKMARK=":x:"; fi
               if [ "${VALUE}" = "skip" ]; then CHECKMARK=":warning:"; fi
               if [ -z "${VALUE}" ]; then CHECKMARK=":no_entry_sign:"; fi
+              printf " %s [%s](%s) |" "$CHECKMARK" "$VALUE" "$URL"
               printf " %s [%s](%s) |" "$CHECKMARK" "$VALUE" "$URL" >> $GITHUB_STEP_SUMMARY
             done
             echo >> $GITHUB_STEP_SUMMARY
