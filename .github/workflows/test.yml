@@ -271,6 +271,7 @@ jobs:
                   done | jq -s -c --sort-keys 'from_entries')
               fi
               echo "{\"key\": \"$JOB_DEVICE_TYPE\", \"value\": $TEST_RESULTS}" | jq
+          # combine entries from boot jobs and pre-merge jobs
           done | jq -s -c 'reduce .[] as $i ({}; .[$i.key] = ((.[$i.key] // {}) + $i.value))')
           echo "$INPUT"
           DEVICES=$(echo "$INPUT" | jq -r 'keys[]' | sort)
@@ -295,7 +296,7 @@ jobs:
             printf " ---- |" >> $GITHUB_STEP_SUMMARY
           done
           echo
-          echo >> $GITHUB_STEP_SUMMARY
+          echo >> $GITHUB_yySTEP_SUMMARY
 
           for R in $RESULTS; do
             printf "| %s |" "$R"
@@ -312,4 +313,18 @@ jobs:
               printf " %s [%s](%s) |" "$CHECKMARK" "$VALUE" "$URL" >> $GITHUB_STEP_SUMMARY
             done
             echo >> $GITHUB_STEP_SUMMARY
+          done
+          echo "### All jobs summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job ID | Device | State | Health |" >> $GITHUB_STEP_SUMMARY
+          echo "| ---- | ---- | ---- | ---- |" >> $GITHUB_STEP_SUMMARY
+          for TESTJOB in $(find ${{ github.workspace }} -name "test-job-*.json"
+          do
+              JOB_ID=$(cat "${TESTJOB}" | jq ".id")
+              JOB_URL="https://lava.infra.foundries.io/results/$JOB_ID"
+              JOB_DETAILS=$(curl -s "https://lava.infra.foundries.io/api/v0.2/jobs/$JOB_ID/")
+              JOB_HEALTH=$(echo "$JOB_DETAILS" | jq -r ".health")
+              JOB_STATE=$(echo "$JOB_DETAILS" | jq -r ".state")
+              JOB_DEVICE_TYPE=$(echo "$JOB_DETAILS" | jq -r ".requested_device_type")
+              echo "| [$JOB_ID]($JOB_URL) | $JOB_DEVICE_TYPE | $JOB_STATE | $JOB_HEALT |" >> $GITHUB_STEP_SUMMARY
           done
