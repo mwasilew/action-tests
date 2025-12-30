@@ -24,11 +24,13 @@ runs:
           path: artifacts
 
       - name: "List files"
+        shell: bash
         run: |
           echo $GITHUB_WORKSPACE
           ls -R $GITHUB_WORKSPACE
 
       - name: Publish Test Job Details
+        shell: bash
         run: |
           INPUT=$(for TESTJOB in $(find ${{ github.workspace }} -name "${{ inputs.prefix }}.json")
           do
