@@ -239,8 +239,8 @@ jobs:
 
       - name: Download Summary
         uses: actions/download-artifact@v6
-        with:
-          path: test_job_summary
+          #        with:
+          #          path: test_job_summary
 
       - name: Publish Test Job Details
         run: |
