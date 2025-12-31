@@ -50,9 +50,11 @@ jobs:
       - name: Prepare PR comment
         id: pr_comment_prep
         run: |
+          set -x
           PR_NUMBER=$(cat "artifacts/Event File/event.json" | jq -r ".number")
           RESULT_FILE_NAME=$(find ./results_summary/ -type f)
-          echo "result_file_name=${RESULTS_FILE_NAME}" >> $GITHUB_OUTPUT
+          echo "$RESULT_FILE_NAME"
+          echo "result_file_name=${RESULT_FILE_NAME}" >> $GITHUB_OUTPUT
           echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
