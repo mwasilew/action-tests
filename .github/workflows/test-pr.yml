@@ -32,7 +32,7 @@ jobs:
         id: download-result-summary
         uses: actions/download-artifact@v6
         with:
-          id: ${{ needs.test.outputs.summary_id }}
+          artifact-ids: ${{ needs.test.outputs.summary_id }}
           path: results_summary
 
       - name: Download event file
