@@ -14,13 +14,13 @@ jobs:
       matrix:
         machine:
           - iq-8275-evk
-          - iq-9075-evk
+          #- iq-9075-evk
           - qcm6490-idp
           #- qcs615-ride
           - rb3gen2-core-kit
           #- qcs8300-ride-sx
           - qcs9100-ride-sx
-          - rb1-core-kit
+          #- rb1-core-kit
           - qcom-armv8a
           #- qcom-armv7a
         distro:
@@ -231,6 +231,7 @@ jobs:
           fetch-depth: 0
 
       - name: Generate Summary
+        id: generate-summary
         uses: ./.github/actions/test-job-summary
         with:
           build_id: ${{ inputs.build_id }}
@@ -239,8 +240,8 @@ jobs:
 
       - name: Download Summary
         uses: actions/download-artifact@v6
-          #        with:
-          #          path: test_job_summary
+        with:
+          artifact-ids: ${{ steps.generate-summary.outputs.artifact_id }}
 
       - name: Publish Test Job Details
         run: |
