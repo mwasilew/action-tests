@@ -6,6 +6,9 @@ on:
       build_id:
         required: true
         type: string
+    outputs:
+      description: "ID of the summary artifact"
+      summary_id: ${{ jobs.publish-test-summary.outputs.summary_id }}
 
 jobs:
   prepare-boot-jobs:
@@ -224,6 +227,8 @@ jobs:
     permissions:
       checks: write
       pull-requests: write
+    outputs:
+      summary_id: ${{ steps.generate-summary.outputs.artifact_id }}
 
     steps:
       - uses: actions/checkout@v4

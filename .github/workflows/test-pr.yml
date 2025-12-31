@@ -31,7 +31,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v6
         with:
-          path: test_job_summary
+          id: ${{ needs.test.outputs.summary_id }}
 
       - name: Download event file
         uses: actions/download-artifact@v6
