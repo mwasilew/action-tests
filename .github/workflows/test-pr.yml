@@ -28,10 +28,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Download Artifacts
+      - name: Download Result Summary
+        id: download-result-summary
         uses: actions/download-artifact@v6
         with:
           id: ${{ needs.test.outputs.summary_id }}
+          path: results_summary
 
       - name: Download event file
         uses: actions/download-artifact@v6
@@ -49,12 +51,14 @@ jobs:
         id: pr_comment_prep
         run: |
           PR_NUMBER=$(cat "artifacts/Event File/event.json" | jq -r ".number")
+          RESULT_FILE_NAME=$(find ./results_summary/ -type f)
+          echo "result_file_name=${RESULTS_FILE_NAME}" >> $GITHUB_OUTPUT
           echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
         uses: thollander/actions-comment-pull-request@v3
         with:
-          file-path: test_job_summary
+          file-path: ${{ steps.pr_comment_prep.outputs.result_file_name }}
           pr-number: ${{ steps.pr_comment_prep.outputs.pr_number }}
 
   publish-test-results:
