@@ -240,7 +240,7 @@ jobs:
         id: generate-summary
         uses: ./.github/actions/test-job-summary
         with:
-          build_id: ${{ inputs.build_id }}
+          build_id: ${{ github.run_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           summary_file_name: test_job_summary
 
