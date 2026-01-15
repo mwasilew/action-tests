@@ -27,20 +27,20 @@ jobs:
     name: "Publish Tests Results"
     runs-on: ubuntu-latest
     steps:
-      - name: Download result files
-        uses: actions/download-artifact@v6
-        with:
-            run-id: ${{ inputs.workflow_id }}
-            path: artifacts
-            github-token: ${{ github.token }}
-
-      - name: Download result files PR
-        if: ${{ github.run_id != inputs.workflow_id }}
-        uses: actions/download-artifact@v6
-        with:
-            path: artifacts
-            github-token: ${{ github.token }}
-
+#      - name: Download result files
+#        uses: actions/download-artifact@v6
+#        with:
+#            run-id: ${{ inputs.workflow_id }}
+#            path: artifacts
+#            github-token: ${{ github.token }}
+#
+#      - name: Download result files PR
+#        if: ${{ github.run_id != inputs.workflow_id }}
+#        uses: actions/download-artifact@v6
+#        with:
+#            path: artifacts
+#            github-token: ${{ github.token }}
+#
       - name: "List files"
         id: listfiles
         run: |
