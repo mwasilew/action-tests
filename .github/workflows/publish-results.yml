@@ -60,10 +60,9 @@ jobs:
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
-        needs: [listfiles]
         if: |
           always()
-          && contains(needs.*.result, 'success')
+          && contains(steps.listfiles.outcome, 'success')
         with:
           commit: ${{ inputs.commit }}
           event_file: ${{ inputs.event_file}}
