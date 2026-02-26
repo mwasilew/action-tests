@@ -26,25 +26,14 @@ jobs:
         distro:
           - name: poky-altcfg
           - name: qcom-distro
-          - name: qcom-distro-prop-image
-        include:
-          # Additional builds for specific machines
-          - machine: qcom-armv8a
-            distro:
-                name: qcom-distro
-                yamlfile: ':ci/qcom-distro.yml'
-            kernel:
-                type: additional
-                dirname: "+linux-yocto-dev"
-                yamlfile: ":ci/linux-yocto-dev.yml"
-          - machine: qcom-armv8a
-            distro:
-                name: qcom-distro
-                yamlfile: ':ci/qcom-distro.yml'
-            kernel:
-                type: additional
-                dirname: "+linux-yocto-lts"
-                yamlfile: ":ci/linux-yocto-lts.yml"
+        kernel:
+          - ""
+          - +linux-qcom-6.18
+        exclude:
+          - distro: poky-altcfg
+            kernel: +linux-qcom-6.18
+          - machine: qcom-armv7a
+            kernel: +linux-qcom-6.18
 
     runs-on: ubuntu-latest
     steps:
@@ -55,9 +44,7 @@ jobs:
       - name: Save URL
         id: print-output
         run: |
-          KERNEL_DIRNAME="${{ matrix.kernel.dirname }}"
-          BUILDNAME="${{ matrix.machine }}_${{ matrix.distro.name }}${KERNEL_DIRNAME}"
-          FILENAME="build-url_${BUILDNAME}"
+          FILENAME="build-url_${{ matrix.machine }}_${{ matrix.distro.name }}${{ matrix.kernel }}"
           echo "${BASE_ARTIFACT_URL}" > "${FILENAME}"
           echo "filename=${FILENAME}" >> $GITHUB_OUTPUT
       - name: Upload build URL
