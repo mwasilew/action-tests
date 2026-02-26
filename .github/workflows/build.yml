@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 env:
-  BASE_ARTIFACT_URL: "https://quic-yocto-fileserver-1029608027416.us-central1.run.app/qualcomm-linux/meta-qcom/20976384446-1/"
+  BASE_ARTIFACT_URL: "https://quic-yocto-fileserver-1029608027416.us-central1.run.app/qualcomm-linux/meta-qcom/22420816242-1/"
 
 jobs:
   print-trigger:

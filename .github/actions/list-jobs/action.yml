@@ -18,7 +18,7 @@ runs:
   using: "composite"
   steps:
     - name: 'Download build URLs'
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         github-token: ${{ inputs.gh_token }}
         run-id: ${{ inputs.build_id }}
@@ -34,17 +34,19 @@ runs:
       id: listjobs
       shell: bash
       run: |
-        JOBFILES=$(find . -name "*.yaml" | grep "${{ inputs.prefix }}")
+        JOBFILES=$(find . -name "${{ input.prefix }}*.yaml")
         RESULT_JSON=$(jq -n '{target: []}')
         for J in $JOBFILES
           do
               echo $J
-              NAME=$(echo "$J" | cut --delimiter "/" --field 3)
+              BASE_NAME=$(echo "$J" | cut --delimiter "/" --field 3)
+              TEST_PLAN=$(basename "$J" .yaml)
+              NAME="${BASE_NAME}-${TEST_PLAN}"
               echo $NAME
               F_TMP="${J#*/}"
               RESULT_NAME="${F_TMP//\//-}"
               echo $RESULT_NAME
-              RESULT_JSON=$(echo "$RESULT_JSON" | jq -c --arg path "${J}" --arg result_file "${RESULT_NAME}" --arg name "${NAME}" '.target += [$ARGS.named]')
+              RESULT_JSON=$(echo "$RESULT_JSON" | jq -c --arg path "${F_TMP#*/}" --arg artifact "${F_TMP%%/*}" --arg result_file "${RESULT_NAME}" --arg name "${NAME}" '.target += [$ARGS.named]')
               echo "$RESULT_JSON"
           done
           echo "$RESULT_JSON"

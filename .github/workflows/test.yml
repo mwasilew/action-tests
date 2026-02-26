@@ -1,4 +1,4 @@
-name: Run tests
+name: Tests
 
 on:
   workflow_call:
@@ -8,7 +8,7 @@ on:
         type: string
     outputs:
       summary_id:
-        description: "ID of the summary artifact"
+        description: "ID of the test summary artifact"
         value: ${{ jobs.publish-test-summary.outputs.summary_id }}
 
 jobs:
@@ -17,19 +17,27 @@ jobs:
     strategy:
       matrix:
         machine:
-          - iq-8275-evk
-          #- iq-9075-evk
-          - qcm6490-idp
+          #- iq-8275-evk
+          - iq-9075-evk
+          #- qcm6490-idp
           #- qcs615-ride
           - rb3gen2-core-kit
           #- qcs8300-ride-sx
-          - qcs9100-ride-sx
-          #- rb1-core-kit
-          - qcom-armv8a
+          #- qcs9100-ride-sx
+          #- qcom-armv8a
           #- qcom-armv7a
+          #- rb1-core-kit
         distro:
           - name: poky-altcfg
           - name: qcom-distro
+        kernel:
+          - ""
+          - +linux-qcom-6.18
+        exclude:
+          - distro: poky-altcfg
+            kernel: +linux-qcom-6.18
+          - machine: qcom-armv7a
+            kernel: +linux-qcom-6.18
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,6 +48,7 @@ jobs:
         with:
           machine: ${{ matrix.machine }}
           distro_name: ${{ matrix.distro.name }}
+          kernel: ${{ matrix.kernel }}
           build_id: ${{ inputs.build_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: boottest
@@ -53,17 +62,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: 'Download job templates'
-        uses: actions/download-artifact@v6
-        with:
-          pattern: boottest-*
 
       - name: "List jobs"
         id: listjobs
         uses: ./.github/actions/list-jobs
         with:
           prefix: "boottest"
-          build_id: ${{ inputs.build_id }}
+          build_id: ${{ github.run_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
 
   submit-boot-job:
@@ -75,9 +80,10 @@ jobs:
       matrix: ${{ fromJson(needs.prepare-boot-job-list.outputs.jobmatrix) }}
     steps:
       - name: 'Download job templates'
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
-          pattern: boottest-*
+          name: ${{ matrix.target.artifact }}
+
       - name: Submit ${{ matrix.target.name }}
         timeout-minutes: 20
         id: submit
@@ -91,7 +97,6 @@ jobs:
           fail_action_on_incomplete: true
           save_result_as_artifact: true
           save_job_details: true
-#          result_file_name: "${{ env.RESULT_NAME }}"
           result_file_name: "${{ matrix.target.result_file }}"
       - uses: mwasilew/github-action-matrix-outputs-write@v2
         if: always()
@@ -102,6 +107,7 @@ jobs:
           artifact-name: ${{ matrix.target.name }}
           outputs: |-
             result: ${{ steps.submit.outcome }}
+
 
   boot-job-result:
     runs-on: ubuntu-latest
@@ -132,20 +138,24 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        # only run pre-merge tests on devices available in the LAB
+        # and "contemporary" - exclude dragonboards
         machine:
-#          - iq-8275-evk
           - iq-9075-evk
-#          - qcm6490-idp
-#          - qcs615-ride
-          - rb3gen2-core-kit
-#          - qcs8300-ride-sx
-          - qcs9100-ride-sx
-          - rb1-core-kit
-#          - qcom-armv8a
-#          - qcom-armv7a
+          #- qcs615-ride
+          #- rb3gen2-core-kit
+          #- qcs8300-ride-sx
+          #- qcs9100-ride-sx
+          #- rb1-core-kit
         distro:
           - name: poky-altcfg
           - name: qcom-distro
+        kernel:
+          - ""
+          - +linux-qcom-6.18
+        exclude:
+          - distro: poky-altcfg
+            kernel: +linux-qcom-6.18
     steps:
       - id: print-condition
         name: "Print condition"
@@ -163,6 +173,7 @@ jobs:
         with:
           machine: ${{ matrix.machine }}
           distro_name: ${{ matrix.distro.name }}
+          kernel: ${{ matrix.kernel }}
           build_id: ${{ inputs.build_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: premerge
@@ -177,17 +188,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: 'Download job templates'
-        uses: actions/download-artifact@v6
-        with:
-          pattern: premerge-*
 
       - name: "List jobs"
         id: listjobs
         uses: ./.github/actions/list-jobs
         with:
           prefix: "premerge"
-          build_id: ${{ inputs.build_id }}
+          build_id: ${{ github.run_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
 
   submit-premerge-job:
@@ -199,9 +206,9 @@ jobs:
       matrix: ${{ fromJson(needs.prepare-premerge-job-list.outputs.jobmatrix) }}
     steps:
       - name: 'Download job templates'
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
-          pattern: premerge-*
+          name: ${{ matrix.target.artifact}}
 
       - name: Submit ${{ matrix.target.name }}
         timeout-minutes: 20
@@ -245,7 +252,7 @@ jobs:
           summary_file_name: test_job_summary
 
       - name: Download Summary
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           artifact-ids: ${{ steps.generate-summary.outputs.artifact_id }}
 
