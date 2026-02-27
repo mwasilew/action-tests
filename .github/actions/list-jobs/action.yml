@@ -34,6 +34,9 @@ runs:
       id: listjobs
       shell: bash
       run: |
+        echo "******************************"
+        pwd
+        ls -R ./
         JOBFILES=$(find "./${{ inputs.prefix }}*" -type f -name "*.yaml" )
         RESULT_JSON=$(jq -n '{target: []}')
         for J in $JOBFILES
