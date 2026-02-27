@@ -37,6 +37,13 @@ runs:
         echo "******************************"
         pwd
         ls -R ./
+        echo "******************************"
+        find "./${{ inputs.prefix }}*" -type f -name "*.yaml"
+        echo "******************************"
+        find ./${{ inputs.prefix }}* -type f -name "*.yaml"
+        echo "******************************"
+        find . -type f -name "*.yaml"
+        echo "******************************"
         JOBFILES=$(find "./${{ inputs.prefix }}*" -type f -name "*.yaml" )
         RESULT_JSON=$(jq -n '{target: []}')
         for J in $JOBFILES
