@@ -83,6 +83,12 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: ${{ matrix.target.artifact }}
+      - name: "List files"
+        shell: bash
+        run: |
+          echo $GITHUB_WORKSPACE
+          ls -R $GITHUB_WORKSPACE
+
 
       - name: Submit ${{ matrix.target.name }}
         timeout-minutes: 20
