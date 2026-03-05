@@ -18,10 +18,10 @@ jobs:
       matrix:
         machine:
           #- iq-8275-evk
-          - iq-9075-evk
+          #- iq-9075-evk
           #- qcm6490-idp
-          #- qcs615-ride
-          - rb3gen2-core-kit
+          - qcs615-ride
+          #- rb3gen2-core-kit
           #- qcs8300-ride-sx
           #- qcs9100-ride-sx
           #- qcom-armv8a
@@ -32,12 +32,12 @@ jobs:
           - name: qcom-distro
         kernel:
           - ""
-          - +linux-qcom-6.18
+          - _linux-qcom-6.18
         exclude:
           - distro: poky-altcfg
-            kernel: +linux-qcom-6.18
+            kernel: _linux-qcom-6.18
           - machine: qcom-armv7a
-            kernel: +linux-qcom-6.18
+            kernel: _linux-qcom-6.18
     steps:
       - uses: actions/checkout@v4
         with:
@@ -95,8 +95,10 @@ jobs:
         id: submit
         uses: foundriesio/lava-action@v9
         with:
-          lava_token: ${{ secrets.LAVA_TOKEN }}
-          lava_url: 'lava.infra.foundries.io'
+          #lava_token: ${{ secrets.LAVA_TOKEN }}
+          #lava_url: 'lava.infra.foundries.io'
+          lava_token: ${{ secrets.LAVA_STAGING_TOKEN }}
+          lava_url: 'lava-staging.infra.foundries.io'
           job_definition: ${{ matrix.target.path }}
           wait_for_job: true
           fail_action_on_failure: true
@@ -147,8 +149,8 @@ jobs:
         # only run pre-merge tests on devices available in the LAB
         # and "contemporary" - exclude dragonboards
         machine:
-          - iq-9075-evk
-          #- qcs615-ride
+          #- iq-9075-evk
+          - qcs615-ride
           #- rb3gen2-core-kit
           #- qcs8300-ride-sx
           #- qcs9100-ride-sx
@@ -158,10 +160,10 @@ jobs:
           - name: qcom-distro
         kernel:
           - ""
-          - +linux-qcom-6.18
+          - -linux-qcom-6.18
         exclude:
           - distro: poky-altcfg
-            kernel: +linux-qcom-6.18
+            kernel: _linux-qcom-6.18
     steps:
       - id: print-condition
         name: "Print condition"
@@ -220,8 +222,10 @@ jobs:
         timeout-minutes: 20
         uses: foundriesio/lava-action@v9
         with:
-          lava_token: ${{ secrets.LAVA_TOKEN }}
-          lava_url: 'lava.infra.foundries.io'
+          #lava_token: ${{ secrets.LAVA_TOKEN }}
+          lava_token: ${{ secrets.LAVA_STAGING_TOKEN }}
+          #lava_url: 'lava.infra.foundries.io'
+          lava_url: 'lava-staging.infra.foundries.io'
           job_definition: ${{ matrix.target.path }}
           wait_for_job: true
           fail_action_on_failure: true
