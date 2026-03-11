@@ -39,7 +39,7 @@ jobs:
           prefix: boottest
 
   submit-boot-job:
-    needs: prepare-boot-job-list
+    needs: prepare-boot-jobs
     runs-on: ubuntu-latest
     continue-on-error: true
     name: Boot ${{ matrix.target.name }}
