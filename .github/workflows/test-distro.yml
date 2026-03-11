@@ -14,12 +14,12 @@ on:
         # iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx
       distro:
         required: true
-        type: choice
+        type: string
         # add more options when required
-        options:
-          - nodistro
-          - qcom-distro
-          - qcom-distro_linux-qcom-6.18
+        #options:
+        #  - nodistro
+        #  - qcom-distro
+        #  - qcom-distro_linux-qcom-6.18
 
 jobs:
   prepare-boot-jobs:
