@@ -24,7 +24,7 @@ jobs:
       build_id: ${{ inputs.build_id }}
       devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
       distro: "qcom-distro"
-  boot-test-qcom-distro_linux-qcom-6.18:
+  boot-test-qcom-distro_linux-qcom-6-18:
     uses: ./.github/workflows/test-distro.yml
     with:
       build_id: ${{ inputs.build_id }}
@@ -129,7 +129,7 @@ jobs:
   publish-test-summary:
     name: "Publish Tests Summary"
     #needs: [submit-premerge-job, submit-boot-job]
-    needs: [boot-test-nodistro, boot-test-qcom-distro, boot-test-qcom-distro_linux-qcom-6.18]
+    needs: [boot-test-nodistro, boot-test-qcom-distro, boot-test-qcom-distro_linux-qcom-6-18]
     if: |
       always()
       && contains(needs.*.result, 'success')
