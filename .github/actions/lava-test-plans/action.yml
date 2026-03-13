@@ -18,6 +18,9 @@ inputs:
   testplan:
     description: "Name of the test plan to use in job generation"
     default: boot
+  project:
+    description: "Project name to be used in lava-test-plans call"
+    required: false
 
 outputs:
   jobmatrix:
@@ -56,13 +59,17 @@ runs:
           OUT_PATH="${GITHUB_WORKSPACE}/out"
           VARS_OUT_PATH="${OUT_PATH}/vars"
           JOBS_OUT_PATH="${OUT_PATH}/jobs"
+          PROJECT="${GITHUB_REPOSITORY#*/}"
+          if [ -n "${{ inputs.project }}" ]; then
+            PROJECT="${{ inputs.project }}"
+          fi
           echo "JOBS_OUT_PATH=${JOBS_OUT_PATH}" >> $GITHUB_ENV
           mkdir -p "${VARS_OUT_PATH}"
           mkdir -p "${JOBS_OUT_PATH}"
           #echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> "${VARS_OUT_PATH}/gh-variables.ini"
           #echo "PROJECT=projects/${GITHUB_REPOSITORY#*/}/" >> "${VARS_OUT_PATH}/gh-variables.ini"
-          echo "PROJECT_NAME=meta-qcom" >> "${VARS_OUT_PATH}/gh-variables.ini"
-          echo "PROJECT=projects/meta-qcom/" >> "${VARS_OUT_PATH}/gh-variables.ini"
+          echo "PROJECT_NAME=${PROJECT}" >> "${VARS_OUT_PATH}/gh-variables.ini"
+          echo "PROJECT=projects/${PROJECT}/" >> "${VARS_OUT_PATH}/gh-variables.ini"
           echo "LAVA_JOB_PRIORITY=50" >> "${VARS_OUT_PATH}/gh-variables.ini"
           # OS_INFO can be omited
           echo "OS_INFO=qcom-distro" >> "${VARS_OUT_PATH}/gh-variables.ini"
@@ -121,7 +128,7 @@ runs:
 
             cat "${machine}.ini"
             #lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/gh-variables.ini" --test-plan "${GITHUB_REPOSITORY#*/}/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/${GITHUB_REPOSITORY#*/}/devices/${{ inputs.machine }}" --dry-run-path "${JOBS_OUT_PATH}/${{ inputs.machine }}-${{ inputs.distro_name }}${{ inputs.kernel }}-${{ inputs.testplan }}" || true
-            lava-test-plans --dry-run --variables "${machine}.ini" --test-plan "meta-qcom/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/meta-qcom/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" || true
+            lava-test-plans --dry-run --variables "${machine}.ini" --test-plan "meta-qcom/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/${PROJECT}/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" || true
             # create the JSON file that is used for the job submission matrix
           done
 

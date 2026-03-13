@@ -34,6 +34,7 @@ jobs:
           build_id: ${{ inputs.build_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: boottest
+          project: "meta-qcom"
 
   submit-boot-job:
     needs: prepare-boot-jobs
