@@ -90,6 +90,7 @@ runs:
           TOTAL=$(echo "${INPUT}" | jq '[.. | objects | select(.result)] | length')
           printf "<summary>Pass: %s | Fail: %s | Total: %s </summary>" "$TOTAL_PASS" "$TOTAL_FAIL" "$TOTAL" >> ${{inputs.summary_file_name}}
           echo "" >> ${{inputs.summary_file_name}}
+          echo "" >> ${{inputs.summary_file_name}}
 
           # Print header row
           printf "| %s |" "Test"
@@ -99,7 +100,7 @@ runs:
             printf " %s |" "$D" >> ${{inputs.summary_file_name}}
           done
           echo
-          echo "\n" >> ${{inputs.summary_file_name}}
+          echo "" >> ${{inputs.summary_file_name}}
 
           ## Print separator
           printf "| ---- |"
@@ -109,7 +110,7 @@ runs:
             printf " ---- |" >> ${{inputs.summary_file_name}}
           done
           echo
-          echo "\n" >> ${{inputs.summary_file_name}}
+          echo "" >> ${{inputs.summary_file_name}}
 
           for R in $RESULTS; do
             printf "| %s |" "$R"
@@ -125,7 +126,7 @@ runs:
               printf " %s [%s](%s) |" "$CHECKMARK" "$VALUE" "$URL"
               printf " %s [%s](%s) |" "$CHECKMARK" "$VALUE" "$URL" >> ${{inputs.summary_file_name}}
             done
-            echo "\n" >> ${{inputs.summary_file_name}}
+            echo "" >> ${{inputs.summary_file_name}}
           done
           echo "" >> ${{inputs.summary_file_name}}
           echo "</details>" >> ${{inputs.summary_file_name}}
