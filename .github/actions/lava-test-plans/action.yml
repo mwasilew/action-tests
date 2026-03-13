@@ -129,7 +129,7 @@ runs:
                 echo "BUILD_OS=${{ inputs.distro_name }}${{ inputs.kernel }}/" >> "${VARS_OUT_PATH}/${machine}.ini"
             fi
 
-            cat "${machine}.ini"
+            cat "${VARS_OUT_PATH}/${machine}.ini"
             #lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/gh-variables.ini" --test-plan "${GITHUB_REPOSITORY#*/}/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/${GITHUB_REPOSITORY#*/}/devices/${{ inputs.machine }}" --dry-run-path "${JOBS_OUT_PATH}/${{ inputs.machine }}-${{ inputs.distro_name }}${{ inputs.kernel }}-${{ inputs.testplan }}" || true
             lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/${machine}.ini" --test-plan "meta-qcom/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/${PROJECT}/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" || true
             # create the JSON file that is used for the job submission matrix
