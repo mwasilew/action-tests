@@ -81,6 +81,8 @@ runs:
 
           OLDIFS=$IFS
           IFS=,
+          set -- ${{ input.machines }}
+          IFS=$OLDIFS
           for machine in ${{ inputs.machines }}; do
             echo "Rendering test job templates for ${machine}"
             cp "${VARS_OUT_PATH}/gh-variables.ini" "${machine}.ini"
