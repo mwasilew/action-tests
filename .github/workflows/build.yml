@@ -26,7 +26,7 @@ jobs:
           - qcom-armv7a
           - sm8750-mtp
         distro:
-          - name: poky-altcfg
+          - name: nodistro
           - name: qcom-distro
         kernel:
           - ""

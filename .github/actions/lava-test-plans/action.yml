@@ -118,8 +118,8 @@ runs:
             # create the JSON file that is used for the job submission matrix
           done
 
-          RESULT_JSON=$(jq -n '{target: []}')
-          echo "jobmatrix=$RESULT_JSON" >> $GITHUB_OUTPUT
+          #RESULT_JSON=$(jq -n '{target: []}')
+          #echo "jobmatrix=$RESULT_JSON" >> $GITHUB_OUTPUT
 
 #      - name: "List files"
 #        shell: bash
