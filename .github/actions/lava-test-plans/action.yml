@@ -142,7 +142,7 @@ runs:
               RESULT_NAME="${{ inputs.prefix }}-${{ inputs.distro_name }}-${machine}-${FILENAME}"
               NAME="${machine}"
               ARTIFACT="${{ inputs.prefix }}-${{ inputs.distro_name }}"
-              #RESULT_JSON=$(echo "$RESULT_JSON" | jq -c --arg path "${JOB_PATH}" --arg artifact "${ARTIFACT}" --arg result_file "${RESULT_NAME}" --arg name "${NAME}" '.target += [$ARGS.named]')
+              RESULT_JSON=$(echo "$RESULT_JSON" | jq -c --arg path "${JOB_PATH}" --arg artifact "${ARTIFACT}" --arg result_file "${RESULT_NAME}" --arg name "${NAME}" '.target += [$ARGS.named]')
             done
           done
 
