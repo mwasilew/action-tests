@@ -134,6 +134,7 @@ runs:
             #lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/gh-variables.ini" --test-plan "${GITHUB_REPOSITORY#*/}/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/${GITHUB_REPOSITORY#*/}/devices/${{ inputs.machine }}" --dry-run-path "${JOBS_OUT_PATH}/${{ inputs.machine }}-${{ inputs.distro_name }}${{ inputs.kernel }}-${{ inputs.testplan }}" || true
             lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/${machine}.ini" --test-plan "meta-qcom/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/${PROJECT}/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" || true
             # create the JSON file that is used for the job submission matrix
+            find "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" -name "*.yaml"
             for JOB_PATH in $( find "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" -name "*.yaml");
             do
               echo "$JOB_PATH"
