@@ -92,8 +92,8 @@ jobs:
         id: out
         with:
           matrix-step-name: ${{ github.job }}
-          matrix-key: ${{ matrix.target.name }}
-          artifact-name: ${{ matrix.target.name }}
+          matrix-key: ${{ matrix.target.name }}-${{ inputs.distro_name }}${{ inputs.distro_suffix }}
+          artifact-name: ${{ matrix.target.name }}-${{ inputs.distro_name }}${{ inputs.distro_suffix }}
           outputs: |-
             result: ${{ steps.submit.outcome }}
 
