@@ -27,6 +27,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run lava-test-plans
+        id: lava-test-plans
         uses: ./.github/actions/lava-test-plans
         with:
           machines: ${{ inputs.devices }}
@@ -35,6 +36,11 @@ jobs:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: boottest
           project: "meta-qcom"
+
+      - name: Print output ID
+        run: |
+          echo "${{ steps.lava-test-plans.outputs.artifact_id }}"
+        
 
   submit-boot-job:
     needs: prepare-boot-jobs

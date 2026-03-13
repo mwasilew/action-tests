@@ -26,6 +26,9 @@ outputs:
   jobmatrix:
     description: Job matrix composed from generated LAVA test job files
     value: ${{ steps.lava-test-plans.outputs.jobmatrix }}
+  artifact_id:
+    description: "ID of the uploaded artifact containing rendered test jobs"
+    value: ${{ steps.upload-test-plans.outputs.artifact-id }}
 
 runs:
   using: "composite"
@@ -90,9 +93,9 @@ runs:
 
           IFS=,; for machine in ${MACHINES}; do
             echo "Rendering test job templates for ${machine}"
-            cp "${VARS_OUT_PATH}/gh-variables.ini" "${machine}.ini"
-            echo "IMAGE_FILE_NAME=${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${machine}.ini"
-            echo "DEVICE_TYPE=${machine}" >> "${machine}.ini"
+            cp "${VARS_OUT_PATH}/gh-variables.ini" "${VARS_OUT_PATH}/${machine}.ini"
+            echo "IMAGE_FILE_NAME=${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${VARS_OUT_PATH}/${machine}.ini"
+            echo "DEVICE_TYPE=${machine}" >> "${VARS_OUT_PATH}/${machine}.ini"
             export BUILD_URL=""
             # dir name and file name are the same as we're downloading multiple files
             export BUILD_URL_FILE="$GITHUB_WORKSPACE/build-url_${machine}_${{ inputs.distro_name }}/build-url_${machine}_${{ inputs.distro_name }}"
@@ -111,24 +114,24 @@ runs:
                # fail action if BUILD_URL is empty. At this point the variable should be filled in
                continue
             fi
-            echo "BUILD_DOWNLOAD_URL=${BUILD_URL}/" >> "${machine}.ini"
+            echo "BUILD_DOWNLOAD_URL=${BUILD_URL}/" >> "${VARS_OUT_PATH}/${machine}.ini"
 
-            echo "ROOTFS_URL=${BUILD_URL}/${{ inputs.distro_name }}/${machine}/${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${machine}.ini"
+            echo "ROOTFS_URL=${BUILD_URL}/${{ inputs.distro_name }}/${machine}/${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${VARS_OUT_PATH}/${machine}.ini"
 
             if [ "${machine}" = "dragonboard-410c" ]; then
-                echo "ROOTFS_IMG_FILE=${IMAGE_TYPE}-qcom-armv8a.rootfs.ext4" >> "${machine}.ini"
-                echo "BOOT_IMG_FILE=boot-apq8016-sbc-qcom-armv8a.img" >> "${machine}.ini"
-                echo "BUILD_OS=${{ inputs.distro_name }}${{ inputs.kernel }}/" >> "${machine}.ini"
+                echo "ROOTFS_IMG_FILE=${IMAGE_TYPE}-qcom-armv8a.rootfs.ext4" >> "${VARS_OUT_PATH}/${machine}.ini"
+                echo "BOOT_IMG_FILE=boot-apq8016-sbc-qcom-armv8a.img" >> "${VARS_OUT_PATH}/${machine}.ini"
+                echo "BUILD_OS=${{ inputs.distro_name }}${{ inputs.kernel }}/" >> "${VARS_OUT_PATH}/${machine}.ini"
             fi
             if [ "${machine}" = "dragonboard-820c" ]; then
-                echo "ROOTFS_IMG_FILE=${IMAGE_TYPE}-qcom-armv8a.rootfs.ext4" >> "${machine}.ini"
-                echo "BOOT_IMG_FILE=boot-apq8096-db820c-qcom-armv8a.img" >> "${machine}.ini"
-                echo "BUILD_OS=${{ inputs.distro_name }}${{ inputs.kernel }}/" >> "${machine}.ini"
+                echo "ROOTFS_IMG_FILE=${IMAGE_TYPE}-qcom-armv8a.rootfs.ext4" >> "${VARS_OUT_PATH}/${machine}.ini"
+                echo "BOOT_IMG_FILE=boot-apq8096-db820c-qcom-armv8a.img" >> "${VARS_OUT_PATH}/${machine}.ini"
+                echo "BUILD_OS=${{ inputs.distro_name }}${{ inputs.kernel }}/" >> "${VARS_OUT_PATH}/${machine}.ini"
             fi
 
             cat "${machine}.ini"
             #lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/gh-variables.ini" --test-plan "${GITHUB_REPOSITORY#*/}/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/${GITHUB_REPOSITORY#*/}/devices/${{ inputs.machine }}" --dry-run-path "${JOBS_OUT_PATH}/${{ inputs.machine }}-${{ inputs.distro_name }}${{ inputs.kernel }}-${{ inputs.testplan }}" || true
-            lava-test-plans --dry-run --variables "${machine}.ini" --test-plan "meta-qcom/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/${PROJECT}/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" || true
+            lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/${machine}.ini" --test-plan "meta-qcom/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/${PROJECT}/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" || true
             # create the JSON file that is used for the job submission matrix
           done
 
@@ -142,6 +145,7 @@ runs:
 #          ls -R "${GITHUB_WORKSPACE}"
 
       - name: 'Upload test jobs'
+        id: upload-test-plans
         uses: actions/upload-artifact@v6
         with:
           name: ${{ inputs.prefix }}-${{ inputs.distro_name }}${{ inputs.kernel }}
