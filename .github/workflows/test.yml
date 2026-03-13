@@ -13,6 +13,7 @@ on:
 
 jobs:
   boot-test-nodistro:
+    name: "Boot test **nodistro**"
     uses: ./.github/workflows/test-distro.yml
     secrets: inherit
     with:
@@ -20,6 +21,7 @@ jobs:
       devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
       distro_name: "nodistro"
   boot-test-qcom-distro:
+    name: "Boot test **qcom-distro**"
     uses: ./.github/workflows/test-distro.yml
     secrets: inherit
     with:
@@ -27,6 +29,7 @@ jobs:
       devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
       distro_name: "qcom-distro"
   boot-test-qcom-distro_linux-qcom-6-18:
+    name: "Boot test **qcom-distro_linux-qcom-6.18**"
     uses: ./.github/workflows/test-distro.yml
     secrets: inherit
     with:
