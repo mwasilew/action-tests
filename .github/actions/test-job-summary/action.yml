@@ -76,6 +76,11 @@ runs:
 
           RESULTS=$(echo "$INPUT" | jq -r '.[] | keys[]?' | sort -u)
 
+          # Print collapsible box
+          echo "<details>" >> ${{inputs.summary_file_name}}
+          # Print section summary
+          printf "<summary>Tips for collapsed sections</summary>" >> ${{inputs.summary_file_name}}
+
           # Print header row
           printf "| %s |" "Test"
           printf "| %s |" "Test" >> ${{inputs.summary_file_name}}
@@ -112,7 +117,9 @@ runs:
             done
             echo >> ${{inputs.summary_file_name}}
           done
-          echo "### All jobs summary" >> ${{inputs.summary_file_name}}
+          echo "</details>" >> ${{inputs.summary_file_name}}
+          echo "<details>" >> ${{inputs.summary_file_name}}
+          echo "<summary>All jobs summary</summary>" >> ${{inputs.summary_file_name}}
           echo "" >> ${{inputs.summary_file_name}}
           echo "| Job ID | Device | State | Health |" >> ${{inputs.summary_file_name}}
           echo "| ---- | ---- | ---- | ---- |" >> ${{inputs.summary_file_name}}
@@ -126,6 +133,7 @@ runs:
               JOB_DEVICE_TYPE=$(echo "$JOB_DETAILS" | jq -r ".requested_device_type")
               echo "| [$JOB_ID]($JOB_URL) | $JOB_DEVICE_TYPE | $JOB_STATE | $JOB_HEALTH |" >> ${{inputs.summary_file_name}}
           done
+          echo "</details>" >> ${{inputs.summary_file_name}}
       - name: Upload summary
         id: upload-summary
         uses: actions/upload-artifact@v6
