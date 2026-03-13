@@ -78,7 +78,7 @@ runs:
               echo "AUTO_LOGIN_PASSWORD=oelinux123" >> "${VARS_OUT_PATH}/gh-variables.ini"
               ;;
           esac
-          fi
+
           OLDIFS=$IFS
           IFS=,
           for machine in ${{ inputs.machines }}; do
