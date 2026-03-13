@@ -79,11 +79,8 @@ runs:
               ;;
           esac
 
-          OLDIFS=$IFS
-          IFS=,
-          set -- ${{ input.machines }}
-          IFS=$OLDIFS
-          for machine in ${{ inputs.machines }}; do
+          IFS=',' read -ra ARRAY <<< "${{ input.machines }}"
+          for machine in "${ARRAY[@]}"; do
             echo "Rendering test job templates for ${machine}"
             cp "${VARS_OUT_PATH}/gh-variables.ini" "${machine}.ini"
             echo "IMAGE_FILE_NAME=${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${machine}.ini"
