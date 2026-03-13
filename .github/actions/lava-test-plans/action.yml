@@ -146,7 +146,6 @@ runs:
             done
           done
 
-          #RESULT_JSON=$(jq -n '{target: []}')
           echo "$RESULT_JSON"
           echo "jobmatrix=$RESULT_JSON" >> $GITHUB_OUTPUT
 
