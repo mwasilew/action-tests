@@ -98,9 +98,9 @@ runs:
                # fail action if BUILD_URL is empty. At this point the variable should be filled in
                continue
             fi
-            echo "BUILD_DOWNLOAD_URL=${BUILD_URL}/" >> "${VARS_OUT_PATH}/${machine}.ini"
+            echo "BUILD_DOWNLOAD_URL=${BUILD_URL}/" >> "${machine}.ini"
 
-            echo "ROOTFS_URL=${BUILD_URL}/${{ inputs.distro_name }}/${machine}/${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${VARS_OUT_PATH}/${machine}.ini"
+            echo "ROOTFS_URL=${BUILD_URL}/${{ inputs.distro_name }}/${machine}/${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${machine}.ini"
 
             if [ "${machine}" = "dragonboard-410c" ]; then
                 echo "ROOTFS_IMG_FILE=${IMAGE_TYPE}-qcom-armv8a.rootfs.ext4" >> "${machine}.ini"
