@@ -99,7 +99,7 @@ runs:
             printf " %s |" "$D" >> ${{inputs.summary_file_name}}
           done
           echo
-          echo >> ${{inputs.summary_file_name}}
+          echo "\n" >> ${{inputs.summary_file_name}}
 
           ## Print separator
           printf "| ---- |"
@@ -109,7 +109,7 @@ runs:
             printf " ---- |" >> ${{inputs.summary_file_name}}
           done
           echo
-          echo >> ${{inputs.summary_file_name}}
+          echo "\n" >> ${{inputs.summary_file_name}}
 
           for R in $RESULTS; do
             printf "| %s |" "$R"
@@ -125,7 +125,7 @@ runs:
               printf " %s [%s](%s) |" "$CHECKMARK" "$VALUE" "$URL"
               printf " %s [%s](%s) |" "$CHECKMARK" "$VALUE" "$URL" >> ${{inputs.summary_file_name}}
             done
-            echo >> ${{inputs.summary_file_name}}
+            echo "\n" >> ${{inputs.summary_file_name}}
           done
           echo "" >> ${{inputs.summary_file_name}}
           echo "</details>" >> ${{inputs.summary_file_name}}
