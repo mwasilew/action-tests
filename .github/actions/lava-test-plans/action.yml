@@ -89,6 +89,12 @@ runs:
             export BUILD_URL=""
             # dir name and file name are the same as we're downloading multiple files
             export BUILD_URL_FILE="$GITHUB_WORKSPACE/build-url_${machine}_${{ inputs.distro_name }}/build-url_${machine}_${{ inputs.distro_name }}"
+            if [ "${machine}" = "dragonboard-410c" ]; then
+              export BUILD_URL_FILE="$GITHUB_WORKSPACE/build-url_qcom-armv8a_${{ inputs.distro_name }}/build-url_qcom-armv8a_${{ inputs.distro_name }}"
+            fi
+            if [ "${machine}" = "dragonboard-820c" ]; then
+              export BUILD_URL_FILE="$GITHUB_WORKSPACE/build-url_qcom-armv8a_${{ inputs.distro_name }}/build-url_qcom-armv8a_${{ inputs.distro_name }}"
+            fi
             echo "${BUILD_URL_FILE}"
             if [ -f "$BUILD_URL_FILE" ]; then
                 export BUILD_URL=$(cat "${BUILD_URL_FILE}")
