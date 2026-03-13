@@ -79,7 +79,11 @@ runs:
           # Print collapsible box
           echo "<details>" >> ${{inputs.summary_file_name}}
           # Print section summary
-          printf "<summary>Tips for collapsed sections</summary>" >> ${{inputs.summary_file_name}}
+          TOTAL_PASS=$(echo "${INPUT}" | jq '[.. | objects | select(.result? == "pass")] | length')
+          TOTAL_FAIL=$(echo "${INPUT}" | jq '[.. | objects | select(.result? == "fail")] | length')
+          TOTAL=$(echo "${INPUT}" | jq '[.. | objects | select(.result)] | length')
+          printf "<summary>Pass: %s | Fail: %s | Total: %s </summary>" "$TOTAL_PASS" "$TOTAL_FAIL" "$TOTAL" >> ${{inputs.summary_file_name}}
+          echo "" >> ${{inputs.summary_file_name}}
 
           # Print header row
           printf "| %s |" "Test"
@@ -117,6 +121,7 @@ runs:
             done
             echo >> ${{inputs.summary_file_name}}
           done
+          echo "" >> ${{inputs.summary_file_name}}
           echo "</details>" >> ${{inputs.summary_file_name}}
           echo "<details>" >> ${{inputs.summary_file_name}}
           echo "<summary>All jobs summary</summary>" >> ${{inputs.summary_file_name}}
