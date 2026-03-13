@@ -73,6 +73,12 @@ runs:
                           jq -n -c --arg key "$TEST_NAME" --argjson value "$TEST_RESULT_OBJ" '$ARGS.named'
                       fi
                   done | jq -s -c --sort-keys 'from_entries')
+              else
+                  TEST_NAME="boot"
+                  TEST_URL="${JOB_URL}"
+                  TEST_RESULT_OBJ=$(jq --arg url "$TEST_URL" --arg result "fail" -n -c '$ARGS.named')
+                  jq -n -c --arg key "$TEST_NAME" --argjson value "$TEST_RESULT_OBJ" '$ARGS.named'
+
               fi
               echo "{\"key\": \"$JOB_DEVICE_TYPE\", \"value\": $TEST_RESULTS}" | jq
           # combine entries from boot jobs and pre-merge jobs
