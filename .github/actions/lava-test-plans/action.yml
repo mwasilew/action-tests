@@ -72,7 +72,7 @@ runs:
           echo "TEST_DEFINITIONS_REPOSITORY=https://github.com/qualcomm-linux/qcom-linux-testkit/" >> "${VARS_OUT_PATH}/gh-variables.ini"
           IMAGE_TYPE="core-image-base"
           case "${{ inputs.distro_name }}" in
-            "qcom-distro"*) then
+            "qcom-distro"*)
               IMAGE_TYPE="qcom-multimedia-image"
               echo "AUTO_LOGIN_PASSWORD_PROMPT=Password" >> "${VARS_OUT_PATH}/gh-variables.ini"
               echo "AUTO_LOGIN_PASSWORD=oelinux123" >> "${VARS_OUT_PATH}/gh-variables.ini"

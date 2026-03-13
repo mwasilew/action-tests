@@ -15,11 +15,7 @@ on:
       distro:
         required: true
         type: string
-        # add more options when required
-        #options:
-        #  - nodistro
-        #  - qcom-distro
-        #  - qcom-distro_linux-qcom-6.18
+        description: Name of the distro used in the build. For meta-qcom, the following values are available: nodistro, qcom-distro, qcom-distro_linux-qcom-6-18
 
 jobs:
   prepare-boot-jobs:
