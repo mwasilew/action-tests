@@ -24,9 +24,12 @@ on:
 
 jobs:
   prepare-boot-jobs:
-    id: prepare-boot-jobs
     name: "Prepare boot jobs for ${{ inputs.distro }}"
     runs-on: ubuntu-latest
+    outputs:
+      jobmatrix: ${{ steps.lava-test-plans.outputs.jobmatrix }}
+      artifact_id: ${{ steps.lava-test-plans.outputs.artifact_id }}
+
     steps:
       - uses: actions/checkout@v4
         with:
