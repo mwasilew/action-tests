@@ -12,10 +12,15 @@ on:
         description: Comma separated list of devices to be used for testing
         # example
         # iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx
-      distro:
+      distro_name:
         required: true
         type: string
-        description: "Name of the distro used in the build. For meta-qcom, the following values are available: nodistro, qcom-distro, qcom-distro_linux-qcom-6-18"
+        description: "Name of the distro used in the build. For meta-qcom, the following values are available: nodistro, qcom-distro"
+      distro_suffix:
+        required: false
+        type: string
+        description: "Suffix for the distro name"
+
 
 jobs:
   prepare-boot-jobs:
@@ -31,11 +36,12 @@ jobs:
         uses: ./.github/actions/lava-test-plans
         with:
           machines: ${{ inputs.devices }}
-          distro_name: ${{ inputs.distro }}
+          distro_name: ${{ inputs.distro_name }}${{ inputs.distro_suffix }}
           build_id: ${{ inputs.build_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: boottest
           project: "meta-qcom"
+          testplan: "${{ inputs.distro_name }}/boot"
 
       - name: Print output ID
         run: |
