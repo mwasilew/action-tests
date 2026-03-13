@@ -148,7 +148,7 @@ jobs:
           build_id: ${{ github.run_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: "${{ inputs.distro_name }}${{ inputs.distro_suffix }}-test-job*"
-          summary_file_name: test_job_summary
+          summary_file_name: "${{ inputs.distro_name }}${{ inputs.distro_suffix }}-test_job_summary"
 
       - name: Download Summary
         uses: actions/download-artifact@v7
@@ -157,4 +157,4 @@ jobs:
 
       - name: Publish Test Job Details
         run: |
-            cat test_job_summary >> $GITHUB_STEP_SUMMARY
+            cat ${{ inputs.distro_name }}${{ inputs.distro_suffix }}-test_job_summary >> $GITHUB_STEP_SUMMARY
