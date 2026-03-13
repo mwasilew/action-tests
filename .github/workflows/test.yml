@@ -133,7 +133,8 @@ jobs:
   publish-test-summary:
     name: "Publish Tests Summary"
     #needs: [submit-premerge-job, submit-boot-job]
-    needs: [boot-test-nodistro, boot-test-qcom-distro, boot-test-qcom-distro_linux-qcom-6-18]
+    #needs: [boot-test-nodistro, boot-test-qcom-distro, boot-test-qcom-distro_linux-qcom-6-18]
+    needs: [boot-test-nodistro]
     if: |
       always()
       && contains(needs.*.result, 'success')
