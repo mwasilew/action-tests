@@ -140,7 +140,7 @@ runs:
               echo "$JOB_PATH"
               FILENAME=$(basename "${JOB_PATH}")
               RESULT_NAME="${{ inputs.prefix }}-${{ inputs.distro_name }}-${machine}-${FILENAME}"
-              RELATIVE_JOB_PATH=$(realpath -s --relative-to "${GITHUB_WORKSPACE}" "${JOB_PATH}")
+              RELATIVE_JOB_PATH=$(realpath -s --relative-to "${JOBS_OUT_PATH}" "${JOB_PATH}")
               NAME="${machine}"
               ARTIFACT="${{ inputs.prefix }}-${{ inputs.distro_name }}"
               RESULT_JSON=$(echo "$RESULT_JSON" | jq -c --arg path "${RELATIVE_JOB_PATH}" --arg artifact "${ARTIFACT}" --arg result_file "${RESULT_NAME}" --arg name "${NAME}" '.target += [$ARGS.named]')
