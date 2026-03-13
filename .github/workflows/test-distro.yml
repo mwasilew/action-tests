@@ -40,7 +40,6 @@ jobs:
       - name: Print output ID
         run: |
           echo "${{ steps.lava-test-plans.outputs.artifact_id }}"
-        
 
   submit-boot-job:
     needs: prepare-boot-jobs

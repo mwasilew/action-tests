@@ -91,6 +91,7 @@ runs:
               ;;
           esac
 
+          RESULT_JSON=$(jq -n '{target: []}')
           IFS=,; for machine in ${MACHINES}; do
             echo "Rendering test job templates for ${machine}"
             cp "${VARS_OUT_PATH}/gh-variables.ini" "${VARS_OUT_PATH}/${machine}.ini"
@@ -133,10 +134,20 @@ runs:
             #lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/gh-variables.ini" --test-plan "${GITHUB_REPOSITORY#*/}/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/${GITHUB_REPOSITORY#*/}/devices/${{ inputs.machine }}" --dry-run-path "${JOBS_OUT_PATH}/${{ inputs.machine }}-${{ inputs.distro_name }}${{ inputs.kernel }}-${{ inputs.testplan }}" || true
             lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/${machine}.ini" --test-plan "meta-qcom/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/${PROJECT}/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" || true
             # create the JSON file that is used for the job submission matrix
+            for JOB_PATH in $( find "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" -name "*.yaml");
+            do
+              echo "$JOB_PATH"
+              FILENAME=$(basename "${JOB_PATH}")
+              RESULT_NAME="${{ inputs.prefix }}-${{ inputs.distro_name }}-${machine}-${FILENAME}"
+              NAME="${machine}"
+              ARTIFACT="${{ inputs.prefix }}-${{ inputs.distro_name }}"
+              #RESULT_JSON=$(echo "$RESULT_JSON" | jq -c --arg path "${JOB_PATH}" --arg artifact "${ARTIFACT}" --arg result_file "${RESULT_NAME}" --arg name "${NAME}" '.target += [$ARGS.named]')
+            done
           done
 
           #RESULT_JSON=$(jq -n '{target: []}')
-          #echo "jobmatrix=$RESULT_JSON" >> $GITHUB_OUTPUT
+          echo "$RESULT_JSON"
+          echo "jobmatrix=$RESULT_JSON" >> $GITHUB_OUTPUT
 
 #      - name: "List files"
 #        shell: bash
@@ -148,6 +159,6 @@ runs:
         id: upload-test-plans
         uses: actions/upload-artifact@v6
         with:
-          name: ${{ inputs.prefix }}-${{ inputs.distro_name }}${{ inputs.kernel }}
+          name: ${{ inputs.prefix }}-${{ inputs.distro_name }}
           path: ${{ env.JOBS_OUT_PATH }}/**
 
