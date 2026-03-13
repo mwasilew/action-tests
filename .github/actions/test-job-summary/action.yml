@@ -45,11 +45,11 @@ runs:
               JOB_HEALTH=$(echo "$JOB_DETAILS" | jq -r ".health")
               JOB_STATE=$(echo "$JOB_DETAILS" | jq -r ".state")
               JOB_DEVICE_TYPE=$(echo "$JOB_DETAILS" | jq -r ".requested_device_type")
-              if [ "${JOB_STATE}" = "Finished" ] && [ ${JOB_HEALTH} = "Complete" ]; then
-                  # get suites and results
-                  JOB_SUITES=$(curl -s "https://lava.infra.foundries.io/api/v0.2/jobs/$JOB_ID/suites/")
-                  TEST_RESULTS=$(for SUITE in $(echo "$JOB_SUITES" | jq -r -c ".results[]")
-                  do
+              # get suites and results
+              JOB_SUITES=$(curl -s "https://lava.infra.foundries.io/api/v0.2/jobs/$JOB_ID/suites/")
+              TEST_RESULTS=$(for SUITE in $(echo "$JOB_SUITES" | jq -r -c ".results[]")
+              do
+                  if [ "${JOB_STATE}" = "Finished" ] && [ ${JOB_HEALTH} = "Complete" ]; then
                       SUITE_NAME=$(echo "$SUITE" | jq -r ".name")
                       SUITE_ID=$(echo "$SUITE" | jq -r ".id")
                       SUITE_TESTS=$(curl -s "https://lava.infra.foundries.io/api/v0.2/jobs/$JOB_ID/suites/$SUITE_ID/tests/")
@@ -67,14 +67,13 @@ runs:
                           TEST_RESULT_OBJ=$(jq --arg url "$TEST_URL" --arg result "pass" -n -c '$ARGS.named')
                           jq -n -c --arg key "$TEST_NAME" --argjson value "$TEST_RESULT_OBJ" '$ARGS.named'
                       fi
-                  done | jq -s -c --sort-keys 'from_entries')
-              else
-                  TEST_NAME="boot"
-                  TEST_URL="${JOB_URL}"
-                  TEST_RESULT_OBJ=$(jq --arg url "$TEST_URL" --arg result "fail" -n -c '$ARGS.named')
-                  jq -n -c --arg key "$TEST_NAME" --argjson value "$TEST_RESULT_OBJ" '$ARGS.named'
-
-              fi
+                  else
+                      TEST_NAME="boot"
+                      TEST_URL="${JOB_URL}"
+                      TEST_RESULT_OBJ=$(jq --arg url "$TEST_URL" --arg result "fail" -n -c '$ARGS.named')
+                      jq -n -c --arg key "$TEST_NAME" --argjson value "$TEST_RESULT_OBJ" '$ARGS.named'
+                  fi
+              done | jq -s -c --sort-keys 'from_entries')
               echo "{\"key\": \"$JOB_DEVICE_TYPE\", \"value\": $TEST_RESULTS}" | jq
           # combine entries from boot jobs and pre-merge jobs
           done | jq -s -c 'reduce .[] as $i ({}; .[$i.key] = ((.[$i.key] // {}) + $i.value))')
