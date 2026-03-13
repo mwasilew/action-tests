@@ -81,7 +81,7 @@ runs:
               ;;
           esac
 
-          IFS=,; for machine in "${MACHINES}"; do
+          IFS=,; for machine in ${MACHINES}; do
             echo "Rendering test job templates for ${machine}"
             cp "${VARS_OUT_PATH}/gh-variables.ini" "${machine}.ini"
             echo "IMAGE_FILE_NAME=${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${machine}.ini"
