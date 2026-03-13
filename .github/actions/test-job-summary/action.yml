@@ -36,12 +36,7 @@ runs:
       - name: Publish Test Job Details
         shell: bash
         run: |
-          for TESTJOB in $(find ${{ github.workspace }} -name "${{ inputs.prefix }}.json")
-          do
-              echo "$TESTJOB"
-              cat "$TESTJOB"
-              cat "$TESTJOB" | jq ".id"
-          done
+          set -x
           INPUT=$(for TESTJOB in $(find ${{ github.workspace }} -name "${{ inputs.prefix }}.json")
           do
               JOB_ID=$(cat "$TESTJOB" | jq ".id")
