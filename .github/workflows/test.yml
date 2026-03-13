@@ -17,19 +17,19 @@ jobs:
     with:
       build_id: "${{ inputs.build_id }}"
       devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
-      distro: "nodistro"
+      distro_name: "nodistro"
   boot-test-qcom-distro:
     uses: ./.github/workflows/test-distro.yml
     with:
       build_id: "${{ inputs.build_id }}"
       devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
-      distro: "qcom-distro"
+      distro_name: "qcom-distro"
   boot-test-qcom-distro_linux-qcom-6-18:
     uses: ./.github/workflows/test-distro.yml
     with:
       build_id: "${{ inputs.build_id }}"
       devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
-      distro: "qcom-distro_linux-qcom-6.18"
+      distro_name: "qcom-distro_linux-qcom-6.18"
 #
 #  prepare-premerge-jobs:
 #    needs: boot-job-result
