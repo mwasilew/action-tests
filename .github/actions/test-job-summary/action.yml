@@ -38,6 +38,7 @@ runs:
         run: |
           INPUT=$(for TESTJOB in $(find ${{ github.workspace }} -name "${{ inputs.prefix }}.json")
           do
+              echo "Processing ${TESTJOB}"
               JOB_ID=$(cat "${TESTJOB}" | jq ".id")
               JOB_URL="https://lava.infra.foundries.io/results/$JOB_ID"
               JOB_DETAILS=$(curl -s "https://lava.infra.foundries.io/api/v0.2/jobs/$JOB_ID/")

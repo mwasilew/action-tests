@@ -76,10 +76,10 @@ jobs:
         id: submit
         uses: foundriesio/lava-action@v9
         with:
-          #lava_token: ${{ secrets.LAVA_TOKEN }}
-          #lava_url: 'lava.infra.foundries.io'
-          lava_token: ${{ secrets.LAVA_STAGING_TOKEN }}
-          lava_url: 'lava-staging.infra.foundries.io'
+          lava_token: ${{ secrets.LAVA_TOKEN }}
+          lava_url: 'lava.infra.foundries.io'
+          #lava_token: ${{ secrets.LAVA_STAGING_TOKEN }}
+          #lava_url: 'lava-staging.infra.foundries.io'
           job_definition: ${{ matrix.target.path }}
           wait_for_job: true
           fail_action_on_failure: true
