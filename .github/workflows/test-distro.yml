@@ -12,6 +12,10 @@ on:
         description: Comma separated list of devices to be used for testing
         # example
         # iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx
+      devices_premerge:
+        required: false
+        type: string
+        description: Comma separated list of devices to be used for testing. Set when different from devices running boot test.
       distro_name:
         required: true
         type: string
@@ -63,7 +67,7 @@ jobs:
       - name: 'Download job templates'
         uses: actions/download-artifact@v7
         with:
-          name: ${{ matrix.target.artifact }}
+          artifact-ids: ${{ needs.prepare-boot-jobs.outputs.artifact_id }}
       - name: "List files"
         shell: bash
         run: |
@@ -74,8 +78,7 @@ jobs:
       - name: Submit ${{ matrix.target.name }}
         timeout-minutes: 20
         id: submit
-        #uses: foundriesio/lava-action@v9
-        uses: mwasilew/lava-action@result-detail-prefix
+        uses: foundriesio/lava-action@v10
         with:
           lava_token: ${{ secrets.LAVA_TOKEN }}
           lava_url: 'lava.infra.foundries.io'
@@ -122,9 +125,80 @@ jobs:
           echo "boot_result=$BOOT_RESULT"
           echo "boot_result=$BOOT_RESULT" >> "$GITHUB_OUTPUT"
 
+  prepare-premerge-jobs:
+    name: "Prepare boot jobs for ${{ inputs.distro }}"
+    runs-on: ubuntu-latest
+    needs: boot-job-result
+    # run only if boot jobs are successful
+    if: ${{ needs.boot-job-result.outputs.boot_result == 'success' }}
+    runs-on: ubuntu-latest
+
+    outputs:
+      jobmatrix: ${{ steps.lava-test-plans.outputs.jobmatrix }}
+      artifact_id: ${{ steps.lava-test-plans.outputs.artifact_id }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine device list
+        id: determine-device-list
+        run: |
+          PREMERGE_DEVICE_LIST="${{ inputs.devices }}"
+          if [ -n "${{ inputs.devices_premerge }}" ]; then
+            PREMERGE_DEVICE_LIST="${{ inputs.devices_premerge }}"
+          fi
+          echo "PREMERGE_DEVICE_LIST=${PREMERGE_DEVICE_LIST}" >> $GITHUB_OUTPUT
+
+      - name: Run lava-test-plans
+        id: lava-test-plans
+        uses: ./.github/actions/lava-test-plans
+        with:
+          machines: ${{ steps.determine-device-list.outputs.PREMERGE_DEVICE_LIST }}
+          distro_name: ${{ inputs.distro_name }}${{ inputs.distro_suffix }}
+          build_id: ${{ inputs.build_id }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: premerge
+          project: "meta-qcom"
+          testplan: "${{ inputs.distro_name }}/pre-merge"
+
+      - name: Print output ID
+        run: |
+          echo "${{ steps.lava-test-plans.outputs.artifact_id }}"
+          echo "${{ steps.lava-test-plans.outputs.jobmatrix }}"
+
+  submit-premerge-job:
+    needs: prepare-premerge-jobs
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    name: Pre-merge ${{ matrix.target.name }}
+    strategy:
+      matrix: ${{ fromJson(needs.prepare-premerge-jobs.outputs.jobmatrix) }}
+    steps:
+      - name: 'Download job templates'
+        uses: actions/download-artifact@v7
+        with:
+          artifact-ids: ${{ needs.prepare-premerge-jobs.outputs.artifact_id }}
+
+      - name: Submit ${{ matrix.target.name }}
+        timeout-minutes: 20
+        uses: foundriesio/lava-action@v10
+        with:
+          lava_token: ${{ secrets.LAVA_TOKEN }}
+          lava_url: 'lava.infra.foundries.io'
+          job_definition: ${{ matrix.target.path }}
+          wait_for_job: true
+          fail_action_on_failure: true
+          fail_action_on_incomplete: true
+          save_result_as_artifact: true
+          save_job_details: true
+          result_file_name: "${{ matrix.target.result_file }}"
+          test_job_file_name_prefix: "${{ inputs.distro_name }}${{ inputs.distro_suffix }}-"
+
   publish-test-summary:
     name: "Publish Summary ${{ inputs.distro_name }}${{ inputs.distro_suffix }}"
-    needs: [boot-job-result]
+    needs: [boot-job-result, submit-premerge-job]
     if: |
       always()
       && contains(needs.*.result, 'success')

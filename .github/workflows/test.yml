@@ -133,39 +133,39 @@ jobs:
 #          save_job_details: true
 #          result_file_name: "${{ matrix.target.result_file }}"
 
-  publish-test-summary:
-    name: "Publish Tests Summary"
-    #needs: [submit-premerge-job, submit-boot-job]
-    needs: [boot-test-nodistro, boot-test-qcom-distro, boot-test-qcom-distro_linux-qcom-6-18]
-    if: |
-      always()
-      && contains(needs.*.result, 'success')
-      && !contains(needs.*.result, 'failure')
-    runs-on: ubuntu-latest
-    permissions:
-      checks: write
-      pull-requests: write
-    outputs:
-      summary_id: ${{ steps.generate-summary.outputs.artifact_id }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Generate Summary
-        id: generate-summary
-        uses: ./.github/actions/test-job-summary
-        with:
-          build_id: ${{ github.run_id }}
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
-          summary_file_name: test_job_summary
-
-      - name: Download Summary
-        uses: actions/download-artifact@v7
-        with:
-          artifact-ids: ${{ steps.generate-summary.outputs.artifact_id }}
-
-      - name: Publish Test Job Details
-        run: |
-            cat test_job_summary >> $GITHUB_STEP_SUMMARY
+#  publish-test-summary:
+#    name: "Publish Tests Summary"
+#    #needs: [submit-premerge-job, submit-boot-job]
+#    needs: [boot-test-nodistro, boot-test-qcom-distro, boot-test-qcom-distro_linux-qcom-6-18]
+#    if: |
+#      always()
+#      && contains(needs.*.result, 'success')
+#      && !contains(needs.*.result, 'failure')
+#    runs-on: ubuntu-latest
+#    permissions:
+#      checks: write
+#      pull-requests: write
+#    outputs:
+#      summary_id: ${{ steps.generate-summary.outputs.artifact_id }}
+#
+#    steps:
+#      - uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Generate Summary
+#        id: generate-summary
+#        uses: ./.github/actions/test-job-summary
+#        with:
+#          build_id: ${{ github.run_id }}
+#          gh_token: ${{ secrets.GITHUB_TOKEN }}
+#          summary_file_name: test_job_summary
+#
+#      - name: Download Summary
+#        uses: actions/download-artifact@v7
+#        with:
+#          artifact-ids: ${{ steps.generate-summary.outputs.artifact_id }}
+#
+#      - name: Publish Test Job Details
+#        run: |
+#            cat test_job_summary >> $GITHUB_STEP_SUMMARY
