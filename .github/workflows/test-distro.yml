@@ -112,7 +112,7 @@ jobs:
       - uses: cloudposse/github-action-matrix-outputs-read@v1
         id: read
         with:
-          matrix-step-name: "submit-boot-job"
+          matrix-step-name: ${{ github.job }}
       - id: print-boot-result
         name: "Print boot result"
         run: |
