@@ -144,7 +144,7 @@ jobs:
       - name: Determine device list
         id: determine-device-list
         run: |
-          PREMERGE_DEVICE_LIST="${{ inputs.devices }}"
+          PREMERGE_DEVICE_LIST=""
           if [ -n "${{ inputs.devices_premerge }}" ]; then
             PREMERGE_DEVICE_LIST="${{ inputs.devices_premerge }}"
           fi
