@@ -161,6 +161,8 @@ runs:
 #          ls -R "${GITHUB_WORKSPACE}"
 
       - name: 'Upload test jobs'
+        # only run upload if jobmatrix was generated
+        if: ${{ lava-test-plans.outputs.jobmatrix }}
         id: upload-test-plans
         uses: actions/upload-artifact@v6
         with:
