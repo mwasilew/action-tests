@@ -68,6 +68,7 @@ runs:
           JOBS_OUT_PATH="${OUT_PATH}/jobs"
           PROJECT="${GITHUB_REPOSITORY#*/}"
           if [ -n "${{ inputs.project }}" ]; then
+            echo "jobmatrix=''" >> $GITHUB_OUTPUT
             PROJECT="${{ inputs.project }}"
           fi
           echo "JOBS_OUT_PATH=${JOBS_OUT_PATH}" >> $GITHUB_ENV
@@ -162,8 +163,7 @@ runs:
 
       - name: 'Upload test jobs'
         # only run upload if jobmatrix was generated
-        needs: [lava-test-plans]
-        if: ${{ needs.lava-test-plans.outputs.jobmatrix != '' }}
+        if: ${{ steps.lava-test-plans.outputs.jobmatrix != '' }}
         id: upload-test-plans
         uses: actions/upload-artifact@v6
         with:
