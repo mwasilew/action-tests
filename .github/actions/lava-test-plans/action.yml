@@ -59,6 +59,10 @@ runs:
           set -euo pipefail
           cd lava-test-plans && pip install .
           lava-test-plans --version
+          if [ -z "$MACHINES"]; then
+            echo "No machines defined. Exiting"
+            exit 0
+          fi
           OUT_PATH="${GITHUB_WORKSPACE}/out"
           VARS_OUT_PATH="${OUT_PATH}/vars"
           JOBS_OUT_PATH="${OUT_PATH}/jobs"
