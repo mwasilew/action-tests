@@ -98,7 +98,7 @@ jobs:
         with:
           matrix-step-name: "${{ github.job }}-${{ inputs.distro_name }}${{ inputs.distro_suffix }}"
           matrix-key: ${{ matrix.target.name }}-${{ inputs.distro_name }}${{ inputs.distro_suffix }}
-          artifact-name: ${{ github.job }-${{ inputs.distro_name }}${{ inputs.distro_suffix }}-${{ matrix.target.name }}
+          artifact-name: ${{ github.job }}-${{ inputs.distro_name }}${{ inputs.distro_suffix }}-${{ matrix.target.name }}
           outputs: |-
             result: ${{ steps.submit.outcome }}
 
