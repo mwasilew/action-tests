@@ -96,7 +96,7 @@ jobs:
         if: always()
         id: out
         with:
-          matrix-step-name: "boot-job-results-${{ github.job }}"
+          matrix-step-name: "boot-job-results-${{ inputs.distro_name }}${{ inputs.distro_suffix }}-${{ github.job }}"
           matrix-key: ${{ matrix.target.name }}-${{ inputs.distro_name }}${{ inputs.distro_suffix }}
           artifact-name: ${{ matrix.target.name }}-${{ inputs.distro_name }}${{ inputs.distro_suffix }}
           outputs: |-
@@ -112,7 +112,7 @@ jobs:
       - uses: cloudposse/github-action-matrix-outputs-read@v1
         id: read
         with:
-          matrix-step-name: "boot-job-results-${{ github.job }}"
+          matrix-step-name: "boot-job-results-${{ inputs.distro_name }}${{ inputs.distro_suffix }}-${{ github.job }}"
       - id: print-boot-result
         name: "Print boot result"
         run: |
