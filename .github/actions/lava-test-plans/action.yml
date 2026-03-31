@@ -97,8 +97,7 @@ runs:
           esac
 
           RESULT_JSON=$(jq -n '{target: []}')
-          OLDIFS=$IFS
-          IFS=,; for machine in ${MACHINES}; do
+          for machine in ${MACHINES//,/ }; do
             echo "Rendering test job templates for ${machine}"
             cp "${VARS_OUT_PATH}/gh-variables.ini" "${VARS_OUT_PATH}/${machine}.ini"
             echo "IMAGE_FILE_NAME=${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${VARS_OUT_PATH}/${machine}.ini"
@@ -141,7 +140,7 @@ runs:
             lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/${machine}.ini" --test-plan "${PROJECT}/${{ inputs.testplan }}" --device-type "projects/${PROJECT}/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" || true
             # create the JSON file that is used for the job submission matrix
             find "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" -name "*.yaml"
-            IFS=$OLDIFS for JOB_PATH in $( find "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" -name "*.yaml");
+            for JOB_PATH in $( find "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" -name "*.yaml");
             do
               echo "Processing $JOB_PATH"
               FILENAME=$(basename "${JOB_PATH}")
