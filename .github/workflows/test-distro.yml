@@ -96,9 +96,9 @@ jobs:
         if: always()
         id: out
         with:
-          matrix-step-name: "boot-job-results-${{ inputs.distro_name }}${{ inputs.distro_suffix }}-${{ github.job }}"
+          matrix-step-name: "${{ github.job }}-${{ inputs.distro_name }}${{ inputs.distro_suffix }}"
           matrix-key: ${{ matrix.target.name }}-${{ inputs.distro_name }}${{ inputs.distro_suffix }}
-          artifact-name: ${{ matrix.target.name }}-${{ inputs.distro_name }}${{ inputs.distro_suffix }}
+          artifact-name: ${{ github.job }-${{ inputs.distro_name }}${{ inputs.distro_suffix }}-${{ matrix.target.name }}
           outputs: |-
             result: ${{ steps.submit.outcome }}
 
@@ -109,10 +109,11 @@ jobs:
     outputs:
       boot_result: "${{ steps.print-boot-result.outputs.boot_result }}"
     steps:
-      - uses: cloudposse/github-action-matrix-outputs-read@v1
+      - uses: mwasilew/github-action-matrix-outputs-read@main
         id: read
         with:
-          matrix-step-name: "boot-job-results-${{ inputs.distro_name }}${{ inputs.distro_suffix }}-${{ github.job }}"
+          matrix-step-name: "submit-boot-job-${{ inputs.distro_name }}${{ inputs.distro_suffix }}"
+          download-file-pattern: "submit-boot-job-${{ inputs.distro_name }}${{ inputs.distro_suffix }}*"
       - id: print-boot-result
         name: "Print boot result"
         run: |
