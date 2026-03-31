@@ -142,13 +142,15 @@ runs:
             find "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" -name "*.yaml"
             for JOB_PATH in $( find "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" -name "*.yaml");
             do
-              echo "$JOB_PATH"
+              echo "Processing $JOB_PATH"
               FILENAME=$(basename "${JOB_PATH}")
               RESULT_NAME="${{ inputs.prefix }}-${{ inputs.distro_name }}-${machine}-${FILENAME}"
               RELATIVE_JOB_PATH=$(realpath -s --relative-to "${JOBS_OUT_PATH}" "${JOB_PATH}")
+              echo "$RELATIVE_JOB_PATH"
               NAME="${machine}"
               ARTIFACT="${{ inputs.prefix }}-${{ inputs.distro_name }}"
               RESULT_JSON=$(echo "$RESULT_JSON" | jq -c --arg path "${RELATIVE_JOB_PATH}" --arg artifact "${ARTIFACT}" --arg result_file "${RESULT_NAME}" --arg name "${NAME}" '.target += [$ARGS.named]')
+              echo "$RESULT_JSON"
             done
           done
 
