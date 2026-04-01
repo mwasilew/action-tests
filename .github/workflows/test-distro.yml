@@ -198,7 +198,7 @@ jobs:
 
   publish-test-summary:
     name: "Publish Summary ${{ inputs.distro_name }}${{ inputs.distro_suffix }}"
-    needs: [boot-job-result]
+    needs: [boot-job-result, submit-premerge-job]
     if: |
       always()
       && contains(needs.*.result, 'success')
