@@ -55,13 +55,14 @@ runs:
                       SUITE_ID=$(echo "$SUITE" | jq -r ".id")
                       SUITE_TESTS=$(curl -s "https://lava.infra.foundries.io/api/v0.2/jobs/$JOB_ID/suites/$SUITE_ID/tests/")
                       if [ "$SUITE_NAME" != "lava" ]; then
-                          TEST_NAME=$(echo "$SUITE_TESTS" | jq -r -c ".results[] | .name")
-                          TEST_RESULT=$(echo "$SUITE_TESTS" | jq -r -c ".results[] | .result")
-                          TEST_URL="${JOB_URL}"
-                          TEST_RESULT_OBJ=$(jq --arg url "$TEST_URL" --arg result "$TEST_RESULT" -n -c '$ARGS.named')
-                          if [ -n "$TEST_NAME" ]; then
-                              jq -n -c --arg key "$TEST_NAME" --argjson value "$TEST_RESULT_OBJ" '$ARGS.named'
-                          fi
+                          echo "$SUITE_TESTS" | jq ".results[] | {(.name): {result: .result, url: .resource_uri}} | to_entries | .[]"
+                          #TEST_NAME=$(echo "$SUITE_TESTS" | jq -r -c ".results[] | .name")
+                          #TEST_RESULT=$(echo "$SUITE_TESTS" | jq -r -c ".results[] | .result")
+                          #TEST_URL="${JOB_URL}"
+                          #TEST_RESULT_OBJ=$(jq --arg url "$TEST_URL" --arg result "$TEST_RESULT" -n -c '$ARGS.named')
+                          #if [ -n "$TEST_NAME" ]; then
+                          #    jq -n -c --arg key "$TEST_NAME" --argjson value "$TEST_RESULT_OBJ" '$ARGS.named'
+                          #fi
                       else
                           TEST_NAME="boot"
                           TEST_URL="${JOB_URL}"
