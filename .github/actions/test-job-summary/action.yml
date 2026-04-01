@@ -26,6 +26,7 @@ runs:
           github-token: ${{ inputs.gh_token }}
           run-id: ${{ inputs.build_id }}
           path: artifacts
+          pattern: ${{ inputs.prefix }}
 
       - name: "List files"
         shell: bash
