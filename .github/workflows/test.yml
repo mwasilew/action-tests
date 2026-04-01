@@ -62,7 +62,7 @@ jobs:
       - name: Summary IDs
         id: generate-summary
         run: |
-          echo "artifact_ids=${{ needs.test-nodistro.outputs.summary_id }},${{ needs.test-qcom-distro.outputs.summary_id }},${{ needs.test-test-qcom-distro_linux-qcom-6-18.outputs.summary_id }}" >> $GITHUB_OUTPUT
+          echo "artifact_ids=${{ needs.test-nodistro.outputs.summary_id }},${{ needs.test-qcom-distro.outputs.summary_id }},${{ needs.test-qcom-distro_linux-qcom-6-18.summary_id }}" >> $GITHUB_OUTPUT
 #
 #  prepare-premerge-jobs:
 #    needs: boot-job-result
