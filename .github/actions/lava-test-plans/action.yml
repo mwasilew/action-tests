@@ -97,7 +97,7 @@ runs:
           esac
 
           #RESULT_JSON=$(jq -n '{target: []}')
-          RESULT_JSON='{target: []}'
+          RESULT_JSON='{"target": []}'
           for machine in ${MACHINES//,/ }; do
             echo "Rendering test job templates for ${machine}"
             cp "${VARS_OUT_PATH}/gh-variables.ini" "${VARS_OUT_PATH}/${machine}.ini"
