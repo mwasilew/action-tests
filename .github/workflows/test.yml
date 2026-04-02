@@ -9,7 +9,7 @@ on:
     outputs:
       summary_ids:
         description: "IDs of the test summary artifact"
-        value: ${{ jobs.collect-ids.outputs.summary_id }}
+        value: ${{ jobs.collect-ids.outputs.summary_ids }}
 
 jobs:
   test-nodistro:
