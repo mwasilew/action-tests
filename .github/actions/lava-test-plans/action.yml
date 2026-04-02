@@ -52,14 +52,19 @@ runs:
 
       - name: Run lava-test-plans
         id: lava-test-plans
-        env:
-          MACHINES: ${{ inputs.machines }}
         shell: bash
+        env:
+          INPUTS_PROJECT: ${{ inputs.project }}
+          INPUTS_DISTRO_NAME: ${{ inputs.distro_name }}
+          INPUTS_MACHINES: ${{ inputs.machines }}
+          INPUTS_KERNEL: ${{ inputs.kernel }}
+          INPUTS_TESTPLAN: ${{ inputs.testplan }}
+          INPUTS_PREFIX: ${{ inputs.prefix }}
         run: |
           set -euo pipefail
           cd lava-test-plans && pip install .
           lava-test-plans --version
-          #if [ -z "$MACHINES"]; then
+          #if [ -z "$INPUT_MACHINES"]; then
           #  echo "No machines defined. Exiting"
           #  exit 0
           #fi
@@ -67,28 +72,28 @@ runs:
           VARS_OUT_PATH="${OUT_PATH}/vars"
           JOBS_OUT_PATH="${OUT_PATH}/jobs"
           PROJECT="${GITHUB_REPOSITORY#*/}"
-          if [ -n "${{ inputs.project }}" ]; then
+          if [ -n "${INPUTS_PROJECT}" ]; then
             echo "jobmatrix=''" >> $GITHUB_OUTPUT
-            PROJECT="${{ inputs.project }}"
+            PROJECT="${INPUTS_PROJECT}"
           fi
           echo "JOBS_OUT_PATH=${JOBS_OUT_PATH}" >> $GITHUB_ENV
           mkdir -p "${VARS_OUT_PATH}"
           mkdir -p "${JOBS_OUT_PATH}"
           #echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> "${VARS_OUT_PATH}/gh-variables.ini"
           #echo "PROJECT=projects/${GITHUB_REPOSITORY#*/}/" >> "${VARS_OUT_PATH}/gh-variables.ini"
-          echo "PROJECT_NAME=${PROJECT}" >> "${VARS_OUT_PATH}/gh-variables.ini"
-          echo "PROJECT=projects/${PROJECT}/" >> "${VARS_OUT_PATH}/gh-variables.ini"
+          echo "PROJECT_NAME=${INPUTS_PROJECT}" >> "${VARS_OUT_PATH}/gh-variables.ini"
+          echo "PROJECT=projects/${INPUTS_PROJECT}/" >> "${VARS_OUT_PATH}/gh-variables.ini"
           echo "LAVA_JOB_PRIORITY=50" >> "${VARS_OUT_PATH}/gh-variables.ini"
           # OS_INFO can be omited
           echo "OS_INFO=qcom-distro" >> "${VARS_OUT_PATH}/gh-variables.ini"
           echo "AUDIO_CLIPS_BASE_DIR=/home/AudioClips/" >> "${VARS_OUT_PATH}/gh-variables.ini"
-          echo "BUILD_NUMBER=${{ github.run_id }}-${{ github.run_attempt }}" >> "${VARS_OUT_PATH}/gh-variables.ini"
+          echo "BUILD_NUMBER=${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "${VARS_OUT_PATH}/gh-variables.ini"
           echo "DOCKER_IMAGE_POSTPROCESS=ghcr.io/foundriesio/lava-lmp-sign:main" >> "${VARS_OUT_PATH}/gh-variables.ini"
           echo "AUTH_HEADER_NAME=Authorization" >> "${VARS_OUT_PATH}/gh-variables.ini"
           echo "AUTH_HEADER_TOKEN=Q_S3_TOKEN" >> "${VARS_OUT_PATH}/gh-variables.ini"
           echo "TEST_DEFINITIONS_REPOSITORY=https://github.com/qualcomm-linux/qcom-linux-testkit/" >> "${VARS_OUT_PATH}/gh-variables.ini"
           IMAGE_TYPE="core-image-base"
-          case "${{ inputs.distro_name }}" in
+          case "${INPUTS_DISTRO_NAME}" in
             "qcom-distro"*)
               IMAGE_TYPE="qcom-multimedia-image"
               echo "AUTO_LOGIN_PASSWORD_PROMPT=Password" >> "${VARS_OUT_PATH}/gh-variables.ini"
@@ -96,21 +101,20 @@ runs:
               ;;
           esac
 
-          #RESULT_JSON=$(jq -n '{target: []}')
           RESULT_JSON='{"target": []}'
-          for machine in ${MACHINES//,/ }; do
+          for machine in ${INPUT_MACHINES//,/ }; do
             echo "Rendering test job templates for ${machine}"
             cp "${VARS_OUT_PATH}/gh-variables.ini" "${VARS_OUT_PATH}/${machine}.ini"
             echo "IMAGE_FILE_NAME=${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${VARS_OUT_PATH}/${machine}.ini"
             echo "DEVICE_TYPE=${machine}" >> "${VARS_OUT_PATH}/${machine}.ini"
             export BUILD_URL=""
             # dir name and file name are the same as we're downloading multiple files
-            export BUILD_URL_FILE="$GITHUB_WORKSPACE/build-url_${machine}_${{ inputs.distro_name }}/build-url_${machine}_${{ inputs.distro_name }}"
+            export BUILD_URL_FILE="$GITHUB_WORKSPACE/build-url_${machine}_${INPUTS_DISTRO_NAME}/build-url_${machine}_${INPUTS_DISTRO_NAME}"
             if [ "${machine}" = "dragonboard-410c" ]; then
-              export BUILD_URL_FILE="$GITHUB_WORKSPACE/build-url_qcom-armv8a_${{ inputs.distro_name }}/build-url_qcom-armv8a_${{ inputs.distro_name }}"
+              export BUILD_URL_FILE="$GITHUB_WORKSPACE/build-url_qcom-armv8a_${INPUTS_DISTRO_NAME}/build-url_qcom-armv8a_${INPUTS_DISTRO_NAME}"
             fi
             if [ "${machine}" = "dragonboard-820c" ]; then
-              export BUILD_URL_FILE="$GITHUB_WORKSPACE/build-url_qcom-armv8a_${{ inputs.distro_name }}/build-url_qcom-armv8a_${{ inputs.distro_name }}"
+              export BUILD_URL_FILE="$GITHUB_WORKSPACE/build-url_qcom-armv8a_${INPUTS_DISTRO_NAME}/build-url_qcom-armv8a_${INPUTS_DISTRO_NAME}"
             fi
             echo "${BUILD_URL_FILE}"
             if [ -f "$BUILD_URL_FILE" ]; then
@@ -123,33 +127,33 @@ runs:
             fi
             echo "BUILD_DOWNLOAD_URL=${BUILD_URL}/" >> "${VARS_OUT_PATH}/${machine}.ini"
 
-            echo "ROOTFS_URL=${BUILD_URL}/${{ inputs.distro_name }}/${machine}/${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${VARS_OUT_PATH}/${machine}.ini"
+            echo "ROOTFS_URL=${BUILD_URL}/${INPUTS_DISTRO_NAME}/${machine}/${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${VARS_OUT_PATH}/${machine}.ini"
 
             if [ "${machine}" = "dragonboard-410c" ]; then
                 echo "ROOTFS_IMG_FILE=${IMAGE_TYPE}-qcom-armv8a.rootfs.ext4" >> "${VARS_OUT_PATH}/${machine}.ini"
                 echo "BOOT_IMG_FILE=boot-apq8016-sbc-qcom-armv8a.img" >> "${VARS_OUT_PATH}/${machine}.ini"
-                echo "BUILD_OS=${{ inputs.distro_name }}${{ inputs.kernel }}/" >> "${VARS_OUT_PATH}/${machine}.ini"
+                echo "BUILD_OS=${INPUTS_DISTRO_NAME}${INPUTS_KERNEL}/" >> "${VARS_OUT_PATH}/${machine}.ini"
             fi
             if [ "${machine}" = "dragonboard-820c" ]; then
                 echo "ROOTFS_IMG_FILE=${IMAGE_TYPE}-qcom-armv8a.rootfs.ext4" >> "${VARS_OUT_PATH}/${machine}.ini"
                 echo "BOOT_IMG_FILE=boot-apq8096-db820c-qcom-armv8a.img" >> "${VARS_OUT_PATH}/${machine}.ini"
-                echo "BUILD_OS=${{ inputs.distro_name }}${{ inputs.kernel }}/" >> "${VARS_OUT_PATH}/${machine}.ini"
+                echo "BUILD_OS=${INPUTS_DISTRO_NAME}${INPUTS_KERNEL}/" >> "${VARS_OUT_PATH}/${machine}.ini"
             fi
 
             cat "${VARS_OUT_PATH}/${machine}.ini"
             #lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/gh-variables.ini" --test-plan "${GITHUB_REPOSITORY#*/}/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/${GITHUB_REPOSITORY#*/}/devices/${{ inputs.machine }}" --dry-run-path "${JOBS_OUT_PATH}/${{ inputs.machine }}-${{ inputs.distro_name }}${{ inputs.kernel }}-${{ inputs.testplan }}" || true
-            lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/${machine}.ini" --test-plan "${PROJECT}/${{ inputs.testplan }}" --device-type "projects/${PROJECT}/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" || true
+            lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/${machine}.ini" --test-plan "${INPUTS_PROJECT}/${INPUTS_TESTPLAN}" --device-type "projects/${INPUTS_PROJECT}/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${INPUTS_DISTRO_NAME}-${INPUTS_TESTPLAN}" || true
             # create the JSON file that is used for the job submission matrix
-            find "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" -name "*.yaml"
-            for JOB_PATH in $( find "${JOBS_OUT_PATH}/${machine}-${{ inputs.distro_name }}-${{ inputs.testplan }}" -name "*.yaml");
+            find "${JOBS_OUT_PATH}/${machine}-${INPUTS_DISTRO_NAME}-${INPUTS_TESTPLAN}" -name "*.yaml"
+            for JOB_PATH in $( find "${JOBS_OUT_PATH}/${machine}-${INPUTS_DISTRO_NAME}-${INPUTS_TESTPLAN}" -name "*.yaml");
             do
               echo "Processing $JOB_PATH"
               FILENAME=$(basename "${JOB_PATH}")
-              RESULT_NAME="${{ inputs.prefix }}-${{ inputs.distro_name }}-${machine}-${FILENAME}"
+              RESULT_NAME="${INPUTS_PREFIX}-${INPUTS_DISTRO_NAME}-${machine}-${FILENAME}"
               RELATIVE_JOB_PATH=$(realpath -s --relative-to "${JOBS_OUT_PATH}" "${JOB_PATH}")
               echo "$RELATIVE_JOB_PATH"
               NAME="${machine}"
-              ARTIFACT="${{ inputs.prefix }}-${{ inputs.distro_name }}"
+              ARTIFACT="${INPUTS_PREFIX}-${INPUTS_DISTRO_NAME}"
               RESULT_JSON=$(echo "$RESULT_JSON" | jq -c --arg path "${RELATIVE_JOB_PATH}" --arg artifact "${ARTIFACT}" --arg result_file "${RESULT_NAME}" --arg name "${NAME}" '.target += [$ARGS.named]')
               echo "$RESULT_JSON"
             done

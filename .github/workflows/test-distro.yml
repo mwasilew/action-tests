@@ -55,9 +55,12 @@ jobs:
           testplan: "${{ inputs.distro_name }}/boot"
 
       - name: Print output ID
+        env:
+          JOBMATRIX: "${{ steps.lava-test-plans.outputs.jobmatrix }}"
+          ARTIFACT_ID: "${{ steps.lava-test-plans.outputs.artifact_id }}"
         run: |
-          echo "${{ steps.lava-test-plans.outputs.artifact_id }}"
-          echo "${{ steps.lava-test-plans.outputs.jobmatrix }}"
+          echo "${ARTIFACT_ID}"
+          echo "${JOBMATRIX}"
 
   submit-boot-job:
     needs: prepare-boot-jobs
@@ -119,10 +122,12 @@ jobs:
           download-file-pattern: "submit-boot-job-${{ inputs.distro_name }}${{ inputs.distro_suffix }}*"
       - id: print-boot-result
         name: "Print boot result"
+        env:
+          OUTPUTS_RESULT: "${{ steps.read.outputs.result }}"
         run: |
           # collapse results of matrix of boot test jobs to a single result
-          echo '${{ steps.read.outputs.result }}' | yq
-          BOOT_RESULT=$(echo '${{ steps.read.outputs.result }}' | yq '.[] | first (. != "success")')
+          echo '${OUTPUTS_RESULT}' | yq
+          BOOT_RESULT=$(echo '${OUTPUTS_RESULT}' | yq '.[] | first (. != "success")')
           if [ -z "$BOOT_RESULT" ]; then
             BOOT_RESULT="success"
           fi
@@ -148,10 +153,12 @@ jobs:
 
       - name: Determine device list
         id: determine-device-list
+        env:
+          INPUTS_DEVICES_PREMERGE: "${{ inputs.devices_premerge }}"
         run: |
           PREMERGE_DEVICE_LIST=""
-          if [ -n "${{ inputs.devices_premerge }}" ]; then
-            PREMERGE_DEVICE_LIST="${{ inputs.devices_premerge }}"
+          if [ -n "${INPUTS_DEVICES_PREMERGE}" ]; then
+            PREMERGE_DEVICE_LIST="${INPUTS_DEVICES_PREMERGE}"
           fi
           echo "PREMERGE_DEVICE_LIST=${PREMERGE_DEVICE_LIST}" >> $GITHUB_OUTPUT
 
@@ -168,9 +175,12 @@ jobs:
           testplan: "${{ inputs.distro_name }}/pre-merge"
 
       - name: Print output ID
+        env:
+          JOBMATRIX: "${{ steps.lava-test-plans.outputs.jobmatrix }}"
+          ARTIFACT_ID: "${{ steps.lava-test-plans.outputs.artifact_id }}"
         run: |
-          echo "${{ steps.lava-test-plans.outputs.artifact_id }}"
-          echo "${{ steps.lava-test-plans.outputs.jobmatrix }}"
+          echo "${ARTIFACT_ID}"
+          echo "${JOBMATRIX}"
 
   submit-premerge-job:
     needs: prepare-premerge-jobs
@@ -235,5 +245,8 @@ jobs:
           artifact-ids: ${{ steps.generate-summary.outputs.artifact_id }}
 
       - name: Publish Test Job Details
+        env:
+          INPUTS_DISTRO_NAME: "${{ inputs.distro_name }}"
+          INPUTS_DISTRO_SUFFIX: "${{ inputs.distro_suffix }}"
         run: |
-            cat ${{ inputs.distro_name }}${{ inputs.distro_suffix }}-test_job_summary >> $GITHUB_STEP_SUMMARY
+            cat ${INPUTS_DISTRO_NAME}${INPUTS_DISTRO_SUFFIX}-test_job_summary >> $GITHUB_STEP_SUMMARY
