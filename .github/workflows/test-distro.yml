@@ -227,6 +227,7 @@ jobs:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: "${{ inputs.distro_name }}${{ inputs.distro_suffix }}-test-job*"
           summary_file_name: "${{ inputs.distro_name }}${{ inputs.distro_suffix }}-test_job_summary"
+          summary_title: "${{ inputs.distro_name }}${{ inputs.distro_suffix }}"
 
       - name: Download Summary
         uses: actions/download-artifact@v7
