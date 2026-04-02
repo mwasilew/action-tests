@@ -64,7 +64,7 @@ runs:
           set -euo pipefail
           cd lava-test-plans && pip install .
           lava-test-plans --version
-          #if [ -z "$INPUT_MACHINES"]; then
+          #if [ -z "$INPUTS_MACHINES"]; then
           #  echo "No machines defined. Exiting"
           #  exit 0
           #fi
@@ -102,7 +102,7 @@ runs:
           esac
 
           RESULT_JSON='{"target": []}'
-          for machine in ${INPUT_MACHINES//,/ }; do
+          for machine in ${INPUTS_MACHINES//,/ }; do
             echo "Rendering test job templates for ${machine}"
             cp "${VARS_OUT_PATH}/gh-variables.ini" "${VARS_OUT_PATH}/${machine}.ini"
             echo "IMAGE_FILE_NAME=${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${VARS_OUT_PATH}/${machine}.ini"
