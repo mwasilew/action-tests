@@ -53,8 +53,10 @@ jobs:
           echo "## Test run [workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" > pr-comment.txt
           echo "## Test jobs for commit ${{ github.event.workflow_run.head_sha }}" >> pr-comment.txt
           PR_NUMBER=$(cat "artifacts/Event File/event.json" | jq -r ".number")
-          RESULT_FILE_NAME=$(find ./results_summary/ -type f)
-          cat "${RESULT_FILE_NAME}" >> pr-comment.txt
+          for RESULT_FILE_NAME in $(find ./results_summary/ -type f)
+          do
+              cat "${RESULT_FILE_NAME}" >> pr-comment.txt
+          done
           echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
