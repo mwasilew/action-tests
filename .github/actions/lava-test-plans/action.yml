@@ -33,7 +33,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: qualcomm-linux/lava-test-plans
           path: lava-test-plans
