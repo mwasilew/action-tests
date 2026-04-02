@@ -55,7 +55,7 @@ jobs:
           PR_NUMBER=$(cat "artifacts/Event File/event.json" | jq -r ".number")
           for RESULT_FILE_NAME in $(find ./results_summary/ -type f)
           do
-              cat "${RESULT_FILE_NAME}" >> pr-comment.txt
+              cat "${RESULT_FILE_NAME}" | grep "summary" >> pr-comment.txt
           done
           echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
 
