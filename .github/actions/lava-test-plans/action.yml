@@ -79,10 +79,8 @@ runs:
           echo "JOBS_OUT_PATH=${JOBS_OUT_PATH}" >> $GITHUB_ENV
           mkdir -p "${VARS_OUT_PATH}"
           mkdir -p "${JOBS_OUT_PATH}"
-          #echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> "${VARS_OUT_PATH}/gh-variables.ini"
-          #echo "PROJECT=projects/${GITHUB_REPOSITORY#*/}/" >> "${VARS_OUT_PATH}/gh-variables.ini"
-          echo "PROJECT_NAME=${INPUTS_PROJECT}" >> "${VARS_OUT_PATH}/gh-variables.ini"
-          echo "PROJECT=projects/${INPUTS_PROJECT}/" >> "${VARS_OUT_PATH}/gh-variables.ini"
+          echo "PROJECT_NAME=${PROJECT}" >> "${VARS_OUT_PATH}/gh-variables.ini"
+          echo "PROJECT=projects/${PROJECT}/" >> "${VARS_OUT_PATH}/gh-variables.ini"
           echo "LAVA_JOB_PRIORITY=50" >> "${VARS_OUT_PATH}/gh-variables.ini"
           # OS_INFO can be omited
           echo "OS_INFO=qcom-distro" >> "${VARS_OUT_PATH}/gh-variables.ini"
@@ -141,8 +139,7 @@ runs:
             fi
 
             cat "${VARS_OUT_PATH}/${machine}.ini"
-            #lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/gh-variables.ini" --test-plan "${GITHUB_REPOSITORY#*/}/${{ inputs.distro_name }}/${{ inputs.testplan }}" --device-type "projects/${GITHUB_REPOSITORY#*/}/devices/${{ inputs.machine }}" --dry-run-path "${JOBS_OUT_PATH}/${{ inputs.machine }}-${{ inputs.distro_name }}${{ inputs.kernel }}-${{ inputs.testplan }}" || true
-            lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/${machine}.ini" --test-plan "${INPUTS_PROJECT}/${INPUTS_TESTPLAN}" --device-type "projects/${INPUTS_PROJECT}/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${INPUTS_DISTRO_NAME}-${INPUTS_TESTPLAN}" || true
+            lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/${machine}.ini" --test-plan "${PROJECT}/${INPUTS_TESTPLAN}" --device-type "projects/${PROJECT}/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${INPUTS_DISTRO_NAME}-${INPUTS_TESTPLAN}" || true
             # create the JSON file that is used for the job submission matrix
             find "${JOBS_OUT_PATH}/${machine}-${INPUTS_DISTRO_NAME}-${INPUTS_TESTPLAN}" -name "*.yaml"
             for JOB_PATH in $( find "${JOBS_OUT_PATH}/${machine}-${INPUTS_DISTRO_NAME}-${INPUTS_TESTPLAN}" -name "*.yaml");
@@ -161,12 +158,6 @@ runs:
 
           echo "$RESULT_JSON"
           echo "jobmatrix=$RESULT_JSON" >> $GITHUB_OUTPUT
-
-#      - name: "List files"
-#        shell: bash
-#        run: |
-#          echo "${GITHUB_WORKSPACE}"
-#          ls -R "${GITHUB_WORKSPACE}"
 
       - name: 'Upload test jobs'
         # only run upload if jobmatrix was generated
