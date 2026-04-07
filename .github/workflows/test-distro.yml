@@ -127,17 +127,13 @@ jobs:
         run: |
           # collapse results of matrix of boot test jobs to a single result
           yq --version
-          yq --help
-          echo "*********************"
-          echo ${OUTPUTS_RESULT}
-          echo "*********************"
-          echo '${{ steps.read.outputs.result }}'
-          echo "*********************"
-          echo ${OUTPUTS_RESULT} | yq
-          BOOT_RESULT=$(echo '${{ steps.read.outputs.result }}' | yq '.result | [.[]] | all_c(. == "success")')
+
+          BOOT_RESULT=$(echo '${OUTPUTS_RESULT}' | yq '.result | [.[]] | all_c(. == "success")')
           # BOOT_RESULT will be true only if there are no failures
           if [ "$BOOT_RESULT" == "true" ]; then
             BOOT_RESULT="success"
+          else
+            BOOT_RESULT="failure"
           fi
           echo "boot_result=$BOOT_RESULT"
           echo "boot_result=$BOOT_RESULT" >> "$GITHUB_OUTPUT"
