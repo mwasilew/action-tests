@@ -129,9 +129,9 @@ jobs:
           yq --version
 
           BOOT_RESULT="failure"
-          echo '${OUTPUTS_RESULT}'
-          echo '${OUTPUTS_RESULT}' | yq '.result | [.[]] | all_c(. == "success")'
-          RESULT=$(echo '${OUTPUTS_RESULT}' | yq '.result | [.[]] | all_c(. == "success")')
+          echo "${OUTPUTS_RESULT}"
+          echo "${OUTPUTS_RESULT}" | yq '.result | [.[]] | all_c(. == "success")'
+          RESULT=$(echo "${OUTPUTS_RESULT}" | yq '.result | [.[]] | all_c(. == "success")')
           # RESULT will be true only if there are no failures
           if [ "$RESULT" == "true" ]; then
             BOOT_RESULT="success"
