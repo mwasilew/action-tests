@@ -127,8 +127,9 @@ jobs:
         run: |
           # collapse results of matrix of boot test jobs to a single result
           echo '${OUTPUTS_RESULT}' | yq
-          BOOT_RESULT=$(echo '${OUTPUTS_RESULT}' | yq '.[] | first (. != "success")')
-          if [ -z "$BOOT_RESULT" ]; then
+          BOOT_RESULT=$(echo '${OUTPUTS_RESULT}' | yq '.result | any(.[]; . != "success")')
+          # BOOT_RESULT will be false only if there are no failures
+          if [ "$BOOT_RESULT" == "false" ]; then
             BOOT_RESULT="success"
           fi
           echo "boot_result=$BOOT_RESULT"
