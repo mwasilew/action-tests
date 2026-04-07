@@ -126,6 +126,8 @@ jobs:
           OUTPUTS_RESULT: "${{ steps.read.outputs.result }}"
         run: |
           # collapse results of matrix of boot test jobs to a single result
+          yq --version
+          yq --help
           echo "*********************"
           echo ${OUTPUTS_RESULT}
           echo "*********************"
