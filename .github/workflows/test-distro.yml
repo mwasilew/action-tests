@@ -126,6 +126,9 @@ jobs:
           OUTPUTS_RESULT: "${{ steps.read.outputs.result }}"
         run: |
           # collapse results of matrix of boot test jobs to a single result
+          echo "*********************"
+          echo '${OUTPUTS_RESULT}'
+          echo "*********************"
           echo '${OUTPUTS_RESULT}' | yq
           BOOT_RESULT=$(echo '${OUTPUTS_RESULT}' | yq '.result | any(.[]; . != "success")')
           # BOOT_RESULT will be false only if there are no failures
