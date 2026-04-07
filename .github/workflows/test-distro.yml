@@ -132,7 +132,7 @@ jobs:
           echo '${{ steps.read.outputs.result }}'
           echo "*********************"
           echo ${OUTPUTS_RESULT} | yq
-          BOOT_RESULT=$(echo ${OUTPUTS_RESULT} | yq '.result | any(.[]; . != "success")')
+          BOOT_RESULT=$(echo '${{ steps.read.outputs.result }}' | yq '.result | any(.[]; . != "success")')
           # BOOT_RESULT will be false only if there are no failures
           if [ "$BOOT_RESULT" == "false" ]; then
             BOOT_RESULT="success"
