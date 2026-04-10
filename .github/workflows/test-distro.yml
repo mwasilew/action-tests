@@ -51,7 +51,7 @@ jobs:
           build_id: ${{ inputs.build_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: boottest
-          project: "meta-qcom"
+          project: "qcom-deb-images"
           testplan: "${{ inputs.distro_name }}/boot"
 
       - name: Print output ID
