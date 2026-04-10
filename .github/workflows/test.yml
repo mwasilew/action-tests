@@ -19,8 +19,9 @@ jobs:
     with:
       build_id: "${{ inputs.build_id }}"
       #devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
-      devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      distro_name: "nodistro"
+      devices: "lemans-evk,monaco-evk,qcs615-ride,qcs6490-rb3gen2-vision-kit,qcs8300-ride,qcs9100-ride-r3,qrb2210-rb1"
+      distro_name: "qcom-deb-images"
+      project: "qcom-deb-images"
 
   collect-ids:
     name: "Collect Summary artifact IDs"

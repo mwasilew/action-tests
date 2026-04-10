@@ -24,6 +24,10 @@ on:
         required: false
         type: string
         description: "Suffix for the distro name"
+      project:
+        required: true
+        type: string
+        description: "Name of the project in lava-test-plans"
     outputs:
       summary_id:
         description: "ID of the test summary artifact"
@@ -51,7 +55,7 @@ jobs:
           build_id: ${{ inputs.build_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: boottest
-          project: "qcom-deb-images"
+          project: ${{ inputs.project }}
           testplan: "${{ inputs.distro_name }}/boot"
 
       - name: Print output ID
@@ -176,7 +180,7 @@ jobs:
           build_id: ${{ inputs.build_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: premerge
-          project: "meta-qcom"
+          project: ${{ inputs.project }}
           testplan: "${{ inputs.distro_name }}/pre-merge"
 
       - name: Print output ID
