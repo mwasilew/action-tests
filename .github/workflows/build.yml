@@ -22,7 +22,7 @@ jobs:
           - qcs9100-ride-r3
           - qrb2210-rb1
         distro:
-          - name: debian
+          - name: qcom-deb-images
             yamlfile: ""
         kernel:
           - type: default
