@@ -35,9 +35,9 @@ runs:
   steps:
       - uses: actions/checkout@v6
         with:
-          repository: qualcomm-linux/lava-test-plans
+          repository: mwasilew/lava-test-plans
           path: lava-test-plans
-          ref: 69d58b2f21bdd2ad5589df3a94fd703680572976
+          ref: debian-support
 
       - uses: actions/setup-python@v6
         with:
