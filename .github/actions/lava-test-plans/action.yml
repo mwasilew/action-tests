@@ -104,7 +104,7 @@ runs:
             echo "Rendering test job templates for ${machine}"
             cp "${VARS_OUT_PATH}/gh-variables.ini" "${VARS_OUT_PATH}/${machine}.ini"
             #echo "IMAGE_FILE_NAME=${IMAGE_TYPE}-${machine}.rootfs.qcomflash.tar.gz" >> "${VARS_OUT_PATH}/${machine}.ini"
-            echo "IMAGE_FILE_NAME=flash-ufs.tar.gz" >> "${VARS_OUT_PATH}/${machine}.ini"
+            #echo "IMAGE_FILE_NAME=flash-ufs.tar.gz" >> "${VARS_OUT_PATH}/${machine}.ini"
             echo "DEVICE_TYPE=${machine}" >> "${VARS_OUT_PATH}/${machine}.ini"
             export BUILD_URL=""
             # dir name and file name are the same as we're downloading multiple files
