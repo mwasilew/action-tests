@@ -18,7 +18,8 @@ jobs:
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      devices: "lemans-evk,monaco-evk,qcs615-ride,qcs6490-rb3gen2-vision-kit,qcs8300-ride,qcs9100-ride-r3,qrb2210-rb1"
+      #devices: "lemans-evk,monaco-evk,qcs615-ride,qcs6490-rb3gen2-vision-kit,qcs8300-ride,qcs9100-ride-r3,qrb2210-rb1"
+      devices: "qrb2210-rb1"
       distro_name: "debian"
       project: "qcom-deb-images"
 
