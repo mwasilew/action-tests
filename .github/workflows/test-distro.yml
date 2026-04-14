@@ -88,7 +88,7 @@ jobs:
       - name: Submit ${{ matrix.target.name }}
         timeout-minutes: 20
         id: submit
-        uses: mwasilew/lava-action@fix_node_warning
+        uses: foundriesio/lava-action@v11
         with:
           lava_token: ${{ secrets.LAVA_TOKEN }}
           lava_url: 'lava.infra.foundries.io'
@@ -102,7 +102,7 @@ jobs:
           save_job_details: true
           result_file_name: "${{ matrix.target.result_file }}"
           test_job_file_name_prefix: "${{ inputs.distro_name }}${{ inputs.distro_suffix }}-"
-      - uses: mwasilew/github-action-matrix-outputs-write@v2
+      - uses: mwasilew/github-action-matrix-outputs-write@v3
         if: always()
         id: out
         with:
@@ -206,7 +206,7 @@ jobs:
 
       - name: Submit ${{ matrix.target.name }}
         timeout-minutes: 20
-        uses: foundriesio/lava-action@v10
+        uses: foundriesio/lava-action@v11
         with:
           lava_token: ${{ secrets.LAVA_TOKEN }}
           lava_url: 'lava.infra.foundries.io'
