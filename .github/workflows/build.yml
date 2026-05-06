@@ -9,7 +9,7 @@ env:
   BASE_ARTIFACT_URL: "https://qli-prod-artifacts.qualcomm.com/qcom-prd-gh-artifacts/qualcomm-linux/meta-qcom/24881459631-1/"
   BASE_ARTIFACT_MONZA_DEBIAN_URL: "https://qli-prod-artifacts.qualcomm.com/qcom-prd-gh-artifacts/qualcomm-linux/qcom-deb-images/25419754921-1/"
   BASE_ARTIFACT_GLYMUR_DEBIAN_URL: "https://qli-prod-artifacts.qualcomm.com/qcom-prd-gh-artifacts/qualcomm-linux/qcom-deb-images/25372382635-1/"
-  BASE_ARTICACT_DEBIAN_URL: "https://qli-prod-artifacts.qualcomm.com/qcom-prd-gh-artifacts/qualcomm-linux/qcom-deb-images/25306732140-1/"
+  BASE_ARTIFACT_DEBIAN_URL: "https://qli-prod-artifacts.qualcomm.com/qcom-prd-gh-artifacts/qualcomm-linux/qcom-deb-images/25306732140-1/"
 
 jobs:
   print-trigger:
@@ -68,7 +68,7 @@ jobs:
                 echo "Writing ${BASE_ARTIFACT_GLYMUR_DEBIAN_URL} to ${FILENAME}"
                 ;;
               monaco-arduino-monza)
-                echo "${BASE_ARTIFACT_GLYMUR_DEBIAN_URL}" > "${FILENAME}"
+                echo "${BASE_ARTIFACT_MONZA_DEBIAN_URL}" > "${FILENAME}"
                 echo "Writing ${BASE_ARTIFACT_GLYMUR_DEBIAN_URL} to ${FILENAME}"
                 ;;
               *)
