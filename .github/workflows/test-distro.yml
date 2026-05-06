@@ -55,7 +55,7 @@ jobs:
           build_id: ${{ inputs.build_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: boottest
-          project: ${{ inputs.project }}
+          project: ${{ inputs.project_name }}
           testplan: "${{ inputs.distro_name }}/boot"
 
       - name: Print output ID
@@ -178,7 +178,7 @@ jobs:
           build_id: ${{ inputs.build_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: premerge
-          project: ${{ inputs.project }}
+          project: ${{ inputs.project_name }}
           testplan: "${{ inputs.distro_name }}/pre-merge"
 
       - name: Print output ID
