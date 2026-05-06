@@ -139,6 +139,7 @@ runs:
             cat "${VARS_OUT_PATH}/${machine}.ini"
             # INPUTS_TESTPLAN contains distro name
             lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/${machine}.ini" --test-plan "${PROJECT}/${INPUTS_TESTPLAN}" --device-type "projects/${PROJECT}/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${INPUTS_DISTRO_NAME}-${INPUTS_TESTPLAN}" || true
+            echo "lava-test-plans --dry-run --variables ${VARS_OUT_PATH}/${machine}.ini --test-plan ${PROJECT}/${INPUTS_TESTPLAN} --device-type projects/${PROJECT}/devices/${machine} --dry-run-path ${JOBS_OUT_PATH}/${machine}-${INPUTS_DISTRO_NAME}-${INPUTS_TESTPLAN}"
             # create the JSON file that is used for the job submission matrix
             find "${JOBS_OUT_PATH}/${machine}-${INPUTS_DISTRO_NAME}-${INPUTS_TESTPLAN}" -name "*.yaml"
             for JOB_PATH in $( find "${JOBS_OUT_PATH}/${machine}-${INPUTS_DISTRO_NAME}-${INPUTS_TESTPLAN}" -name "*.yaml");
