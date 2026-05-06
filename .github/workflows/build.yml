@@ -7,6 +7,9 @@ env:
   #BASE_ARTIFACT_URL: "https://quic-yocto-fileserver-1029608027416.us-central1.run.app/qualcomm-linux/meta-qcom/22420816242-1/"
   # AWS URL
   BASE_ARTIFACT_URL: "https://qli-prod-artifacts.qualcomm.com/qcom-prd-gh-artifacts/qualcomm-linux/meta-qcom/24881459631-1/"
+  BASE_ARTIFACT_MONZA_DEBIAN_URL: "https://qli-prod-artifacts.qualcomm.com/qcom-prd-gh-artifacts/qualcomm-linux/qcom-deb-images/25419754921-1/"
+  BASE_ARTIFACT_GLYMUR_DEBIAN_URL: "https://qli-prod-artifacts.qualcomm.com/qcom-prd-gh-artifacts/qualcomm-linux/qcom-deb-images/25372382635-1/"
+  BASE_ARTICACT_DEBIAN_URL: "https://qli-prod-artifacts.qualcomm.com/qcom-prd-gh-artifacts/qualcomm-linux/qcom-deb-images/25306732140-1/"
 
 jobs:
   print-trigger:
@@ -26,8 +29,11 @@ jobs:
           - qcs8300-ride-sx
           - qcs9100-ride-sx
           - rb1-core-kit
+          - qrb2210-rb1
           - rb3gen2-core-kit
+          - qcs6490-rb3gen2-vision-kit
           - sm8750-mtp
+          - monaco-arduino-monza
         distro:
           - name: nodistro
             yamlfile: ""
@@ -39,6 +45,8 @@ jobs:
             yamlfile: ':ci/qcom-distro-prop-image.yml:ci/debug.yml'
           - name: performance
             yamlfile: ':ci/qcom-distro-prop-image.yml:ci/performance.yml'
+          - distro: debian
+            yamlfile: ':ci/debian.yml'
         kernel:
           - type: default
             dirname: ""
@@ -61,6 +69,19 @@ jobs:
         run: |
           FILENAME="build-url_${{ matrix.machine }}_${{ matrix.distro.name }}${{ matrix.kernel.dirname }}"
           echo "${BASE_ARTIFACT_URL}" > "${FILENAME}"
+          if [ "${{ matrix.distro }}" = "debian" ]; then
+            case "${{ matrix.machine }}" in
+              glymur-crd)
+                echo "${BASE_ARTIFACT_GLYMUR_DEBIAN_URL}" > "${FILENAME}"
+                ;;
+              monaco-arduino-monza)
+                echo "${BASE_ARTIFACT_GLYMUR_DEBIAN_URL}" > "${FILENAME}"
+                ;;
+              *)
+                echo "${BASE_ARTIFACT_DEBIAN_URL}" > "${FILENAME}"
+                ;;
+            esac
+          fi
           echo "filename=${FILENAME}" >> $GITHUB_OUTPUT
       - name: Upload build URL
         uses: actions/upload-artifact@v7
