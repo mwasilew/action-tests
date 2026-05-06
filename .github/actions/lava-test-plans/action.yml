@@ -37,7 +37,7 @@ runs:
         with:
           repository: qualcomm-linux/lava-test-plans
           path: lava-test-plans
-          ref: 3ef1a0d87c7122590b58df1f37c65a95ed25b3b1
+          ref: d0f755a1cc8b66af6bc28e61fd4c7b40975194e0
 
       - uses: actions/setup-python@v6
         with:
@@ -135,6 +135,7 @@ runs:
             fi
 
             cat "${VARS_OUT_PATH}/${machine}.ini"
+            # INPUTS_TESTPLAN contains distro name
             lava-test-plans --dry-run --variables "${VARS_OUT_PATH}/${machine}.ini" --test-plan "${PROJECT}/${INPUTS_TESTPLAN}" --device-type "projects/${PROJECT}/devices/${machine}" --dry-run-path "${JOBS_OUT_PATH}/${machine}-${INPUTS_DISTRO_NAME}-${INPUTS_TESTPLAN}" || true
             # create the JSON file that is used for the job submission matrix
             find "${JOBS_OUT_PATH}/${machine}-${INPUTS_DISTRO_NAME}-${INPUTS_TESTPLAN}" -name "*.yaml"

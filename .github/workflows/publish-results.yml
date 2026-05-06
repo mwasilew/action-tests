@@ -52,14 +52,14 @@ jobs:
           fi
 
       - id: app_token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         if: always()
         with:
           app-id: 2311695
           private-key: ${{ secrets.PRIVATE_KEY_ENRICOMI_PUBLISH }}
 
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@c950f6fb443cb5af20a377fd0dfaa78838901040
+        uses: EnricoMi/publish-unit-test-result-action@c950f6fb443cb5af20a377fd0dfaa78838901040 # v2.23.0
         if: |
           always()
           && contains(steps.listfiles.outcome, 'success')

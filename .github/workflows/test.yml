@@ -18,8 +18,7 @@ jobs:
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      #devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
-      devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
       distro_name: "nodistro"
   test-qcom-distro:
     name: "Test qcom-distro"
@@ -27,10 +26,8 @@ jobs:
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      #devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
-      devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      #devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      devices_premerge: "iq-9075-evk,rb3gen2-core-kit"
+      devices: "glymur-crd,iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
       distro_name: "qcom-distro"
   test-qcom-distro_linux-qcom-6-18:
     name: "Test qcom-distro_linux-qcom-6.18"
@@ -38,10 +35,8 @@ jobs:
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      #devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
       devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      #devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      devices_premerge: "iq-9075-evk,rb3gen2-core-kit"
+      devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
       distro_name: "qcom-distro"
       distro_suffix: "_linux-qcom-6.18"
 
@@ -63,126 +58,3 @@ jobs:
         id: generate-summary
         run: |
           echo "artifact_ids=${{ needs.test-nodistro.outputs.summary_id }},${{ needs.test-qcom-distro.outputs.summary_id }},${{ needs.test-qcom-distro_linux-qcom-6-18.outputs.summary_id }}" >> $GITHUB_OUTPUT
-#
-#  prepare-premerge-jobs:
-#    needs: boot-job-result
-#    # run only if boot jobs are successful
-#    if: ${{ needs.boot-job-result.outputs.boot_result == 'success' }}
-#    runs-on: ubuntu-latest
-#    strategy:
-#      matrix:
-#        # only run pre-merge tests on devices available in the LAB
-#        # and "contemporary" - exclude dragonboards
-#        machine:
-#          #- iq-9075-evk
-#          - qcs615-ride
-#          #- rb3gen2-core-kit
-#          #- qcs8300-ride-sx
-#          #- qcs9100-ride-sx
-#          #- rb1-core-kit
-#        distro:
-#          - name: poky-altcfg
-#          - name: qcom-distro
-#        kernel:
-#          - ""
-#          - -linux-qcom-6.18
-#        exclude:
-#          - distro: poky-altcfg
-#            kernel: _linux-qcom-6.18
-#    steps:
-#      - id: print-condition
-#        name: "Print condition"
-#        env:
-#          RESULT: ${{ needs.boot-job-result.outputs.boot_result }}
-#        run: |
-#          echo "${RESULT}"
-#
-#      - uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#
-#      - name: Run lava-test-plans
-#        uses: ./.github/actions/lava-test-plans
-#        with:
-#          machine: ${{ matrix.machine }}
-#          distro_name: ${{ matrix.distro.name }}
-#          kernel: ${{ matrix.kernel }}
-#          build_id: ${{ inputs.build_id }}
-#          gh_token: ${{ secrets.GITHUB_TOKEN }}
-#          prefix: premerge
-#          testplan: pre-merge
-#
-#  prepare-premerge-job-list:
-#    needs: prepare-premerge-jobs
-#    runs-on: ubuntu-latest
-#    outputs:
-#      jobmatrix: ${{ steps.listjobs.outputs.jobmatrix }}
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#
-#      - name: "List jobs"
-#        id: listjobs
-#        uses: ./.github/actions/list-jobs
-#        with:
-#          prefix: "premerge"
-#          build_id: ${{ github.run_id }}
-#          gh_token: ${{ secrets.GITHUB_TOKEN }}
-#
-#  submit-premerge-job:
-#    needs: prepare-premerge-job-list
-#    runs-on: ubuntu-latest
-#    continue-on-error: true
-#    name: Pre-merge ${{ matrix.target.name }}
-#    strategy:
-#      matrix: ${{ fromJson(needs.prepare-premerge-job-list.outputs.jobmatrix) }}
-#    steps:
-#      - name: 'Download job templates'
-#        uses: actions/download-artifact@v7
-#        with:
-#          name: ${{ matrix.target.artifact}}
-#
-#      - name: Submit ${{ matrix.target.name }}
-#        timeout-minutes: 20
-#        uses: foundriesio/lava-action@v9
-#        with:
-#          #lava_token: ${{ secrets.LAVA_TOKEN }}
-#          lava_token: ${{ secrets.LAVA_STAGING_TOKEN }}
-#          #lava_url: 'lava.infra.foundries.io'
-#          lava_url: 'lava-staging.infra.foundries.io'
-#          job_definition: ${{ matrix.target.path }}
-#          wait_for_job: true
-#          fail_action_on_failure: true
-#          fail_action_on_incomplete: true
-#          save_result_as_artifact: true
-#          save_job_details: true
-#          result_file_name: "${{ matrix.target.result_file }}"
-#
-#  publish-test-summary:
-#    name: "Publish Tests Summary"
-#    #needs: [submit-premerge-job, submit-boot-job]
-#    needs: [boot-test-nodistro, boot-test-qcom-distro, boot-test-qcom-distro_linux-qcom-6-18]
-#    if: |
-#      always()
-#      && contains(needs.*.result, 'success')
-#      && !contains(needs.*.result, 'failure')
-#    runs-on: ubuntu-latest
-#    permissions:
-#      checks: write
-#      pull-requests: write
-#    outputs:
-#      summary_id: ${{ steps.generate-summary.outputs.artifact_id }}
-#
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#      - name: Download Summaries
-#        uses: actions/download-artifact@v7
-#        with:
-#          artifact-ids: ${{ steps.generate-summary.outputs.artifact_id }}
-#
-#      - name: Publish Test Job Details
-#        run: |
-#            cat test_job_summary >> $GITHUB_STEP_SUMMARY
