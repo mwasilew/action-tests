@@ -59,16 +59,21 @@ jobs:
         run: |
           FILENAME="build-url_${{ matrix.machine }}_${{ matrix.distro.name }}${{ matrix.kernel.dirname }}"
           echo "${BASE_ARTIFACT_URL}" > "${FILENAME}"
-          if [ "${{ matrix.distro }}" = "debian" ]; then
+          echo "Writing ${BASE_ARTIFACT_URL} to ${FILENAME}"
+          echo "Distro: ${{ matrix.distro.name }}"
+          if [ "${{ matrix.distro.name }}" = "debian" ]; then
             case "${{ matrix.machine }}" in
               glymur-crd)
                 echo "${BASE_ARTIFACT_GLYMUR_DEBIAN_URL}" > "${FILENAME}"
+                echo "Writing ${BASE_ARTIFACT_GLYMUR_DEBIAN_URL} to ${FILENAME}"
                 ;;
               monaco-arduino-monza)
                 echo "${BASE_ARTIFACT_GLYMUR_DEBIAN_URL}" > "${FILENAME}"
+                echo "Writing ${BASE_ARTIFACT_GLYMUR_DEBIAN_URL} to ${FILENAME}"
                 ;;
               *)
                 echo "${BASE_ARTIFACT_DEBIAN_URL}" > "${FILENAME}"
+                echo "Writing ${BASE_ARTIFACT_DEBIAN_URL} to ${FILENAME}"
                 ;;
             esac
           fi
