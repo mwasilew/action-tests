@@ -35,7 +35,7 @@ jobs:
             yamlfile: ""
           - name: qcom-distro
             yamlfile: ':ci/qcom-distro-prop-image.yml'
-          - distro: debian
+          - name: debian
             yamlfile: ':ci/debian.yml'
         kernel:
           - type: default
