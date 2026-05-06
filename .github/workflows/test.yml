@@ -19,6 +19,7 @@ jobs:
     with:
       build_id: "${{ inputs.build_id }}"
       devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
+      project_name: "meta-qcom"
       distro_name: "nodistro"
   test-qcom-distro:
     name: "Test qcom-distro"
@@ -28,6 +29,7 @@ jobs:
       build_id: "${{ inputs.build_id }}"
       devices: "glymur-crd,iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
       devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      project_name: "meta-qcom"
       distro_name: "qcom-distro"
   test-qcom-distro_linux-qcom-6-18:
     name: "Test qcom-distro_linux-qcom-6.18"
@@ -38,6 +40,7 @@ jobs:
       devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
       devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
       distro_name: "qcom-distro"
+      project_name: "meta-qcom"
       distro_suffix: "_linux-qcom-6.18"
   test-debian:
     name: "Test debian"
@@ -47,6 +50,7 @@ jobs:
       build_id: "${{ inputs.build_id }}"
       devices: "glymur-crd,qcs6490-rb3gen2-vision-kit,qrb2210-rb1"
       devices_premerge: "glymur-crd,qcs6490-rb3gen2-vision-kit,qrb2210-rb1"
+      project_name: "qcom-deb-images"
       distro_name: "debian"
 
   collect-ids:
