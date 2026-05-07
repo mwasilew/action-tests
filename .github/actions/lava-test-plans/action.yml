@@ -21,6 +21,9 @@ inputs:
   project:
     description: "Project name to be used in lava-test-plans call"
     required: false
+  ref:
+    description: "Ref in the lava-test-plans repository. Can be a commit ID, branch or tag"
+    required: true
 
 outputs:
   jobmatrix:
@@ -38,8 +41,7 @@ runs:
           #repository: qualcomm-linux/lava-test-plans
           repository: mwasilew/lava-test-plans
           path: lava-test-plans
-          #ref: d0f755a1cc8b66af6bc28e61fd4c7b40975194e0
-          ref: debian-support
+          ref: ${{ inputs.ref }}
 
       - uses: actions/setup-python@v6
         with:
