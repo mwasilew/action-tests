@@ -19,7 +19,10 @@ jobs:
     name: Prepare environment
     runs-on: ubuntu-latest
     steps:
-      - run: echo "lava-test-plans ref: ${{ env.LAVA_TEST_PLANS_REF }}"
+      - run: |
+        shell: bash
+        name: "Print ref"
+        echo "lava-test-plans ref: ${{ env.LAVA_TEST_PLANS_REF }}"
     outputs:
       lava-test-plans-ref: "${{ env.LAVA_TEST_PLANS_REF }}"
   test-nodistro:
