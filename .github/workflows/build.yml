@@ -30,6 +30,7 @@ jobs:
           - rb3gen2-core-kit
           - qcs6490-rb3gen2-vision-kit
           - monaco-arduino-monza
+          - qrb2210-arduino-imola
         distro:
           - name: nodistro
             yamlfile: ""
