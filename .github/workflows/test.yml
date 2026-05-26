@@ -6,6 +6,11 @@ on:
       build_id:
         required: true
         type: string
+      git_ref:
+        required: false
+        default: ''
+        type: string
+        description: "Ref in the repo which should be used for the tests"
     outputs:
       summary_ids:
         description: "IDs of the test summary artifact"
@@ -36,6 +41,7 @@ jobs:
       project_name: "meta-qcom"
       distro_name: "nodistro"
       lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
+      git_ref: ${{ inputs.git_ref }}
   test-qcom-distro:
     needs: [prepare-env]
     name: "Test qcom-distro"
@@ -48,6 +54,7 @@ jobs:
       project_name: "meta-qcom"
       distro_name: "qcom-distro"
       lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
+      git_ref: ${{ inputs.git_ref }}
   test-qcom-distro_linux-qcom-6-18:
     needs: [prepare-env]
     name: "Test qcom-distro_linux-qcom-6.18"
@@ -61,6 +68,7 @@ jobs:
       project_name: "meta-qcom"
       distro_suffix: "_linux-qcom-6.18"
       lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
+      git_ref: ${{ inputs.git_ref }}
   test-debian:
     needs: [prepare-env]
     name: "Test debian"
@@ -73,6 +81,7 @@ jobs:
       project_name: "qcom-deb-images"
       distro_name: "debian"
       lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
+      git_ref: ${{ inputs.git_ref }}
 
   collect-ids:
     name: "Collect Summary artifact IDs"
