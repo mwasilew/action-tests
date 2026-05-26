@@ -71,7 +71,7 @@ jobs:
 
   collect-ids:
     name: "Collect Summary artifact IDs"
-    needs: [test-nodistro, test-qcom-distro, test-qcom-distro_linux-qcom-6-18, test-debian]
+    needs: [test-nodistro, test-qcom-distro, test-debian]
     if: |
       always()
       && contains(needs.*.result, 'success')
