@@ -28,13 +28,8 @@ jobs:
         shell: bash
         run: |
           echo "lava-test-plans ref: ${{ env.LAVA_TEST_PLANS_REF }}"
-      - name: "Check event file"
-        id: check-event-file
-        uses: LIT-Protocol/artifact-exists-action@v0
-        with:
-          name: "Event File"
       - name: "Download event file"
-        if: ${{ steps.check-event-file.outputs.exists == 'true' }}
+        continue-on-error: true
         uses: actions/download-artifact@v7
         with:
             run-id: ${{ inputs.build_id }}
@@ -44,11 +39,11 @@ jobs:
       - name: "Determine target branch"
         id: target-branch
         env:
-          EVENT_FILE_EXISTS: "${{ steps.check-event-file.output.exists }}"
+          EVENT_FILE_EXISTS: "${{ steps.check-event-file.outcome }}"
         shell: bash
         run: |
           TARGET_BRANCH=main
-          if [ "${EVENT_FILE_EXISTS}" = "true" ]; then
+          if [ "${EVENT_FILE_EXISTS}" = "success" ]; then
               TARGET_BRANCH=$(cat "artifacts/Event File/event.json" | jq -r ".pull_request.base.ref")
           fi
           echo "TARGET_BRANCH=$TARGET_BRANCH" >> $GITHUB_OUTPUT
