@@ -82,7 +82,7 @@ jobs:
       git_ref: ${{ inputs.git_ref }}
   test-qcom-distro_linux-qcom-6-18:
     needs: [prepare-env]
-    if: ${{ needs.prepare-env.outputs.target-branch == "main" }}
+    if: ${{ needs.prepare-env.outputs.target-branch == 'main' }}
     name: "Test qcom-distro_linux-qcom-6.18"
     uses: ./.github/workflows/test-distro.yml
     secrets: inherit
@@ -111,10 +111,12 @@ jobs:
 
   collect-ids:
     name: "Collect Summary artifact IDs"
-    needs: [test-nodistro, test-qcom-distro, test-debian]
+    needs: [test-nodistro, test-qcom-distro, test-debian, test-qcom-distro_linux-qcom-6-18]
     if: |
       always()
-      && contains(needs.*.result, 'success')
+      && contains(needs.test-nodistro.result, 'success')
+      && contains(needs.test-qcom-distro.result, 'success')
+      && contains(needs.test-debian.result, 'success')
       && !contains(needs.*.result, 'failure')
     runs-on: ubuntu-latest
     permissions:
