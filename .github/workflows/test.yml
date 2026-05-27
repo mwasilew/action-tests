@@ -34,7 +34,7 @@ jobs:
         with:
           name: "Event File"
       - name: "Download event file"
-        if: ${{ steps.check-event-file.outputs.exists }}
+        if: ${{ steps.check-event-file.outputs.exists == 'true' }}
         uses: actions/download-artifact@v7
         with:
             run-id: ${{ inputs.build_id }}
