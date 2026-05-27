@@ -43,6 +43,8 @@ jobs:
           EVENT_FILE_EXISTS: "${{ steps.download-event-file.outcome }}"
         shell: bash
         run: |
+          echo $GITHUB_WORKSPACE
+          ls -R $GITHUB_WORKSPACE
           TARGET_BRANCH=main
           if [ "${EVENT_FILE_EXISTS}" = "success" ]; then
               TARGET_BRANCH=$(cat "artifacts/Event File/event.json" | jq -r ".pull_request.base.ref")
