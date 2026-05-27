@@ -128,7 +128,7 @@ jobs:
       - name: Summary IDs
         id: generate-summary
         run: |
-          if [ -n "${{ jobs.test-qcom-distro_linux-qcom-6-18.outputs.summary_id }}" ]; then
-              ARTIFACT_IDS="${{ jobs.test-qcom-distro_linux-qcom-6-18.outputs.summary_id }},"
+          if [ -n "${{ needs.test-qcom-distro_linux-qcom-6-18.outputs.summary_id }}" ]; then
+              ARTIFACT_IDS="${{ needs.test-qcom-distro_linux-qcom-6-18.outputs.summary_id }},"
           fi
           echo "artifact_ids=${ARTIFACT_IDS}${{ needs.test-nodistro.outputs.summary_id }},${{ needs.test-qcom-distro.outputs.summary_id }},${{ needs.test-debian.outputs.summary_id }}" >> $GITHUB_OUTPUT
