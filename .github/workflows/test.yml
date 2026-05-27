@@ -29,6 +29,7 @@ jobs:
         run: |
           echo "lava-test-plans ref: ${{ env.LAVA_TEST_PLANS_REF }}"
       - name: "Download event file"
+        id: download-event-file
         continue-on-error: true
         uses: actions/download-artifact@v7
         with:
@@ -39,7 +40,7 @@ jobs:
       - name: "Determine target branch"
         id: target-branch
         env:
-          EVENT_FILE_EXISTS: "${{ steps.check-event-file.outcome }}"
+          EVENT_FILE_EXISTS: "${{ steps.download-event-file.outcome }}"
         shell: bash
         run: |
           TARGET_BRANCH=main
