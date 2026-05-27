@@ -31,7 +31,7 @@ jobs:
       - name: "Check event file"
         id: check-event-file
         uses: LIT-Protocol/artifact-exists-action@v0
-          with:
+        with:
           name: "Event File"
       - name: "Download event file"
         if: ${{ steps.check-event-file.outputs.exists }}
