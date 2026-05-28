@@ -28,31 +28,8 @@ jobs:
         shell: bash
         run: |
           echo "lava-test-plans ref: ${{ env.LAVA_TEST_PLANS_REF }}"
-      - name: "Download event file"
-        id: download-event-file
-        continue-on-error: true
-        uses: actions/download-artifact@v7
-        with:
-            run-id: ${{ inputs.build_id }}
-            path: artifacts
-            github-token: ${{ github.token }}
-            name: "Event File"
-      - name: "Determine target branch"
-        id: target-branch
-        env:
-          EVENT_FILE_EXISTS: "${{ steps.download-event-file.outcome }}"
-        shell: bash
-        run: |
-          echo $GITHUB_WORKSPACE
-          ls -R $GITHUB_WORKSPACE
-          TARGET_BRANCH=main
-          if [ "${EVENT_FILE_EXISTS}" = "success" ]; then
-              TARGET_BRANCH=$(cat "artifacts/event.json" | jq -r ".pull_request.base.ref")
-          fi
-          echo "TARGET_BRANCH=$TARGET_BRANCH" >> $GITHUB_OUTPUT
     outputs:
       lava-test-plans-ref: "${{ env.LAVA_TEST_PLANS_REF }}"
-      target-branch: "${{ steps.target-branch.outputs.TARGET_BRANCH }}"
   test-nodistro:
     needs: [prepare-env]
     name: "Test nodistro"
@@ -80,7 +57,6 @@ jobs:
       git_ref: ${{ inputs.git_ref }}
   test-qcom-distro_linux-qcom-6-18:
     needs: [prepare-env]
-    if: ${{ needs.prepare-env.outputs.target-branch == 'main' }}
     name: "Test qcom-distro_linux-qcom-6.18"
     uses: ./.github/workflows/test-distro.yml
     secrets: inherit
@@ -112,9 +88,7 @@ jobs:
     needs: [test-nodistro, test-qcom-distro, test-debian, test-qcom-distro_linux-qcom-6-18]
     if: |
       always()
-      && contains(needs.test-nodistro.result, 'success')
-      && contains(needs.test-qcom-distro.result, 'success')
-      && contains(needs.test-debian.result, 'success')
+      && contains(needs.*.result, 'success')
       && !contains(needs.*.result, 'failure')
     runs-on: ubuntu-latest
     permissions:
@@ -126,7 +100,4 @@ jobs:
       - name: Summary IDs
         id: generate-summary
         run: |
-          if [ -n "${{ needs.test-qcom-distro_linux-qcom-6-18.outputs.summary_id }}" ]; then
-              ARTIFACT_IDS="${{ needs.test-qcom-distro_linux-qcom-6-18.outputs.summary_id }},"
-          fi
-          echo "artifact_ids=${ARTIFACT_IDS}${{ needs.test-nodistro.outputs.summary_id }},${{ needs.test-qcom-distro.outputs.summary_id }},${{ needs.test-debian.outputs.summary_id }}" >> $GITHUB_OUTPUT
+          echo "artifact_ids=${{ needs.test-nodistro.outputs.summary_id }},${{ needs.test-qcom-distro.outputs.summary_id }},${{ needs.test-qcom-distro_linux-qcom-6-18.outputs.summary_id }},${{ needs.test-debian.outputs.summary_id }}" >> $GITHUB_OUTPUT
