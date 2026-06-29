@@ -95,25 +95,26 @@ jobs:
           echo $GITHUB_WORKSPACE
           ls -R $GITHUB_WORKSPACE
 
-#      - name: Submit ${{ matrix.target.name }}
-#        # Set timeout to 2h. The timeout starts when the job is submitted
-#        # It may spend some time in LAVA queue as there is a limited number
-#        # of devices
-#        timeout-minutes: 120
-#        id: submit
-#        uses: mwasilew/lava-action@supress-output-on-submitted
-#        with:
-#          lava_token: ${{ secrets.LAVATOKEN }}
-#          lava_url: 'lava.infra.foundries.io'
-#          job_definition: ${{ matrix.target.path }}
-#          wait_for_job: true
-#          fail_action_on_failure: true
-#          fail_action_on_incomplete: true
-#          save_result_as_artifact: true
-#          save_job_details: true
-#          result_file_name: "${{ matrix.target.result_file }}"
-#          test_job_file_name_prefix: "${{ inputs.distro_name }}${{ inputs.distro_suffix }}-"
-#
+      - name: Submit ${{ matrix.target.name }}
+        # Set timeout to 2h. The timeout starts when the job is submitted
+        # It may spend some time in LAVA queue as there is a limited number
+        # of devices
+        timeout-minutes: 120
+        id: submit
+        uses: mwasilew/lava-action@fake-job-submission
+        with:
+          lava_token: ${{ secrets.LAVATOKEN }}
+          lava_url: 'lava.infra.foundries.io'
+          job_definition: ${{ matrix.target.path }}
+          wait_for_job: true
+          fail_action_on_failure: true
+          fail_action_on_incomplete: true
+          save_result_as_artifact: true
+          save_job_details: true
+          result_file_name: "${{ matrix.target.result_file }}"
+          test_job_file_name_prefix: "${{ inputs.distro_name }}${{ inputs.distro_suffix }}-"
+          fake_lava_submission: true
+
       - name: Submit ${{ matrix.target.name }}
         shell: bash
         run: |
@@ -233,23 +234,24 @@ jobs:
           echo "${{ inputs.distro_name }}${{ inputs.distro_suffix }}-"
           echo "${{ secrets.LAVATOKEN }}"
 
-#      - name: Submit ${{ matrix.target.name }}
-#        # Set timeout to 2h. The timeout starts when the job is submitted
-#        # It may spend some time in LAVA queue as there is a limited number
-#        # of devices
-#        timeout-minutes: 120
-#        uses: mwasilew/lava-action@supress-output-on-submitted
-#        with:
-#          lava_token: ${{ secrets.LAVATOKEN }}
-#          lava_url: 'lava.infra.foundries.io'
-#          job_definition: ${{ matrix.target.path }}
-#          wait_for_job: true
-#          fail_action_on_failure: true
-#          fail_action_on_incomplete: true
-#          save_result_as_artifact: true
-#          save_job_details: true
-#          result_file_name: "${{ matrix.target.result_file }}"
-#          test_job_file_name_prefix: "${{ inputs.distro_name }}${{ inputs.distro_suffix }}-"
+      - name: Submit ${{ matrix.target.name }}
+        # Set timeout to 2h. The timeout starts when the job is submitted
+        # It may spend some time in LAVA queue as there is a limited number
+        # of devices
+        timeout-minutes: 120
+        uses: mwasilew/lava-action@fake-job-submission
+        with:
+          lava_token: ${{ secrets.LAVATOKEN }}
+          lava_url: 'lava.infra.foundries.io'
+          job_definition: ${{ matrix.target.path }}
+          wait_for_job: true
+          fail_action_on_failure: true
+          fail_action_on_incomplete: true
+          save_result_as_artifact: true
+          save_job_details: true
+          result_file_name: "${{ matrix.target.result_file }}"
+          test_job_file_name_prefix: "${{ inputs.distro_name }}${{ inputs.distro_suffix }}-"
+          fake_lava_submission: true
 
   publish-test-summary:
     name: "Publish Summary ${{ inputs.distro_name }}${{ inputs.distro_suffix }}"
