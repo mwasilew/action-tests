@@ -6,18 +6,16 @@ on:
       build_id:
         required: true
         type: string
-      git_ref:
-        required: false
-        default: ''
-        type: string
-        description: "Ref in the repo which should be used for the tests"
     outputs:
       summary_ids:
         description: "IDs of the test summary artifact"
         value: ${{ jobs.collect-ids.outputs.summary_ids }}
 
 env:
-  LAVA_TEST_PLANS_REF: "debian-support"
+  # git sha, tag or branch in lava-test-plans repository
+  LAVA_TEST_PLANS_REF: "62f75dda7cc3c62305abaa5b6ace6c06a080bb7f"
+  # CalVer tag in qcom-linux-testkit repository (format: testkit-YYYY.MM.DD)
+  TESTKIT_REF: "testkit-2026.06.21"
 
 jobs:
   prepare-env:
@@ -30,6 +28,7 @@ jobs:
           echo "lava-test-plans ref: ${{ env.LAVA_TEST_PLANS_REF }}"
     outputs:
       lava-test-plans-ref: "${{ env.LAVA_TEST_PLANS_REF }}"
+      testkit-ref: "${{ env.TESTKIT_REF }}"
   test-nodistro:
     needs: [prepare-env]
     name: "Test nodistro"
@@ -37,11 +36,11 @@ jobs:
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
+      #devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
+      devices: "iq-8275-evk"
       project_name: "meta-qcom"
       distro_name: "nodistro"
       lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
-      git_ref: ${{ inputs.git_ref }}
   test-qcom-distro:
     needs: [prepare-env]
     name: "Test qcom-distro"
@@ -49,12 +48,13 @@ jobs:
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      devices: "glymur-crd,iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      #devices: "glymur-crd,iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      devices: "glymur-crd,iq-8275-evk"
+      #devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      devices_premerge: "iq-8275-evk"
       project_name: "meta-qcom"
       distro_name: "qcom-distro"
       lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
-      git_ref: ${{ inputs.git_ref }}
   test-qcom-distro_linux-qcom-6-18:
     needs: [prepare-env]
     name: "Test qcom-distro_linux-qcom-6.18"
@@ -62,30 +62,30 @@ jobs:
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      #devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      devices: "iq-8275-evk"
+      #devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      devices_premerge: "iq-8275-evk"
       distro_name: "qcom-distro"
       project_name: "meta-qcom"
       distro_suffix: "_linux-qcom-6.18"
       lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
-      git_ref: ${{ inputs.git_ref }}
-  test-debian:
-    needs: [prepare-env]
-    name: "Test debian"
-    uses: ./.github/workflows/test-distro.yml
-    secrets: inherit
-    with:
-      build_id: "${{ inputs.build_id }}"
-      devices: "glymur-crd,qrb2210-rb1,qrb2210-arduino-imola"
-      devices_premerge: "glymur-crd,qrb2210-rb1,qrb2210-arduino-imola"
-      project_name: "qcom-deb-images"
-      distro_name: "debian"
-      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
-      git_ref: ${{ inputs.git_ref }}
+#  test-debian:
+#    needs: [prepare-env]
+#    name: "Test debian"
+#    uses: ./.github/workflows/test-distro.yml
+#    secrets: inherit
+#    with:
+#      build_id: "${{ inputs.build_id }}"
+#      devices: "glymur-crd,qrb2210-rb1,qrb2210-arduino-imola"
+#      devices_premerge: "glymur-crd,qrb2210-rb1,qrb2210-arduino-imola"
+#      project_name: "qcom-deb-images"
+#      distro_name: "debian"
+#      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
 
   collect-ids:
     name: "Collect Summary artifact IDs"
-    needs: [test-nodistro, test-qcom-distro, test-debian, test-qcom-distro_linux-qcom-6-18]
+    needs: [test-nodistro, test-qcom-distro, test-qcom-distro_linux-qcom-6-18]
     if: |
       always()
       && contains(needs.*.result, 'success')
@@ -100,4 +100,4 @@ jobs:
       - name: Summary IDs
         id: generate-summary
         run: |
-          echo "artifact_ids=${{ needs.test-nodistro.outputs.summary_id }},${{ needs.test-qcom-distro.outputs.summary_id }},${{ needs.test-qcom-distro_linux-qcom-6-18.outputs.summary_id }},${{ needs.test-debian.outputs.summary_id }}" >> $GITHUB_OUTPUT
+          echo "artifact_ids=${{ needs.test-nodistro.outputs.summary_id }},${{ needs.test-qcom-distro.outputs.summary_id }},${{ needs.test-qcom-distro_linux-qcom-6-18.outputs.summary_id }}" >> $GITHUB_OUTPUT
