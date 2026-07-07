@@ -22,6 +22,7 @@ permissions:
   pull-requests: write
   contents: read
   packages: read
+  actions: read
 
 jobs:
   determine-target-branch:
@@ -43,7 +44,6 @@ jobs:
     secrets: inherit
     with:
       build_id: ${{ github.event.workflow_run.id }}
-      git_ref: ${{ github.event.workflow_run.head_sha }}
 
   test-wrynose:
     needs: determine-target-branch
@@ -52,7 +52,6 @@ jobs:
     secrets: inherit
     with:
       build_id: ${{ github.event.workflow_run.id }}
-      git_ref: ${{ github.event.workflow_run.head_sha }}
 
   comment-on-pr:
     name: "Comment on PR"
