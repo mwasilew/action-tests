@@ -56,6 +56,7 @@ jobs:
       project_name: "meta-qcom"
       distro_name: "qcom-distro"
       lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
+      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
   test-qcom-distro_linux-qcom-6-18:
     needs: [prepare-env]
     name: "Test qcom-distro_linux-qcom-6.18"
