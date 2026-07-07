@@ -41,6 +41,7 @@ jobs:
       project_name: "meta-qcom"
       distro_name: "nodistro"
       lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
+      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
   test-qcom-distro:
     needs: [prepare-env]
     name: "Test qcom-distro"
@@ -70,6 +71,7 @@ jobs:
       project_name: "meta-qcom"
       distro_suffix: "_linux-qcom-6.18"
       lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
+      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
 #  test-debian:
 #    needs: [prepare-env]
 #    name: "Test debian"
