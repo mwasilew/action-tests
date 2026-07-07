@@ -42,7 +42,8 @@ runs:
   steps:
       - uses: actions/checkout@v6
         with:
-          repository: qualcomm-linux/lava-test-plans
+          #repository: qualcomm-linux/lava-test-plans
+          repository: mwasilew/lava-test-plans
           path: lava-test-plans
           ref: ${{ inputs.ref }}
 
