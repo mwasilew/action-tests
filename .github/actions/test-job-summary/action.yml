@@ -15,12 +15,6 @@ inputs:
   summary_title:
     description: "Title for the summary part of the report"
     required: false
-  mock_results:
-    description: "When 'true', do not query the LAVA API; generate test results locally instead"
-    default: "false"
-  mock_result:
-    description: "Result value used for every locally generated test when 'mock_results' is 'true'. Set to 'fail' to force failed results. Defaults to 'pass'."
-    default: pass
 outputs:
   artifact_id:
     description: "ID of the uploaded artifact"
@@ -49,43 +43,21 @@ runs:
           INPUTS_PREFIX: ${{ inputs.prefix }}
           INPUTS_SUMMARY_FILE_NAME: ${{ inputs.summary_file_name }}
           INPUTS_SUMMARY_TITLE: ${{ inputs.summary_title }}
-          INPUTS_MOCK_RESULTS: ${{ inputs.mock_results }}
-          INPUTS_MOCK_RESULT: ${{ inputs.mock_result }}
         run: |
           set -x
           INPUT=$(for TESTJOB in $(find "${GITHUB_WORKSPACE}" -name "${INPUTS_PREFIX}.json")
           do
               JOB_ID=$(cat "$TESTJOB" | jq ".id")
               JOB_URL="https://lava.infra.foundries.io/results/$JOB_ID"
-              if [ "${INPUTS_MOCK_RESULTS}" = "true" ]; then
-                  # Do not query LAVA. Pretend the job finished successfully and
-                  # read the metadata we need straight from the stored job file.
-                  JOB_HEALTH="Complete"
-                  JOB_STATE="Finished"
-                  JOB_DEVICE_TYPE=$(cat "$TESTJOB" | jq -r ".requested_device_type")
-                  JOB_TITLE=$(cat "$TESTJOB" | jq -r ".description")
-              else
-                  JOB_DETAILS=$(curl -s "https://lava.infra.foundries.io/api/v0.2/jobs/$JOB_ID/")
-                  JOB_HEALTH=$(echo "$JOB_DETAILS" | jq -r ".health")
-                  JOB_STATE=$(echo "$JOB_DETAILS" | jq -r ".state")
-                  JOB_DEVICE_TYPE=$(echo "$JOB_DETAILS" | jq -r ".requested_device_type")
-                  JOB_TITLE=$(echo "$JOB_DETAILS" | jq -r ".description")
-              fi
+              JOB_DETAILS=$(curl -s "https://lava.infra.foundries.io/api/v0.2/jobs/$JOB_ID/")
+              JOB_HEALTH=$(echo "$JOB_DETAILS" | jq -r ".health")
+              JOB_STATE=$(echo "$JOB_DETAILS" | jq -r ".state")
+              JOB_DEVICE_TYPE=$(echo "$JOB_DETAILS" | jq -r ".requested_device_type")
+              JOB_TITLE=$(echo "$JOB_DETAILS" | jq -r ".description")
               JOB_TYPE="test"
               if echo "${JOB_TITLE}" | grep -q "boot"; then
                   JOB_TYPE="boot"
               fi
-              if [ "${INPUTS_MOCK_RESULTS}" = "true" ]; then
-                  # Generate a single result locally instead of querying LAVA suites/tests.
-                  if [ "${JOB_TYPE}" = "test" ]; then
-                      TEST_NAME="test"
-                  else
-                      TEST_NAME="boot"
-                  fi
-                  TEST_URL="${JOB_URL}"
-                  TEST_RESULT_OBJ=$(jq --arg url "$TEST_URL" --arg result "$INPUTS_MOCK_RESULT" -n -c '$ARGS.named')
-                  TEST_RESULTS=$(jq -n -c --arg key "$TEST_NAME" --argjson value "$TEST_RESULT_OBJ" '$ARGS.named' | jq -s -c --sort-keys 'from_entries')
-              else
               # get suites and results
               JOB_SUITES=$(curl -s "https://lava.infra.foundries.io/api/v0.2/jobs/$JOB_ID/suites/")
               TEST_RESULTS=$(for SUITE in $(echo "$JOB_SUITES" | jq -r -c ".results[]")
@@ -111,7 +83,6 @@ runs:
                       jq -n -c --arg key "$TEST_NAME" --argjson value "$TEST_RESULT_OBJ" '$ARGS.named'
                   fi
             done | jq -s -c --sort-keys 'from_entries')
-              fi
               echo "{\"key\": \"$JOB_DEVICE_TYPE\", \"value\": $TEST_RESULTS}" | jq
           # combine entries from boot jobs and pre-merge jobs
           done | jq -s -c 'reduce .[] as $i ({}; .[$i.key] = ((.[$i.key] // {}) + $i.value))')
@@ -181,16 +152,10 @@ runs:
           do
               JOB_ID=$(cat "${TESTJOB}" | jq ".id")
               JOB_URL="https://lava.infra.foundries.io/results/$JOB_ID"
-              if [ "${INPUTS_MOCK_RESULTS}" = "true" ]; then
-                  JOB_HEALTH="Complete"
-                  JOB_STATE="Finished"
-                  JOB_DEVICE_TYPE=$(cat "${TESTJOB}" | jq -r ".requested_device_type")
-              else
-                  JOB_DETAILS=$(curl -s "https://lava.infra.foundries.io/api/v0.2/jobs/$JOB_ID/")
-                  JOB_HEALTH=$(echo "$JOB_DETAILS" | jq -r ".health")
-                  JOB_STATE=$(echo "$JOB_DETAILS" | jq -r ".state")
-                  JOB_DEVICE_TYPE=$(echo "$JOB_DETAILS" | jq -r ".requested_device_type")
-              fi
+              JOB_DETAILS=$(curl -s "https://lava.infra.foundries.io/api/v0.2/jobs/$JOB_ID/")
+              JOB_HEALTH=$(echo "$JOB_DETAILS" | jq -r ".health")
+              JOB_STATE=$(echo "$JOB_DETAILS" | jq -r ".state")
+              JOB_DEVICE_TYPE=$(echo "$JOB_DETAILS" | jq -r ".requested_device_type")
               echo "| [$JOB_ID]($JOB_URL) | $JOB_DEVICE_TYPE | $JOB_STATE | $JOB_HEALTH |" >> "${INPUTS_SUMMARY_FILE_NAME}"
           done
           echo "</details>" >> "${INPUTS_SUMMARY_FILE_NAME}"
