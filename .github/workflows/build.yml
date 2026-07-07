@@ -20,6 +20,7 @@ jobs:
           - glymur-crd
           - iq-615-evk
           - iq-9075-evk
+          - iq-8275-evk
           - kaanapali-mtp
           - qcom-armv8a
           - qcs615-ride
