@@ -67,6 +67,7 @@ runs:
           INPUTS_KERNEL: ${{ inputs.kernel }}
           INPUTS_TESTPLAN: ${{ inputs.testplan }}
           INPUTS_PREFIX: ${{ inputs.prefix }}
+          INPUTS_TESTKIT_REF: ${{ inputs.testkit_ref }}
         run: |
           set -euo pipefail
           cd lava-test-plans && pip install .
