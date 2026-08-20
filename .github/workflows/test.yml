@@ -18,11 +18,11 @@ env:
   LAVA_TEST_PLANS_REPOSITORY: "mwasilew/lava-test-plans"
   # CalVer tag in qcom-linux-testkit repository (format: testkit-YYYY.MM.DD)
   TESTKIT_REF: "testkit-2026.06.21"
-  # Job submission action. This branch fakes the submission, so the pipeline can
-  # be exercised end to end without occupying any LAVA device. Switch back to
-  # foundriesio/lava-action@v13 to run against real hardware.
-  LAVA_ACTION_REPOSITORY: "mwasilew/lava-action"
-  LAVA_ACTION_REF: "fake-job-submission"
+  # Job submission action. Set to mwasilew/lava-action@fake-job-submission
+  # together with fake_lava_submission below to exercise the pipeline end to
+  # end without occupying any LAVA device.
+  LAVA_ACTION_REPOSITORY: "foundriesio/lava-action"
+  LAVA_ACTION_REF: "v13"
 
 jobs:
   prepare-env:
@@ -60,7 +60,7 @@ jobs:
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
       lava_action_repository: "${{ needs.prepare-env.outputs.lava-action-repository }}"
       lava_action_ref: "${{ needs.prepare-env.outputs.lava-action-ref }}"
-      fake_lava_submission: true
+      fake_lava_submission: false
   test-qcom-distro:
     needs: [prepare-env]
     name: "Test qcom-distro"
@@ -77,7 +77,7 @@ jobs:
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
       lava_action_repository: "${{ needs.prepare-env.outputs.lava-action-repository }}"
       lava_action_ref: "${{ needs.prepare-env.outputs.lava-action-ref }}"
-      fake_lava_submission: true
+      fake_lava_submission: false
   test-qcom-distro_linux-qcom-6-18:
     needs: [prepare-env]
     name: "Test qcom-distro_linux-qcom-6.18"
@@ -95,7 +95,7 @@ jobs:
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
       lava_action_repository: "${{ needs.prepare-env.outputs.lava-action-repository }}"
       lava_action_ref: "${{ needs.prepare-env.outputs.lava-action-ref }}"
-      fake_lava_submission: true
+      fake_lava_submission: false
 #  test-debian:
 #    needs: [prepare-env]
 #    name: "Test debian"
@@ -113,7 +113,7 @@ jobs:
 #      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
 #      lava_action_repository: "${{ needs.prepare-env.outputs.lava-action-repository }}"
 #      lava_action_ref: "${{ needs.prepare-env.outputs.lava-action-ref }}"
-#      fake_lava_submission: true
+#      fake_lava_submission: false
 
   collect-ids:
     name: "Collect Summary artifact IDs"
