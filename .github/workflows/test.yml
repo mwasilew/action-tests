@@ -12,17 +12,8 @@ on:
         value: ${{ jobs.collect-ids.outputs.summary_ids }}
 
 env:
-  # git sha, tag or branch in lava-test-plans repository
-  LAVA_TEST_PLANS_REF: "github-action"
-  # repository the lava-test-plans renderer and test plans are taken from
-  LAVA_TEST_PLANS_REPOSITORY: "mwasilew/lava-test-plans"
   # CalVer tag in qcom-linux-testkit repository (format: testkit-YYYY.MM.DD)
   TESTKIT_REF: "testkit-2026.06.21"
-  # Job submission action. Set to mwasilew/lava-action@fake-job-submission
-  # together with fake_lava_submission below to exercise the pipeline end to
-  # end without occupying any LAVA device.
-  LAVA_ACTION_REPOSITORY: "foundriesio/lava-action"
-  LAVA_ACTION_REF: "v13"
 
 jobs:
   prepare-env:
@@ -32,19 +23,13 @@ jobs:
       - name: "Print ref"
         shell: bash
         run: |
-          echo "lava-test-plans: ${{ env.LAVA_TEST_PLANS_REPOSITORY }}@${{ env.LAVA_TEST_PLANS_REF }}"
           echo "qcom-linux-testkit ref: ${{ env.TESTKIT_REF }}"
-          echo "lava-action: ${{ env.LAVA_ACTION_REPOSITORY }}@${{ env.LAVA_ACTION_REF }}"
     outputs:
-      lava-test-plans-ref: "${{ env.LAVA_TEST_PLANS_REF }}"
-      lava-test-plans-repository: "${{ env.LAVA_TEST_PLANS_REPOSITORY }}"
       testkit-ref: "${{ env.TESTKIT_REF }}"
-      lava-action-repository: "${{ env.LAVA_ACTION_REPOSITORY }}"
-      lava-action-ref: "${{ env.LAVA_ACTION_REF }}"
 
-  # The distro test pipeline lives in qcom-reusable-workflows. It checks
-  # lava-test-plans out at the ref passed below, so the renderer and the test
-  # plan revision stay under the control of this repository.
+  # The distro test pipeline lives in qcom-reusable-workflows. The revisions
+  # of lava-test-plans and of the submission action are pinned by that
+  # workflow, so they are selected here by the ref it is called with.
   test-nodistro:
     needs: [prepare-env]
     name: "Test nodistro"
@@ -55,12 +40,7 @@ jobs:
       devices: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
       project_name: "meta-qcom"
       distro_name: "nodistro"
-      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
-      lava_test_plans_repository: "${{ needs.prepare-env.outputs.lava-test-plans-repository }}"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
-      lava_action_repository: "${{ needs.prepare-env.outputs.lava-action-repository }}"
-      lava_action_ref: "${{ needs.prepare-env.outputs.lava-action-ref }}"
-      fake_lava_submission: false
   test-qcom-distro:
     needs: [prepare-env]
     name: "Test qcom-distro"
@@ -72,12 +52,7 @@ jobs:
       devices_premerge: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
       project_name: "meta-qcom"
       distro_name: "qcom-distro"
-      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
-      lava_test_plans_repository: "${{ needs.prepare-env.outputs.lava-test-plans-repository }}"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
-      lava_action_repository: "${{ needs.prepare-env.outputs.lava-action-repository }}"
-      lava_action_ref: "${{ needs.prepare-env.outputs.lava-action-ref }}"
-      fake_lava_submission: false
   test-qcom-distro_linux-qcom-6-18:
     needs: [prepare-env]
     name: "Test qcom-distro_linux-qcom-6.18"
@@ -90,12 +65,7 @@ jobs:
       distro_name: "qcom-distro"
       project_name: "meta-qcom"
       distro_suffix: "_linux-qcom-6.18"
-      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
-      lava_test_plans_repository: "${{ needs.prepare-env.outputs.lava-test-plans-repository }}"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
-      lava_action_repository: "${{ needs.prepare-env.outputs.lava-action-repository }}"
-      lava_action_ref: "${{ needs.prepare-env.outputs.lava-action-ref }}"
-      fake_lava_submission: false
 #  test-debian:
 #    needs: [prepare-env]
 #    name: "Test debian"
@@ -108,12 +78,7 @@ jobs:
 #      project_name: "qcom-deb-images"
 #      distro_name: "debian"
 #      os_info: "debian"
-#      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
-#      lava_test_plans_repository: "${{ needs.prepare-env.outputs.lava-test-plans-repository }}"
 #      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
-#      lava_action_repository: "${{ needs.prepare-env.outputs.lava-action-repository }}"
-#      lava_action_ref: "${{ needs.prepare-env.outputs.lava-action-ref }}"
-#      fake_lava_submission: false
 
   collect-ids:
     name: "Collect Summary artifact IDs"
