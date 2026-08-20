@@ -49,7 +49,10 @@ jobs:
     with:
       build_id: "${{ inputs.build_id }}"
       devices: "glymur-crd,iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      devices_premerge: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      # Limited to two devices: pre-merge renders six test plans per device,
+      # so the full list is 42 LAVA jobs per distro. A different pair per
+      # distro keeps the coverage wider than the per-distro count suggests.
+      devices_premerge: "iq-8275-evk,rb3gen2-core-kit"
       project_name: "meta-qcom"
       distro_name: "qcom-distro"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
@@ -61,7 +64,9 @@ jobs:
     with:
       build_id: "${{ inputs.build_id }}"
       devices: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      devices_premerge: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      # A different pair from the one qcom-distro uses, see above.
+      # iq-9075-evk is the meta-qcom machine for the lemans-evk device type.
+      devices_premerge: "qcs8300-ride-sx,iq-9075-evk"
       distro_name: "qcom-distro"
       project_name: "meta-qcom"
       distro_suffix: "_linux-qcom-6.18"
