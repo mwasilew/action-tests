@@ -13,9 +13,16 @@ on:
 
 env:
   # git sha, tag or branch in lava-test-plans repository
-  LAVA_TEST_PLANS_REF: "deploy-to-qdl"
+  LAVA_TEST_PLANS_REF: "github-action"
+  # repository the lava-test-plans renderer and test plans are taken from
+  LAVA_TEST_PLANS_REPOSITORY: "mwasilew/lava-test-plans"
   # CalVer tag in qcom-linux-testkit repository (format: testkit-YYYY.MM.DD)
   TESTKIT_REF: "testkit-2026.06.21"
+  # Job submission action. This branch fakes the submission, so the pipeline can
+  # be exercised end to end without occupying any LAVA device. Switch back to
+  # foundriesio/lava-action@v13 to run against real hardware.
+  LAVA_ACTION_REPOSITORY: "mwasilew/lava-action"
+  LAVA_ACTION_REF: "fake-job-submission"
 
 jobs:
   prepare-env:
@@ -25,53 +32,74 @@ jobs:
       - name: "Print ref"
         shell: bash
         run: |
-          echo "lava-test-plans ref: ${{ env.LAVA_TEST_PLANS_REF }}"
+          echo "lava-test-plans: ${{ env.LAVA_TEST_PLANS_REPOSITORY }}@${{ env.LAVA_TEST_PLANS_REF }}"
+          echo "qcom-linux-testkit ref: ${{ env.TESTKIT_REF }}"
+          echo "lava-action: ${{ env.LAVA_ACTION_REPOSITORY }}@${{ env.LAVA_ACTION_REF }}"
     outputs:
       lava-test-plans-ref: "${{ env.LAVA_TEST_PLANS_REF }}"
+      lava-test-plans-repository: "${{ env.LAVA_TEST_PLANS_REPOSITORY }}"
       testkit-ref: "${{ env.TESTKIT_REF }}"
+      lava-action-repository: "${{ env.LAVA_ACTION_REPOSITORY }}"
+      lava-action-ref: "${{ env.LAVA_ACTION_REF }}"
+
+  # The distro test pipeline lives in qcom-reusable-workflows. It checks
+  # lava-test-plans out at the ref passed below, so the renderer and the test
+  # plan revision stay under the control of this repository.
   test-nodistro:
     needs: [prepare-env]
     name: "Test nodistro"
-    uses: ./.github/workflows/test-distro.yml
+    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
+      devices: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
       project_name: "meta-qcom"
       distro_name: "nodistro"
       lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
+      lava_test_plans_repository: "${{ needs.prepare-env.outputs.lava-test-plans-repository }}"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+      lava_action_repository: "${{ needs.prepare-env.outputs.lava-action-repository }}"
+      lava_action_ref: "${{ needs.prepare-env.outputs.lava-action-ref }}"
+      fake_lava_submission: true
   test-qcom-distro:
     needs: [prepare-env]
     name: "Test qcom-distro"
-    uses: ./.github/workflows/test-distro.yml
+    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      devices: "glymur-crd,iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      devices: "glymur-crd,iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      devices_premerge: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
       project_name: "meta-qcom"
       distro_name: "qcom-distro"
       lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
+      lava_test_plans_repository: "${{ needs.prepare-env.outputs.lava-test-plans-repository }}"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+      lava_action_repository: "${{ needs.prepare-env.outputs.lava-action-repository }}"
+      lava_action_ref: "${{ needs.prepare-env.outputs.lava-action-ref }}"
+      fake_lava_submission: true
   test-qcom-distro_linux-qcom-6-18:
     needs: [prepare-env]
     name: "Test qcom-distro_linux-qcom-6.18"
-    uses: ./.github/workflows/test-distro.yml
+    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      devices: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      devices_premerge: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
       distro_name: "qcom-distro"
       project_name: "meta-qcom"
       distro_suffix: "_linux-qcom-6.18"
       lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
+      lava_test_plans_repository: "${{ needs.prepare-env.outputs.lava-test-plans-repository }}"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+      lava_action_repository: "${{ needs.prepare-env.outputs.lava-action-repository }}"
+      lava_action_ref: "${{ needs.prepare-env.outputs.lava-action-ref }}"
+      fake_lava_submission: true
 #  test-debian:
 #    needs: [prepare-env]
 #    name: "Test debian"
-#    uses: ./.github/workflows/test-distro.yml
+#    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
 #    secrets: inherit
 #    with:
 #      build_id: "${{ inputs.build_id }}"
@@ -79,7 +107,13 @@ jobs:
 #      devices_premerge: "glymur-crd,qrb2210-rb1,qrb2210-arduino-imola"
 #      project_name: "qcom-deb-images"
 #      distro_name: "debian"
+#      os_info: "debian"
 #      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
+#      lava_test_plans_repository: "${{ needs.prepare-env.outputs.lava-test-plans-repository }}"
+#      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+#      lava_action_repository: "${{ needs.prepare-env.outputs.lava-action-repository }}"
+#      lava_action_ref: "${{ needs.prepare-env.outputs.lava-action-ref }}"
+#      fake_lava_submission: true
 
   collect-ids:
     name: "Collect Summary artifact IDs"
