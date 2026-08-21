@@ -6,14 +6,20 @@ on:
       build_id:
         required: true
         type: string
+      pr_number:
+        required: false
+        type: string
+        description: "Pull request number. Recorded in the LAVA job metadata for PR builds"
+      pr_url:
+        required: false
+        type: string
+        description: "Pull request URL. Recorded in the LAVA job metadata for PR builds"
     outputs:
       summary_ids:
         description: "IDs of the test summary artifact"
         value: ${{ jobs.collect-ids.outputs.summary_ids }}
 
 env:
-  # git sha, tag or branch in lava-test-plans repository
-  LAVA_TEST_PLANS_REF: "62f75dda7cc3c62305abaa5b6ace6c06a080bb7f"
   # CalVer tag in qcom-linux-testkit repository (format: testkit-YYYY.MM.DD)
   TESTKIT_REF: "testkit-2026.06.21"
 
@@ -25,58 +31,64 @@ jobs:
       - name: "Print ref"
         shell: bash
         run: |
-          echo "lava-test-plans ref: ${{ env.LAVA_TEST_PLANS_REF }}"
+          echo "qcom-linux-testkit ref: ${{ env.TESTKIT_REF }}"
     outputs:
-      lava-test-plans-ref: "${{ env.LAVA_TEST_PLANS_REF }}"
       testkit-ref: "${{ env.TESTKIT_REF }}"
+
+  # The distro test pipeline lives in qcom-reusable-workflows. The revisions
+  # of lava-test-plans and of the submission action are pinned by that
+  # workflow, so they are selected here by the ref it is called with.
   test-nodistro:
     needs: [prepare-env]
     name: "Test nodistro"
-    uses: ./.github/workflows/test-distro.yml
+    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      #devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
-      devices: "iq-8275-evk,"
+      devices: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
       project_name: "meta-qcom"
       distro_name: "nodistro"
-      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+      pr_number: "${{ inputs.pr_number }}"
+      pr_url: "${{ inputs.pr_url }}"
   test-qcom-distro:
     needs: [prepare-env]
     name: "Test qcom-distro"
-    uses: ./.github/workflows/test-distro.yml
+    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      #devices: "glymur-crd,iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      devices: "glymur-crd,iq-8275-evk"
-      #devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      devices_premerge: "iq-8275-evk,"
+      devices: "glymur-crd,iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      # Limited to two devices: pre-merge renders six test plans per device,
+      # so the full list is 42 LAVA jobs per distro. A different pair per
+      # distro keeps the coverage wider than the per-distro count suggests.
+      devices_premerge: "iq-8275-evk,rb3gen2-core-kit"
       project_name: "meta-qcom"
       distro_name: "qcom-distro"
-      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+      pr_number: "${{ inputs.pr_number }}"
+      pr_url: "${{ inputs.pr_url }}"
   test-qcom-distro_linux-qcom-6-18:
     needs: [prepare-env]
     name: "Test qcom-distro_linux-qcom-6.18"
-    uses: ./.github/workflows/test-distro.yml
+    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      #devices: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      devices: "iq-8275-evk,"
-      #devices_premerge: "iq-8275-evk,iq-9075-evk,qcm6490-idp,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      devices_premerge: "iq-8275-evk,"
+      devices: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
+      # A different pair from the one qcom-distro uses, see above.
+      # iq-9075-evk is the meta-qcom machine for the lemans-evk device type.
+      devices_premerge: "qcs8300-ride-sx,iq-9075-evk"
       distro_name: "qcom-distro"
       project_name: "meta-qcom"
       distro_suffix: "_linux-qcom-6.18"
-      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+      pr_number: "${{ inputs.pr_number }}"
+      pr_url: "${{ inputs.pr_url }}"
 #  test-debian:
 #    needs: [prepare-env]
 #    name: "Test debian"
-#    uses: ./.github/workflows/test-distro.yml
+#    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
 #    secrets: inherit
 #    with:
 #      build_id: "${{ inputs.build_id }}"
@@ -84,7 +96,10 @@ jobs:
 #      devices_premerge: "glymur-crd,qrb2210-rb1,qrb2210-arduino-imola"
 #      project_name: "qcom-deb-images"
 #      distro_name: "debian"
-#      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
+#      os_info: "debian"
+#      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+#      pr_number: "${{ inputs.pr_number }}"
+#      pr_url: "${{ inputs.pr_url }}"
 
   collect-ids:
     name: "Collect Summary artifact IDs"
