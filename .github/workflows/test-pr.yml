@@ -29,6 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       branch: ${{ steps.branch.outputs.value }}
+      pr_number: ${{ steps.branch.outputs.pr_number }}
+      pr_url: ${{ steps.branch.outputs.pr_url }}
     steps:
       - id: branch
         env:
@@ -36,6 +38,16 @@ jobs:
         run: |
           BRANCH=$(echo "$PULL_REQUESTS_JSON" | jq -r '.[0].base.ref // "master"')
           echo "value=$BRANCH" >> "$GITHUB_OUTPUT"
+          # Recorded in the LAVA job metadata, so a job can be traced back to
+          # the pull request it was run for. The array is empty for pull
+          # requests from forks, in which case both stay unset.
+          PR_NUMBER=$(echo "$PULL_REQUESTS_JSON" | jq -r '.[0].number // empty')
+          echo "pr_number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
+          if [ -n "${PR_NUMBER}" ]; then
+            echo "pr_url=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/pull/${PR_NUMBER}" >> "$GITHUB_OUTPUT"
+          else
+            echo "pr_url=" >> "$GITHUB_OUTPUT"
+          fi
 
   test-master:
     needs: determine-target-branch
@@ -44,6 +56,8 @@ jobs:
     secrets: inherit
     with:
       build_id: ${{ github.event.workflow_run.id }}
+      pr_number: ${{ needs.determine-target-branch.outputs.pr_number }}
+      pr_url: ${{ needs.determine-target-branch.outputs.pr_url }}
 
   test-wrynose:
     needs: determine-target-branch

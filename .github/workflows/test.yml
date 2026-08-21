@@ -6,6 +6,14 @@ on:
       build_id:
         required: true
         type: string
+      pr_number:
+        required: false
+        type: string
+        description: "Pull request number. Recorded in the LAVA job metadata for PR builds"
+      pr_url:
+        required: false
+        type: string
+        description: "Pull request URL. Recorded in the LAVA job metadata for PR builds"
     outputs:
       summary_ids:
         description: "IDs of the test summary artifact"
@@ -41,6 +49,8 @@ jobs:
       project_name: "meta-qcom"
       distro_name: "nodistro"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+      pr_number: "${{ inputs.pr_number }}"
+      pr_url: "${{ inputs.pr_url }}"
   test-qcom-distro:
     needs: [prepare-env]
     name: "Test qcom-distro"
@@ -56,6 +66,8 @@ jobs:
       project_name: "meta-qcom"
       distro_name: "qcom-distro"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+      pr_number: "${{ inputs.pr_number }}"
+      pr_url: "${{ inputs.pr_url }}"
   test-qcom-distro_linux-qcom-6-18:
     needs: [prepare-env]
     name: "Test qcom-distro_linux-qcom-6.18"
@@ -71,6 +83,8 @@ jobs:
       project_name: "meta-qcom"
       distro_suffix: "_linux-qcom-6.18"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+      pr_number: "${{ inputs.pr_number }}"
+      pr_url: "${{ inputs.pr_url }}"
 #  test-debian:
 #    needs: [prepare-env]
 #    name: "Test debian"
@@ -84,6 +98,8 @@ jobs:
 #      distro_name: "debian"
 #      os_info: "debian"
 #      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+#      pr_number: "${{ inputs.pr_number }}"
+#      pr_url: "${{ inputs.pr_url }}"
 
   collect-ids:
     name: "Collect Summary artifact IDs"
