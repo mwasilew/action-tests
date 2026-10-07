@@ -14,108 +14,164 @@ on:
         required: false
         type: string
         description: "Pull request URL. Recorded in the LAVA job metadata for PR builds"
-    outputs:
-      summary_ids:
-        description: "IDs of the test summary artifact"
-        value: ${{ jobs.collect-ids.outputs.summary_ids }}
 
 env:
   # CalVer tag in qcom-linux-testkit repository (format: testkit-YYYY.MM.DD)
   TESTKIT_REF: "testkit-2026.06.21"
+  # Limited to keep the run at most 10 LAVA jobs: two boot jobs and
+  # six pre-merge test plans on a single device.
+  DEVICES: "iq-9075-evk,rb3gen2-core-kit"
+  DEVICES_PREMERGE: "rb3gen2-core-kit"
+  DISTRO_NAME: "qcom-distro"
+  PROJECT_NAME: "meta-qcom"
+  LAVA_URL: "lava.infra.foundries.io"
 
 jobs:
-  prepare-env:
-    name: Prepare environment
+  prepare-boot-jobs:
+    name: "Prepare boot jobs"
     runs-on: ubuntu-latest
-    steps:
-      - name: "Print ref"
-        shell: bash
-        run: |
-          echo "qcom-linux-testkit ref: ${{ env.TESTKIT_REF }}"
     outputs:
-      testkit-ref: "${{ env.TESTKIT_REF }}"
+      jobmatrix: ${{ steps.lava-test-plans.outputs.jobmatrix }}
+      artifact_id: ${{ steps.lava-test-plans.outputs.artifact_id }}
+    steps:
+      - name: Run lava-test-plans
+        id: lava-test-plans
+        uses: qualcomm-linux/lava-test-plans@72813c68eb386a8491c6b20c70c0324f3228a51c  # first commit with github action
+        with:
+          machines: ${{ env.DEVICES }}
+          distro_name: ${{ env.DISTRO_NAME }}
+          build_id: ${{ inputs.build_id }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: boottest
+          project: ${{ env.PROJECT_NAME }}
+          testplan: ${{ env.DISTRO_NAME }}/boot
+          testkit_ref: ${{ env.TESTKIT_REF }}
+          os_info: qcom-distro
+          pr_number: ${{ inputs.pr_number }}
+          pr_url: ${{ inputs.pr_url }}
+          variables: |
+            AUDIO_CLIPS_BASE_DIR=/home/AudioClips/
+            DOCKER_IMAGE_POSTPROCESS=ghcr.io/foundriesio/lava-lmp-sign:main
+            AUTH_HEADER_NAME=QLIAuthorization
+            AUTH_HEADER_TOKEN=Q_QLI_S3_TOKEN
 
-  # The distro test pipeline lives in qcom-reusable-workflows. The revisions
-  # of lava-test-plans and of the submission action are pinned by that
-  # workflow, so they are selected here by the ref it is called with.
-  test-nodistro:
-    needs: [prepare-env]
-    name: "Test nodistro"
-    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
-    secrets: inherit
-    with:
-      build_id: "${{ inputs.build_id }}"
-      devices: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
-      project_name: "meta-qcom"
-      distro_name: "nodistro"
-      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
-      pr_number: "${{ inputs.pr_number }}"
-      pr_url: "${{ inputs.pr_url }}"
-  test-qcom-distro:
-    needs: [prepare-env]
-    name: "Test qcom-distro"
-    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
-    secrets: inherit
-    with:
-      build_id: "${{ inputs.build_id }}"
-      devices: "glymur-crd,iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      # Limited to two devices: pre-merge renders six test plans per device,
-      # so the full list is 42 LAVA jobs per distro. A different pair per
-      # distro keeps the coverage wider than the per-distro count suggests.
-      devices_premerge: "iq-8275-evk,rb3gen2-core-kit"
-      project_name: "meta-qcom"
-      distro_name: "qcom-distro"
-      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
-      pr_number: "${{ inputs.pr_number }}"
-      pr_url: "${{ inputs.pr_url }}"
-  test-qcom-distro_linux-qcom-6-18:
-    needs: [prepare-env]
-    name: "Test qcom-distro_linux-qcom-6.18"
-    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
-    secrets: inherit
-    with:
-      build_id: "${{ inputs.build_id }}"
-      devices: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      # A different pair from the one qcom-distro uses, see above.
-      # iq-9075-evk is the meta-qcom machine for the lemans-evk device type.
-      devices_premerge: "qcs8300-ride-sx,iq-9075-evk"
-      distro_name: "qcom-distro"
-      project_name: "meta-qcom"
-      distro_suffix: "_linux-qcom-6.18"
-      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
-      pr_number: "${{ inputs.pr_number }}"
-      pr_url: "${{ inputs.pr_url }}"
-#  test-debian:
-#    needs: [prepare-env]
-#    name: "Test debian"
-#    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
-#    secrets: inherit
-#    with:
-#      build_id: "${{ inputs.build_id }}"
-#      devices: "glymur-crd,qrb2210-rb1,qrb2210-arduino-imola"
-#      devices_premerge: "glymur-crd,qrb2210-rb1,qrb2210-arduino-imola"
-#      project_name: "qcom-deb-images"
-#      distro_name: "debian"
-#      os_info: "debian"
-#      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
-#      pr_number: "${{ inputs.pr_number }}"
-#      pr_url: "${{ inputs.pr_url }}"
-
-  collect-ids:
-    name: "Collect Summary artifact IDs"
-    needs: [test-nodistro, test-qcom-distro, test-qcom-distro_linux-qcom-6-18]
-    if: |
-      always()
-      && contains(needs.*.result, 'success')
-      && !contains(needs.*.result, 'failure')
+  submit-boot-job:
+    needs: prepare-boot-jobs
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
-      pull-requests: write
-    outputs:
-      summary_ids: ${{ steps.generate-summary.outputs.artifact_ids }}
+    continue-on-error: true
+    name: Boot ${{ matrix.target.name }}
+    strategy:
+      matrix: ${{ fromJson(needs.prepare-boot-jobs.outputs.jobmatrix) }}
     steps:
-      - name: Summary IDs
-        id: generate-summary
+      - name: 'Download job templates'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8
+        with:
+          artifact-ids: ${{ needs.prepare-boot-jobs.outputs.artifact_id }}
+
+      - name: Submit ${{ matrix.target.name }}
+        timeout-minutes: 120
+        id: submit
+        uses: mwasilew/lava-action@poll-interval-input
+        with:
+          lava_token: ${{ secrets.LAVATOKEN }}
+          lava_url: ${{ env.LAVA_URL }}
+          job_definition: ${{ matrix.target.path }}
+          wait_for_job: true
+          fail_action_on_failure: true
+          fail_action_on_incomplete: true
+          save_result_as_artifact: true
+          save_job_details: true
+          result_file_name: "${{ matrix.target.result_file }}"
+          test_job_file_name_prefix: "${{ env.DISTRO_NAME }}-"
+      - uses: qualcomm-linux/github-action-matrix-outputs-write@v3
+        if: always()
+        with:
+          matrix-step-name: "${{ github.job }}-${{ env.DISTRO_NAME }}"
+          matrix-key: ${{ matrix.target.name }}-${{ env.DISTRO_NAME }}
+          artifact-name: ${{ github.job }}-${{ env.DISTRO_NAME }}-${{ matrix.target.name }}
+          outputs: |-
+            result: ${{ steps.submit.outcome }}
+
+  boot-job-result:
+    runs-on: ubuntu-latest
+    needs: [submit-boot-job]
+    outputs:
+      boot_result: "${{ steps.print-boot-result.outputs.boot_result }}"
+    steps:
+      - uses: qualcomm-linux/github-action-matrix-outputs-read@2b2498aa0fc6c565e02af0f3a3c5b7e1b6ae07f4
+        id: read
+        with:
+          matrix-step-name: "submit-boot-job-${{ env.DISTRO_NAME }}"
+          download-file-pattern: "submit-boot-job-${{ env.DISTRO_NAME }}*"
+      - id: print-boot-result
+        name: "Print boot result"
+        env:
+          OUTPUTS_RESULT: "${{ steps.read.outputs.result }}"
         run: |
-          echo "artifact_ids=${{ needs.test-nodistro.outputs.summary_id }},${{ needs.test-qcom-distro.outputs.summary_id }},${{ needs.test-qcom-distro_linux-qcom-6-18.outputs.summary_id }}" >> $GITHUB_OUTPUT
+          # collapse results of matrix of boot test jobs to a single result
+          BOOT_RESULT="failure"
+          RESULT=$(echo "${OUTPUTS_RESULT}" | yq '.result | [.[]] | all_c(. == "success")')
+          if [ "$RESULT" == "true" ]; then
+            BOOT_RESULT="success"
+          fi
+          echo "boot_result=$BOOT_RESULT"
+          echo "boot_result=$BOOT_RESULT" >> "$GITHUB_OUTPUT"
+
+  prepare-premerge-jobs:
+    name: "Prepare pre-merge jobs"
+    runs-on: ubuntu-latest
+    needs: boot-job-result
+    # run only if boot jobs are successful
+    if: ${{ needs.boot-job-result.outputs.boot_result == 'success' }}
+    outputs:
+      jobmatrix: ${{ steps.lava-test-plans.outputs.jobmatrix }}
+      artifact_id: ${{ steps.lava-test-plans.outputs.artifact_id }}
+    steps:
+      - name: Run lava-test-plans
+        id: lava-test-plans
+        uses: mwasilew/lava-test-plans@github-action
+        with:
+          machines: ${{ env.DEVICES_PREMERGE }}
+          distro_name: ${{ env.DISTRO_NAME }}
+          build_id: ${{ inputs.build_id }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: premerge
+          project: ${{ env.PROJECT_NAME }}
+          testplan: ${{ env.DISTRO_NAME }}/pre-merge
+          testkit_ref: ${{ env.TESTKIT_REF }}
+          os_info: qcom-distro
+          pr_number: ${{ inputs.pr_number }}
+          pr_url: ${{ inputs.pr_url }}
+          variables: |
+            AUDIO_CLIPS_BASE_DIR=/home/AudioClips/
+            DOCKER_IMAGE_POSTPROCESS=ghcr.io/foundriesio/lava-lmp-sign:main
+            AUTH_HEADER_NAME=QLIAuthorization
+            AUTH_HEADER_TOKEN=Q_QLI_S3_TOKEN
+
+  submit-premerge-job:
+    needs: prepare-premerge-jobs
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    name: Pre-merge ${{ matrix.target.name }}
+    strategy:
+      matrix: ${{ fromJson(needs.prepare-premerge-jobs.outputs.jobmatrix) }}
+    steps:
+      - name: 'Download job templates'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8
+        with:
+          artifact-ids: ${{ needs.prepare-premerge-jobs.outputs.artifact_id }}
+
+      - name: Submit ${{ matrix.target.name }}
+        timeout-minutes: 120
+        uses: mwasilew/lava-action@poll-interval-input
+        with:
+          lava_token: ${{ secrets.LAVATOKEN }}
+          lava_url: ${{ env.LAVA_URL }}
+          job_definition: ${{ matrix.target.path }}
+          wait_for_job: true
+          fail_action_on_failure: true
+          fail_action_on_incomplete: true
+          save_result_as_artifact: true
+          save_job_details: true
+          result_file_name: "${{ matrix.target.result_file }}"
+          test_job_file_name_prefix: "${{ env.DISTRO_NAME }}-"
