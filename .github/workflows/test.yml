@@ -14,14 +14,26 @@ on:
         required: false
         type: string
         description: "Pull request URL. Recorded in the LAVA job metadata for PR builds"
+      known_failures_repository:
+        required: false
+        type: string
+        default: ""
+        description: "Repository the known failures list is read from. Defaults to the repository running the workflow"
+      known_failures_ref:
+        required: false
+        type: string
+        default: ""
+        description: "Commit the known failures list is read from. Defaults to the commit the workflow runs for"
     outputs:
       summary_ids:
         description: "IDs of the test summary artifact"
-        value: ${{ jobs.collect-ids.outputs.summary_ids }}
+        value: ${{ jobs.publish-test-summary.outputs.summary_ids }}
 
 env:
   # CalVer tag in qcom-linux-testkit repository (format: testkit-YYYY.MM.DD)
   TESTKIT_REF: "testkit-2026.06.21"
+  # Known failures list applied to the test summary
+  KNOWN_FAILURES_FILE: "ci/known-failures.yml"
 
 jobs:
   prepare-env:
@@ -35,17 +47,22 @@ jobs:
     outputs:
       testkit-ref: "${{ env.TESTKIT_REF }}"
 
-  # The distro test pipeline lives in qcom-reusable-workflows. The revisions
-  # of lava-test-plans and of the submission action are pinned by that
-  # workflow, so they are selected here by the ref it is called with.
+  # The distro test pipeline lives in qcom-reusable-workflows
+  # (qualcomm/qcom-reusable-workflows#77). The revisions of lava-test-plans
+  # and of the submission action are pinned by that workflow, so they are
+  # selected here by the ref it is called with.
+  #
+  # Each distro is tested on at most three devices. Pre-merge renders six
+  # test plans per device, and a different pair per distro keeps the coverage
+  # wider than the per-distro count suggests.
   test-nodistro:
     needs: [prepare-env]
     name: "Test nodistro"
-    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
+    uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      devices: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,dragonboard-410c,dragonboard-820c,rb1-core-kit"
+      devices: "iq-9075-evk,rb3gen2-core-kit,qcs8300-ride-sx"
       project_name: "meta-qcom"
       distro_name: "nodistro"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
@@ -54,14 +71,11 @@ jobs:
   test-qcom-distro:
     needs: [prepare-env]
     name: "Test qcom-distro"
-    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
+    uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      devices: "glymur-crd,iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      # Limited to two devices: pre-merge renders six test plans per device,
-      # so the full list is 42 LAVA jobs per distro. A different pair per
-      # distro keeps the coverage wider than the per-distro count suggests.
+      devices: "iq-8275-evk,rb3gen2-core-kit,qcs615-ride"
       devices_premerge: "iq-8275-evk,rb3gen2-core-kit"
       project_name: "meta-qcom"
       distro_name: "qcom-distro"
@@ -71,12 +85,11 @@ jobs:
   test-qcom-distro_linux-qcom-6-18:
     needs: [prepare-env]
     name: "Test qcom-distro_linux-qcom-6.18"
-    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
+    uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
-      devices: "iq-8275-evk,iq-9075-evk,qcs615-ride,rb3gen2-core-kit,qcs8300-ride-sx,qcs9100-ride-sx,rb1-core-kit"
-      # A different pair from the one qcom-distro uses, see above.
+      devices: "qcs8300-ride-sx,iq-9075-evk,qcs9100-ride-sx"
       # iq-9075-evk is the meta-qcom machine for the lemans-evk device type.
       devices_premerge: "qcs8300-ride-sx,iq-9075-evk"
       distro_name: "qcom-distro"
@@ -88,7 +101,7 @@ jobs:
 #  test-debian:
 #    needs: [prepare-env]
 #    name: "Test debian"
-#    uses: mwasilew/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@reusable-test-workflow
+#    uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
 #    secrets: inherit
 #    with:
 #      build_id: "${{ inputs.build_id }}"
@@ -101,8 +114,12 @@ jobs:
 #      pr_number: "${{ inputs.pr_number }}"
 #      pr_url: "${{ inputs.pr_url }}"
 
-  collect-ids:
-    name: "Collect Summary artifact IDs"
+  # The reusable workflow reads the known failures list from a checkout of
+  # the commit the workflow runs for. For a pull request that is the head of
+  # the target branch, not the pull request, so the summary that applies the
+  # list is generated here, from the commit the caller names.
+  publish-test-summary:
+    name: "Publish Summary"
     needs: [test-nodistro, test-qcom-distro, test-qcom-distro_linux-qcom-6-18]
     if: |
       always()
@@ -110,12 +127,62 @@ jobs:
       && !contains(needs.*.result, 'failure')
     runs-on: ubuntu-latest
     permissions:
-      checks: write
-      pull-requests: write
+      actions: read
+      contents: read
     outputs:
-      summary_ids: ${{ steps.generate-summary.outputs.artifact_ids }}
+      summary_ids: ${{ steps.summary-ids.outputs.artifact_ids }}
     steps:
-      - name: Summary IDs
-        id: generate-summary
+      # Only the list is checked out; nothing from the pull request is run.
+      - name: Check out the known failures list
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ inputs.known_failures_repository || github.repository }}
+          ref: ${{ inputs.known_failures_ref || github.sha }}
+          persist-credentials: false
+          sparse-checkout: ${{ env.KNOWN_FAILURES_FILE }}
+          sparse-checkout-cone-mode: false
+
+      - name: Summary nodistro
+        id: summary-nodistro
+        uses: qualcomm/qcom-reusable-workflows/.github/actions/test-job-summary@6d27c5e493ee1d97f080de6e3dc0693a2efa2f65 # main
+        with:
+          build_id: ${{ github.run_id }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: "nodistro-test-job*"
+          summary_file_name: "nodistro-known_failures_summary"
+          summary_title: "nodistro"
+          known_failures_file: ${{ env.KNOWN_FAILURES_FILE }}
+          kernel: "default"
+
+      - name: Summary qcom-distro
+        id: summary-qcom-distro
+        uses: qualcomm/qcom-reusable-workflows/.github/actions/test-job-summary@6d27c5e493ee1d97f080de6e3dc0693a2efa2f65 # main
+        with:
+          build_id: ${{ github.run_id }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: "qcom-distro-test-job*"
+          summary_file_name: "qcom-distro-known_failures_summary"
+          summary_title: "qcom-distro"
+          known_failures_file: ${{ env.KNOWN_FAILURES_FILE }}
+          kernel: "default"
+
+      - name: Summary qcom-distro_linux-qcom-6.18
+        id: summary-qcom-distro_linux-qcom-6-18
+        uses: qualcomm/qcom-reusable-workflows/.github/actions/test-job-summary@6d27c5e493ee1d97f080de6e3dc0693a2efa2f65 # main
+        with:
+          build_id: ${{ github.run_id }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: "qcom-distro_linux-qcom-6.18-test-job*"
+          summary_file_name: "qcom-distro_linux-qcom-6.18-known_failures_summary"
+          summary_title: "qcom-distro_linux-qcom-6.18"
+          known_failures_file: ${{ env.KNOWN_FAILURES_FILE }}
+          kernel: "linux-qcom-6.18"
+
+      - name: Publish Test Job Details
         run: |
-          echo "artifact_ids=${{ needs.test-nodistro.outputs.summary_id }},${{ needs.test-qcom-distro.outputs.summary_id }},${{ needs.test-qcom-distro_linux-qcom-6-18.outputs.summary_id }}" >> $GITHUB_OUTPUT
+          cat *-known_failures_summary >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Summary IDs
+        id: summary-ids
+        run: |
+          echo "artifact_ids=${{ steps.summary-nodistro.outputs.artifact_id }},${{ steps.summary-qcom-distro.outputs.artifact_id }},${{ steps.summary-qcom-distro_linux-qcom-6-18.outputs.artifact_id }}" >> $GITHUB_OUTPUT

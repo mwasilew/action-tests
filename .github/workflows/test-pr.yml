@@ -58,6 +58,10 @@ jobs:
       build_id: ${{ github.event.workflow_run.id }}
       pr_number: ${{ needs.determine-target-branch.outputs.pr_number }}
       pr_url: ${{ needs.determine-target-branch.outputs.pr_url }}
+      # Apply the known failures list of the pull request, not the one of the
+      # target branch, so a pull request can update it along with the change.
+      known_failures_repository: ${{ github.event.workflow_run.head_repository.full_name }}
+      known_failures_ref: ${{ github.event.workflow_run.head_sha }}
 
   test-wrynose:
     needs: determine-target-branch

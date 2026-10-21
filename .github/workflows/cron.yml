@@ -10,6 +10,7 @@ permissions:
   pull-requests: write
   contents: read
   packages: read
+  actions: read
 
 jobs:
   nightly:
@@ -19,4 +20,4 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/test.yml
     with:
-      url: ${{ needs.nightly.outputs.artifact_url }}
+      build_id: ${{ github.run_id }}
