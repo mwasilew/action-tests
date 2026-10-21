@@ -81,6 +81,8 @@ jobs:
       build_id: "${{ inputs.build_id }}"
       devices: "iq-8275-evk,rb3gen2-core-kit,qcs615-ride"
       devices_premerge: "iq-8275-evk,rb3gen2-core-kit"
+      # Run pre-merge on the boards that booted, even when another failed
+      premerge_on_booted: true
       project_name: "meta-qcom"
       distro_name: "qcom-distro"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
@@ -98,6 +100,8 @@ jobs:
       devices: "qcs8300-ride-sx,iq-9075-evk,qcs9100-ride-sx"
       # iq-9075-evk is the meta-qcom machine for the lemans-evk device type.
       devices_premerge: "qcs8300-ride-sx,iq-9075-evk"
+      # Run pre-merge on the boards that booted, even when another failed
+      premerge_on_booted: true
       distro_name: "qcom-distro"
       project_name: "meta-qcom"
       distro_suffix: "_linux-qcom-6.18"
@@ -115,6 +119,8 @@ jobs:
 #      build_id: "${{ inputs.build_id }}"
 #      devices: "glymur-crd,qrb2210-rb1,qrb2210-arduino-imola"
 #      devices_premerge: "glymur-crd,qrb2210-rb1,qrb2210-arduino-imola"
+#      # Run pre-merge on the boards that booted, even when another failed
+#      premerge_on_booted: true
 #      project_name: "qcom-deb-images"
 #      distro_name: "debian"
 #      os_info: "debian"
