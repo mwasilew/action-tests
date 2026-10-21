@@ -98,6 +98,13 @@ jobs:
       project_name: "qcom-deb-images"
       distro_name: "debian"
       os_info: "debian"
+      # The lava-test-plans action points ROOTFS_URL at a Yocto image whenever
+      # a distro name is set, which the reusable workflow always does. Point
+      # it at the debian image instead; keep the build in step with
+      # BASE_ARTIFACT_DEBIAN_URL in build.yml.
+      variables: |
+        DEBIAN_RELEASE=trixie
+        ROOTFS_URL=https://qli-prod-artifacts.qualcomm.com/qcom-prd-gh-artifacts/qualcomm-linux/qcom-deb-images/39618630090-1/trixie-flash-emmc.tar.gz
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
       pr_number: "${{ inputs.pr_number }}"
       pr_url: "${{ inputs.pr_url }}"
