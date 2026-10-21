@@ -57,7 +57,9 @@ jobs:
     needs: [prepare-env]
     name: "Test nodistro"
     uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
-    secrets: inherit
+    # secrets: inherit only reaches workflows of the same owner
+    secrets:
+      LAVATOKEN: ${{ secrets.LAVATOKEN }}
     with:
       build_id: "${{ inputs.build_id }}"
       devices: "glymur-crd,iq-8275-evk"
@@ -70,7 +72,9 @@ jobs:
     needs: [prepare-env]
     name: "Test qcom-distro"
     uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
-    secrets: inherit
+    # secrets: inherit only reaches workflows of the same owner
+    secrets:
+      LAVATOKEN: ${{ secrets.LAVATOKEN }}
     with:
       build_id: "${{ inputs.build_id }}"
       devices: "rb1-core-kit"
@@ -84,7 +88,9 @@ jobs:
     needs: [prepare-env]
     name: "Test debian"
     uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
-    secrets: inherit
+    # secrets: inherit only reaches workflows of the same owner
+    secrets:
+      LAVATOKEN: ${{ secrets.LAVATOKEN }}
     with:
       build_id: "${{ inputs.build_id }}"
       devices: "rb1-core-kit"
