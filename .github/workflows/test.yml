@@ -59,7 +59,9 @@ jobs:
     needs: [prepare-env]
     name: "Test nodistro"
     uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
-    secrets: inherit
+    # secrets: inherit only reaches workflows of the same owner
+    secrets:
+      LAVATOKEN: ${{ secrets.LAVATOKEN }}
     with:
       build_id: "${{ inputs.build_id }}"
       devices: "iq-9075-evk,rb3gen2-core-kit,qcs8300-ride-sx"
@@ -72,7 +74,9 @@ jobs:
     needs: [prepare-env]
     name: "Test qcom-distro"
     uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
-    secrets: inherit
+    # secrets: inherit only reaches workflows of the same owner
+    secrets:
+      LAVATOKEN: ${{ secrets.LAVATOKEN }}
     with:
       build_id: "${{ inputs.build_id }}"
       devices: "iq-8275-evk,rb3gen2-core-kit,qcs615-ride"
@@ -86,7 +90,9 @@ jobs:
     needs: [prepare-env]
     name: "Test qcom-distro_linux-qcom-6.18"
     uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
-    secrets: inherit
+    # secrets: inherit only reaches workflows of the same owner
+    secrets:
+      LAVATOKEN: ${{ secrets.LAVATOKEN }}
     with:
       build_id: "${{ inputs.build_id }}"
       devices: "qcs8300-ride-sx,iq-9075-evk,qcs9100-ride-sx"
@@ -102,7 +108,9 @@ jobs:
 #    needs: [prepare-env]
 #    name: "Test debian"
 #    uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
-#    secrets: inherit
+#    # secrets: inherit only reaches workflows of the same owner
+#    secrets:
+#      LAVATOKEN: ${{ secrets.LAVATOKEN }}
 #    with:
 #      build_id: "${{ inputs.build_id }}"
 #      devices: "glymur-crd,qrb2210-rb1,qrb2210-arduino-imola"
