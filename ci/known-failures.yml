@@ -14,4 +14,23 @@
 #     comment: https://github.com/qualcomm-linux/meta-qcom/issues/1
 #     kernels: [linux-qcom-6.18]
 #   - Ethernet
-{}
+"*":
+  # testkit-2026.06.21 lacks this test definition, which aborts the
+  # pre-merge-basic job
+  - Ethernet_Basic_Validation
+
+qcs8300-ride-sx:
+  - test: CPUFreq_Validation
+    comment: pre-merge-basic aborts, see https://lava.infra.foundries.io/scheduler/job/501675
+    kernels: [linux-qcom-6.18]
+
+iq-9075-evk:
+  # only listed for the default kernel, so it stays a failure on 6.18
+  - test: CPUFreq_Validation
+    kernels: [default]
+  # passes, so it is reported as an unexpected pass
+  - BT_SCAN
+
+rb3gen2-core-kit:
+  - test: boot
+    comment: login times out after flashing, see https://lava.infra.foundries.io/scheduler/job/501661
