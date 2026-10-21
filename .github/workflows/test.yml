@@ -79,6 +79,8 @@ jobs:
       build_id: "${{ inputs.build_id }}"
       devices: "rb1-core-kit"
       devices_premerge: "rb1-core-kit"
+      # Run pre-merge on the boards that booted, even when another failed
+      premerge_on_booted: true
       project_name: "meta-qcom"
       distro_name: "qcom-distro"
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
@@ -100,6 +102,8 @@ jobs:
 #      build_id: "${{ inputs.build_id }}"
 #      devices: "qrb2210-rb1"
 #      devices_premerge: "qrb2210-rb1"
+#      # Run pre-merge on the boards that booted, even when another failed
+#      premerge_on_booted: true
 #      project_name: "qcom-deb-images"
 #      distro_name: "debian"
 #      os_info: "debian"
