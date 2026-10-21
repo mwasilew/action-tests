@@ -93,8 +93,8 @@ jobs:
       LAVATOKEN: ${{ secrets.LAVATOKEN }}
     with:
       build_id: "${{ inputs.build_id }}"
-      devices: "rb1-core-kit"
-      devices_premerge: "rb1-core-kit"
+      devices: "qrb2210-rb1"
+      devices_premerge: "qrb2210-rb1"
       project_name: "qcom-deb-images"
       distro_name: "debian"
       os_info: "debian"
