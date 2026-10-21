@@ -84,30 +84,28 @@ jobs:
       testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
       pr_number: "${{ inputs.pr_number }}"
       pr_url: "${{ inputs.pr_url }}"
-  test-debian:
-    needs: [prepare-env]
-    name: "Test debian"
-    uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
-    # secrets: inherit only reaches workflows of the same owner
-    secrets:
-      LAVATOKEN: ${{ secrets.LAVATOKEN }}
-    with:
-      build_id: "${{ inputs.build_id }}"
-      devices: "qrb2210-rb1"
-      devices_premerge: "qrb2210-rb1"
-      project_name: "qcom-deb-images"
-      distro_name: "debian"
-      os_info: "debian"
-      # The lava-test-plans action points ROOTFS_URL at a Yocto image whenever
-      # a distro name is set, which the reusable workflow always does. Point
-      # it at the debian image instead; keep the build in step with
-      # BASE_ARTIFACT_DEBIAN_URL in build.yml.
-      variables: |
-        DEBIAN_RELEASE=trixie
-        ROOTFS_URL=https://qli-prod-artifacts.qualcomm.com/qcom-prd-gh-artifacts/qualcomm-linux/qcom-deb-images/39618630090-1/trixie-flash-emmc.tar.gz
-      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
-      pr_number: "${{ inputs.pr_number }}"
-      pr_url: "${{ inputs.pr_url }}"
+  # Debian is not tested: the reusable workflow always passes a distro name,
+  # which makes the lava-test-plans action point ROOTFS_URL at a Yocto image
+  # (<url>/debian/<machine>/core-image-base-...), and ROOTFS_URL cannot be
+  # overridden through variables. qrb2210-rb1 is the board name
+  # qcom-deb-images uses.
+#  test-debian:
+#    needs: [prepare-env]
+#    name: "Test debian"
+#    uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
+#    # secrets: inherit only reaches workflows of the same owner
+#    secrets:
+#      LAVATOKEN: ${{ secrets.LAVATOKEN }}
+#    with:
+#      build_id: "${{ inputs.build_id }}"
+#      devices: "qrb2210-rb1"
+#      devices_premerge: "qrb2210-rb1"
+#      project_name: "qcom-deb-images"
+#      distro_name: "debian"
+#      os_info: "debian"
+#      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+#      pr_number: "${{ inputs.pr_number }}"
+#      pr_url: "${{ inputs.pr_url }}"
 
   # The reusable workflow reads the known failures list from a checkout of
   # the commit the workflow runs for. For a pull request that is the head of
@@ -115,7 +113,7 @@ jobs:
   # list is generated here, from the commit the caller names.
   publish-test-summary:
     name: "Publish Summary"
-    needs: [test-nodistro, test-qcom-distro, test-debian]
+    needs: [test-nodistro, test-qcom-distro]
     if: |
       always()
       && contains(needs.*.result, 'success')
@@ -161,18 +159,6 @@ jobs:
           known_failures_file: ${{ env.KNOWN_FAILURES_FILE }}
           kernel: "default"
 
-      - name: Summary debian
-        id: summary-debian
-        uses: qualcomm/qcom-reusable-workflows/.github/actions/test-job-summary@6d27c5e493ee1d97f080de6e3dc0693a2efa2f65 # main
-        with:
-          build_id: ${{ github.run_id }}
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
-          prefix: "debian-test-job*"
-          summary_file_name: "debian-known_failures_summary"
-          summary_title: "debian"
-          known_failures_file: ${{ env.KNOWN_FAILURES_FILE }}
-          kernel: "default"
-
       - name: Publish Test Job Details
         run: |
           cat *-known_failures_summary >> "$GITHUB_STEP_SUMMARY"
@@ -180,4 +166,4 @@ jobs:
       - name: Summary IDs
         id: summary-ids
         run: |
-          echo "artifact_ids=${{ steps.summary-nodistro.outputs.artifact_id }},${{ steps.summary-qcom-distro.outputs.artifact_id }},${{ steps.summary-debian.outputs.artifact_id }}" >> $GITHUB_OUTPUT
+          echo "artifact_ids=${{ steps.summary-nodistro.outputs.artifact_id }},${{ steps.summary-qcom-distro.outputs.artifact_id }}" >> $GITHUB_OUTPUT
