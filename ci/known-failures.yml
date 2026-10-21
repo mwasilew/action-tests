@@ -1,0 +1,17 @@
+# Failures that are known and accepted, applied to the test summary.
+#
+# Keys are board names as in the LAVA job "machine" metadata, or "*" for every
+# board. Each lists test names, either bare or as a mapping with a "comment"
+# (usually the issue the failure is tracked in) and an optional "kernels" list
+# limiting the entry to some kernel flavours ("default").
+# A listed test that passes is reported as an unexpected pass and counted as a
+# failure, so stale entries have to be removed.
+#
+# Pull requests are summarised with the list from the pull request itself.
+#
+# rb3gen2-core-kit:
+#   - test: Audio_Record
+#     comment: https://github.com/qualcomm-linux/meta-qcom/issues/1
+#     kernels: [default]
+#   - Ethernet
+{}

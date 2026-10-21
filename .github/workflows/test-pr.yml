@@ -13,6 +13,7 @@ permissions:
   pull-requests: write
   contents: read
   packages: read
+  actions: read
 
 jobs:
   test:
@@ -21,7 +22,8 @@ jobs:
     secrets: inherit
     with:
       build_id: ${{ github.event.workflow_run.id }}
-      git_ref: ${{ github.event.workflow_run.head_sha }}
+      known_failures_repository: ${{ github.event.workflow_run.head_repository.full_name }}
+      known_failures_ref: ${{ github.event.workflow_run.head_sha }}
 
   comment-on-pr:
     name: "Comment on PR"

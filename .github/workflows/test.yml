@@ -6,18 +6,34 @@ on:
       build_id:
         required: true
         type: string
-      git_ref:
+      pr_number:
         required: false
-        default: ''
         type: string
-        description: "Ref in the repo which should be used for the tests"
+        description: "Pull request number. Recorded in the LAVA job metadata for PR builds"
+      pr_url:
+        required: false
+        type: string
+        description: "Pull request URL. Recorded in the LAVA job metadata for PR builds"
+      known_failures_repository:
+        required: false
+        type: string
+        default: ""
+        description: "Repository the known failures list is read from. Defaults to the repository running the workflow"
+      known_failures_ref:
+        required: false
+        type: string
+        default: ""
+        description: "Commit the known failures list is read from. Defaults to the commit the workflow runs for"
     outputs:
       summary_ids:
         description: "IDs of the test summary artifact"
-        value: ${{ jobs.collect-ids.outputs.summary_ids }}
+        value: ${{ jobs.publish-test-summary.outputs.summary_ids }}
 
 env:
-  LAVA_TEST_PLANS_REF: "debian-support"
+  # CalVer tag in qcom-linux-testkit repository (format: testkit-YYYY.MM.DD)
+  TESTKIT_REF: "testkit-2026.06.21"
+  # Known failures list applied to the test summary
+  KNOWN_FAILURES_FILE: "ci/known-failures.yml"
 
 jobs:
   prepare-env:
@@ -27,25 +43,33 @@ jobs:
       - name: "Print ref"
         shell: bash
         run: |
-          echo "lava-test-plans ref: ${{ env.LAVA_TEST_PLANS_REF }}"
+          echo "qcom-linux-testkit ref: ${{ env.TESTKIT_REF }}"
     outputs:
-      lava-test-plans-ref: "${{ env.LAVA_TEST_PLANS_REF }}"
+      testkit-ref: "${{ env.TESTKIT_REF }}"
+
+  # The distro test pipeline lives in qcom-reusable-workflows
+  # (qualcomm/qcom-reusable-workflows#77). The revisions of lava-test-plans
+  # and of the submission action are pinned by that workflow, so they are
+  # selected here by the ref it is called with.
+  #
+  # Each distro is tested on at most three devices.
   test-nodistro:
     needs: [prepare-env]
     name: "Test nodistro"
-    uses: ./.github/workflows/test-distro.yml
+    uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
       devices: "glymur-crd,iq-8275-evk"
       project_name: "meta-qcom"
       distro_name: "nodistro"
-      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
-      git_ref: ${{ inputs.git_ref }}
+      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+      pr_number: "${{ inputs.pr_number }}"
+      pr_url: "${{ inputs.pr_url }}"
   test-qcom-distro:
     needs: [prepare-env]
     name: "Test qcom-distro"
-    uses: ./.github/workflows/test-distro.yml
+    uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
@@ -53,12 +77,13 @@ jobs:
       devices_premerge: "rb1-core-kit"
       project_name: "meta-qcom"
       distro_name: "qcom-distro"
-      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
-      git_ref: ${{ inputs.git_ref }}
+      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+      pr_number: "${{ inputs.pr_number }}"
+      pr_url: "${{ inputs.pr_url }}"
   test-debian:
     needs: [prepare-env]
     name: "Test debian"
-    uses: ./.github/workflows/test-distro.yml
+    uses: qualcomm/qcom-reusable-workflows/.github/workflows/reusable-test-distro.yml@a45926cf7b3700dc87ee528a91cd1100db656bb6 # qcom-reusable-workflows#77
     secrets: inherit
     with:
       build_id: "${{ inputs.build_id }}"
@@ -66,11 +91,17 @@ jobs:
       devices_premerge: "rb1-core-kit"
       project_name: "qcom-deb-images"
       distro_name: "debian"
-      lava_test_plans_ref: "${{ needs.prepare-env.outputs.lava-test-plans-ref }}"
-      git_ref: ${{ inputs.git_ref }}
+      os_info: "debian"
+      testkit_ref: "${{ needs.prepare-env.outputs.testkit-ref }}"
+      pr_number: "${{ inputs.pr_number }}"
+      pr_url: "${{ inputs.pr_url }}"
 
-  collect-ids:
-    name: "Collect Summary artifact IDs"
+  # The reusable workflow reads the known failures list from a checkout of
+  # the commit the workflow runs for. For a pull request that is the head of
+  # the default branch, not the pull request, so the summary that applies the
+  # list is generated here, from the commit the caller names.
+  publish-test-summary:
+    name: "Publish Summary"
     needs: [test-nodistro, test-qcom-distro, test-debian]
     if: |
       always()
@@ -78,12 +109,62 @@ jobs:
       && !contains(needs.*.result, 'failure')
     runs-on: ubuntu-latest
     permissions:
-      checks: write
-      pull-requests: write
+      actions: read
+      contents: read
     outputs:
-      summary_ids: ${{ steps.generate-summary.outputs.artifact_ids }}
+      summary_ids: ${{ steps.summary-ids.outputs.artifact_ids }}
     steps:
-      - name: Summary IDs
-        id: generate-summary
+      # Only the list is checked out; nothing from the pull request is run.
+      - name: Check out the known failures list
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ inputs.known_failures_repository || github.repository }}
+          ref: ${{ inputs.known_failures_ref || github.sha }}
+          persist-credentials: false
+          sparse-checkout: ${{ env.KNOWN_FAILURES_FILE }}
+          sparse-checkout-cone-mode: false
+
+      - name: Summary nodistro
+        id: summary-nodistro
+        uses: qualcomm/qcom-reusable-workflows/.github/actions/test-job-summary@6d27c5e493ee1d97f080de6e3dc0693a2efa2f65 # main
+        with:
+          build_id: ${{ github.run_id }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: "nodistro-test-job*"
+          summary_file_name: "nodistro-known_failures_summary"
+          summary_title: "nodistro"
+          known_failures_file: ${{ env.KNOWN_FAILURES_FILE }}
+          kernel: "default"
+
+      - name: Summary qcom-distro
+        id: summary-qcom-distro
+        uses: qualcomm/qcom-reusable-workflows/.github/actions/test-job-summary@6d27c5e493ee1d97f080de6e3dc0693a2efa2f65 # main
+        with:
+          build_id: ${{ github.run_id }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: "qcom-distro-test-job*"
+          summary_file_name: "qcom-distro-known_failures_summary"
+          summary_title: "qcom-distro"
+          known_failures_file: ${{ env.KNOWN_FAILURES_FILE }}
+          kernel: "default"
+
+      - name: Summary debian
+        id: summary-debian
+        uses: qualcomm/qcom-reusable-workflows/.github/actions/test-job-summary@6d27c5e493ee1d97f080de6e3dc0693a2efa2f65 # main
+        with:
+          build_id: ${{ github.run_id }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: "debian-test-job*"
+          summary_file_name: "debian-known_failures_summary"
+          summary_title: "debian"
+          known_failures_file: ${{ env.KNOWN_FAILURES_FILE }}
+          kernel: "default"
+
+      - name: Publish Test Job Details
         run: |
-          echo "artifact_ids=${{ needs.test-nodistro.outputs.summary_id }},${{ needs.test-qcom-distro.outputs.summary_id }},${{ needs.test-qcom-distro_linux-qcom-6-18.outputs.summary_id }},${{ needs.test-debian.outputs.summary_id }}" >> $GITHUB_OUTPUT
+          cat *-known_failures_summary >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Summary IDs
+        id: summary-ids
+        run: |
+          echo "artifact_ids=${{ steps.summary-nodistro.outputs.artifact_id }},${{ steps.summary-qcom-distro.outputs.artifact_id }},${{ steps.summary-debian.outputs.artifact_id }}" >> $GITHUB_OUTPUT
