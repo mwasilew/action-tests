@@ -158,7 +158,7 @@ jobs:
 
       - name: Summary nodistro
         id: summary-nodistro
-        uses: qualcomm/qcom-reusable-workflows/.github/actions/test-job-summary@6d27c5e493ee1d97f080de6e3dc0693a2efa2f65 # main
+        uses: mwasilew/action-tests/.github/actions/test-job-summary@main # meta-qcom#3317
         with:
           build_id: ${{ github.run_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
@@ -170,7 +170,7 @@ jobs:
 
       - name: Summary qcom-distro
         id: summary-qcom-distro
-        uses: qualcomm/qcom-reusable-workflows/.github/actions/test-job-summary@6d27c5e493ee1d97f080de6e3dc0693a2efa2f65 # main
+        uses: mwasilew/action-tests/.github/actions/test-job-summary@main # meta-qcom#3317
         with:
           build_id: ${{ github.run_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
@@ -182,7 +182,7 @@ jobs:
 
       - name: Summary qcom-distro_linux-qcom-6.18
         id: summary-qcom-distro_linux-qcom-6-18
-        uses: qualcomm/qcom-reusable-workflows/.github/actions/test-job-summary@6d27c5e493ee1d97f080de6e3dc0693a2efa2f65 # main
+        uses: mwasilew/action-tests/.github/actions/test-job-summary@main # meta-qcom#3317
         with:
           build_id: ${{ github.run_id }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
